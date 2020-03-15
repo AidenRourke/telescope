@@ -1,26 +1,25 @@
 import React from 'react';
-import logo from 'logo.svg';
+import styled from 'styled-components';
+
+import { black, white } from 'styles/colors';
+
 import './App.css';
+import { Login } from 'app/login';
+
+const AppContainer = styled.div`
+    background-color: ${black};
+    height: calc(100vh - 8rem);
+    color: ${white};
+    padding: 4rem;
+    position: relative;
+`;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <AppContainer>
+            <Login />
+        </AppContainer>
+    );
 }
 
 export default App;
