@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Button, Input } from 'components';
+import { Button, Input } from '../../Components';
 
 const LoginView = styled.div`
     font-size: 1rem;
