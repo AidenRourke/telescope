@@ -7,7 +7,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isOutlined?: boolean;
 }
 
-const getTextColor = (color: string) => {
+const getTextColor = (color: string, isOutlined: boolean) => {
+  if (isOutlined) return colors[color];
+
   switch (color) {
     case 'black':
       return colors.white;
@@ -25,7 +27,7 @@ const StyledButton = styled.button<ButtonProps>`
   cursor: pointer;
   border: 3px solid ${({ isOutlined, color }) => (isOutlined ? colors[color] : 'transparent')};
   background-color: ${({ isOutlined, color }) => (isOutlined ? 'transparent' : colors[color])};
-  color: ${({ isOutlined, color }) => isOutlined ? colors.white : getTextColor(color)};
+  color: ${({ color, isOutlined }) => getTextColor(color, isOutlined)};
 `;
 
 const Button: FC<ButtonProps> = ({ children, ...rest }) => {

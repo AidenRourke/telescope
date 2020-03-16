@@ -80,7 +80,7 @@ const Login: FC = () => {
           onChange={handleInput}
           value={loginInput.password}
         />
-        <Submit>LOGIN</Submit>
+        <Submit color="white">LOGIN</Submit>
       </LoginForm>
     </LoginView>
   );
