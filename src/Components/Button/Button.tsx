@@ -21,7 +21,7 @@ const BlackButton = styled(ButtonBase)`
 `;
 
 const WhiteButton = styled(ButtonBase)`
-  background-color: ${blue};
+  background-color: ${white};
   color: ${black};
 `;
 
