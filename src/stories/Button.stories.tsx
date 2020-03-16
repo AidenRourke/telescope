@@ -7,5 +7,5 @@ export default {
 };
 
 export const defaultView = () => (
-  <Button color={select('Colors', ['white', 'black', 'red'], 'black')}>{text('Label', 'Label')}</Button>
+  <Button color={select('Colors', ['white', 'black', 'red', 'green', 'blue'], 'black')}>{text('Label', 'Label')}</Button>
 );
