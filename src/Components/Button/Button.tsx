@@ -10,8 +10,9 @@ interface ButtonProps extends HTMLProps<HTMLButtonElement> {
 const ButtonBase = styled.button<ButtonProps>`
     padding: 1rem 2rem;
     font-size: 1rem;
-    font-family: Druk;
+    font-family: inherit;
     cursor: pointer;
+    border: 1px solid transparent;
 `;
 
 const BlackButton = styled(ButtonBase)`
