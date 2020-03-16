@@ -1,10 +1,10 @@
 @font-face {
-    font-family: 'Druk';
-    src: local('Druk'), url('fonts/DrukWide-Bold.ttf') format('truetype');
+  font-family: 'Druk';
+  src: local('Druk'), url('fonts/DrukWide-Bold.ttf') format('truetype');
 }
 
 body {
-    margin: 0;
-    font-family: Druk;
-    font-size: 16px;
+  margin: 0;
+  font-family: Druk;
+  font-size: 16px;
 }
