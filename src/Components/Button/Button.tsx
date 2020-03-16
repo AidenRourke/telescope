@@ -1,6 +1,6 @@
 import React, { FC, HTMLProps } from 'react';
 import styled from 'styled-components';
-import { black, white, red } from 'styles/colors';
+import { black, white, red , green, blue} from 'styles/colors';
 
 interface ButtonProps extends HTMLProps<HTMLButtonElement> {
   type?: 'default' | 'outlined';
@@ -21,7 +21,7 @@ const BlackButton = styled(ButtonBase)`
 `;
 
 const WhiteButton = styled(ButtonBase)`
-  background-color: ${white};
+  background-color: ${blue};
   color: ${black};
 `;
 
@@ -30,15 +30,29 @@ const RedButton = styled(ButtonBase)`
   color: ${white};
 `;
 
+const GreenButton = styled(ButtonBase)`
+    background-color: ${green};
+    color: ${black};
+`;
+
+const BlueButton = styled(ButtonBase)`
+    background-color: ${blue};
+    color: ${black};
+`;
 const Button: FC<ButtonProps> = ({ type, color, children, className }) => {
-  switch (color) {
-    case 'black':
-      return <BlackButton className={className}>{children}</BlackButton>;
-    case 'red':
-      return <RedButton className={className}>{children}</RedButton>;
-    default:
-      return <WhiteButton className={className}>{children}</WhiteButton>;
-  }
+    switch (color) {
+        case 'black':
+            return <BlackButton className={className}>{children}</BlackButton>;
+        case 'red':
+            return <RedButton className={className}>{children}</RedButton>;
+        case 'green':
+            return <GreenButton className={className}>{children}</GreenButton>;
+        case 'blue':
+            return <BlueButton className={className}>{children}</BlueButton>;
+        default:
+            return <WhiteButton className={className}>{children}</WhiteButton>;
+
+}
 };
 
 Button.defaultProps = {
