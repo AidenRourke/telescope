@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '../Components';
+import { Button } from 'Components';
 import { storiesOf } from '@storybook/react';
 import centered from '@storybook/addon-centered/react';
 import { withKnobs, select, text } from '@storybook/addon-knobs';
