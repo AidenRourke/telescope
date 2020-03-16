@@ -8,6 +8,7 @@ const LoginView = styled.div`
     height: 100%;
     display: flex;
     align-items: center;
+    padding-left: 4rem;
 `;
 
 const Female = styled.img`
@@ -15,16 +16,16 @@ const Female = styled.img`
     bottom: 0;
     right: 25%;
     height: 80%;
-    width: 35%;
+    width: 30%;
     object-fit: cover;
 `;
 
 const Male = styled.img`
     position: absolute;
     bottom: 0;
-    right: 4rem;
+    right: 2rem;
     height: 90%;
-    width: 35%;
+    width: 30%;
     object-fit: cover;
 `;
 
