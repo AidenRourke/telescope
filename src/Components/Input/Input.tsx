@@ -1,8 +1,8 @@
-import React, { FC, HTMLProps } from 'react';
+import React, { FC, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { white } from 'styles/colors';
 
-interface InputProps extends HTMLProps<HTMLInputElement> {}
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 const InputBase = styled.input<InputProps>`
   background: none;
@@ -14,8 +14,8 @@ const InputBase = styled.input<InputProps>`
   font-family: inherit;
 `;
 
-const Input: FC<InputProps> = ({ placeholder, className }) => {
-  return <InputBase placeholder={placeholder} className={className} />;
+const Input: FC<InputProps> = ({ ...rest }) => {
+  return <InputBase {...rest} />;
 };
 
 export { Input };

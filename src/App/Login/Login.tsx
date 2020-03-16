@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useReducer, ChangeEvent } from 'react';
 import styled from 'styled-components';
 
 import { Button, Input } from '../../Components';
@@ -55,6 +55,16 @@ const Submit = styled(Button)`
 `;
 
 const Login: FC = () => {
+  const [loginInput, setLoginInput] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {
+    email: '',
+    password: '',
+  });
+
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginInput({ [name]: value });
+  };
+
   return (
     <LoginView>
       <Male src={require('assets/login_male.gif')} />
@@ -62,8 +72,14 @@ const Login: FC = () => {
 
       <LoginForm>
         <ModuWorld src={require('assets/modu_world.png')} />
-        <Email placeholder="EMAIL" />
-        <Password placeholder="PASSWORD" type="password" />
+        <Email type="text" placeholder="EMAIL" name="email" onChange={handleInput} value={loginInput.email} />
+        <Password
+          type="password"
+          placeholder="PASSWORD"
+          name="password"
+          onChange={handleInput}
+          value={loginInput.password}
+        />
         <Submit>LOGIN</Submit>
       </LoginForm>
     </LoginView>

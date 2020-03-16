@@ -1,9 +1,8 @@
-import React, { FC, HTMLProps } from 'react';
+import React, { FC, ButtonHTMLAttributes } from 'react';
 import styled from 'styled-components';
-import { black, white, red , green, blue} from 'styles/colors';
+import { black, white, red, green, blue } from 'styles/colors';
 
-interface ButtonProps extends HTMLProps<HTMLButtonElement> {
-  type?: 'default' | 'outlined';
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color?: 'white' | 'red' | 'green' | 'blue' | 'black';
 }
 
@@ -31,32 +30,27 @@ const RedButton = styled(ButtonBase)`
 `;
 
 const GreenButton = styled(ButtonBase)`
-    background-color: ${green};
-    color: ${black};
+  background-color: ${green};
+  color: ${black};
 `;
 
 const BlueButton = styled(ButtonBase)`
-    background-color: ${blue};
-    color: ${black};
+  background-color: ${blue};
+  color: ${black};
 `;
-const Button: FC<ButtonProps> = ({ type, color, children, className }) => {
-    switch (color) {
-        case 'black':
-            return <BlackButton className={className}>{children}</BlackButton>;
-        case 'red':
-            return <RedButton className={className}>{children}</RedButton>;
-        case 'green':
-            return <GreenButton className={className}>{children}</GreenButton>;
-        case 'blue':
-            return <BlueButton className={className}>{children}</BlueButton>;
-        default:
-            return <WhiteButton className={className}>{children}</WhiteButton>;
-
-}
-};
-
-Button.defaultProps = {
-  type: 'default',
+const Button: FC<ButtonProps> = ({ color, children, ...rest }) => {
+  switch (color) {
+    case 'black':
+      return <BlackButton {...rest}>{children}</BlackButton>;
+    case 'red':
+      return <RedButton {...rest}>{children}</RedButton>;
+    case 'green':
+      return <GreenButton {...rest}>{children}</GreenButton>;
+    case 'blue':
+      return <BlueButton {...rest}>{children}</BlueButton>;
+    default:
+      return <WhiteButton {...rest}>{children}</WhiteButton>;
+  }
 };
 
 export { Button };
