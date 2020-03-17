@@ -8,3 +8,7 @@ body {
   font-family: Druk;
   font-size: 16px;
 }
+
+h1 {
+    margin: 0;
+}

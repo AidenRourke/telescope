@@ -1,5 +1,6 @@
 import React, { FC, useReducer, ChangeEvent } from 'react';
 import styled from 'styled-components';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Button, Input } from '../../Components';
 
@@ -54,7 +55,7 @@ const Submit = styled(Button)`
   margin-top: 2rem;
 `;
 
-const Login: FC = () => {
+const Login: FC<RouteComponentProps> = ({history}) => {
   const [loginInput, setLoginInput] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {
     email: '',
     password: '',
@@ -80,7 +81,7 @@ const Login: FC = () => {
           onChange={handleInput}
           value={loginInput.password}
         />
-        <Submit color="white">LOGIN</Submit>
+        <Submit color="white" onClick={() => history.push("/posts")}>LOGIN</Submit>
       </LoginForm>
     </LoginView>
   );

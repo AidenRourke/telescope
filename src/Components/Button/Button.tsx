@@ -2,12 +2,14 @@ import React, { FC, ButtonHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import * as colors from 'styles/colors';
 
+type ButtonColors = 'white' | 'red' | 'green' | 'blue' | 'black';
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  color: 'white' | 'red' | 'green' | 'blue' | 'black';
+  color: ButtonColors;
   isOutlined?: boolean;
 }
 
-const getTextColor = (color: string, isOutlined: boolean) => {
+const getTextColor = (color: ButtonColors, isOutlined: boolean | undefined) => {
   if (isOutlined) return colors[color];
 
   switch (color) {

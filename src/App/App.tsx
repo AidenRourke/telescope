@@ -9,7 +9,7 @@ const AppContainer = styled.div`
   background-color: ${black};
   height: 100vh;
   color: ${white};
-  position: relative;
+  display: flex;
 `;
 
 function App() {

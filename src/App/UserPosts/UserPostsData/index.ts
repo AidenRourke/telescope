@@ -1,0 +1,1 @@
+export { UserPostsData } from './UserPostsData';
