@@ -1,1 +1,0 @@
-export { UserPostsheader } from './UserPostsHeader';

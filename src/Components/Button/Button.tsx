@@ -7,10 +7,11 @@ type ButtonColors = 'white' | 'red' | 'green' | 'blue' | 'black';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color: ButtonColors;
   isOutlined?: boolean;
+  isText?: boolean;
 }
 
-const getTextColor = (color: ButtonColors, isOutlined: boolean | undefined) => {
-  if (isOutlined) return colors[color];
+const getTextColor = (color: ButtonColors, isOutlined: boolean | undefined, isText: boolean | undefined) => {
+  if (isOutlined || isText) return colors[color];
 
   switch (color) {
     case 'black':
@@ -23,13 +24,13 @@ const getTextColor = (color: ButtonColors, isOutlined: boolean | undefined) => {
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  padding: 1rem 2rem;
+  padding: ${({ isText }) => (isText ? '0' : '1rem 2rem')};
   font-size: 1rem;
   font-family: inherit;
   cursor: pointer;
-  border: 3px solid ${({ isOutlined, color }) => (isOutlined ? colors[color] : 'transparent')};
-  background-color: ${({ isOutlined, color }) => (isOutlined ? 'transparent' : colors[color])};
-  color: ${({ color, isOutlined }) => getTextColor(color, isOutlined)};
+  border: 3px solid ${({ isOutlined, color, isText }) => (isOutlined && !isText ? colors[color] : 'transparent')};
+  background-color: ${({ isOutlined, isText, color }) => (isOutlined || isText ? 'transparent' : colors[color])};
+  color: ${({ color, isOutlined, isText }) => getTextColor(color, isOutlined, isText)};
 `;
 
 const Button: FC<ButtonProps> = ({ children, ...rest }) => {

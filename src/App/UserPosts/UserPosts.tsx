@@ -4,29 +4,21 @@ import styled from 'styled-components';
 
 import { Navbar } from 'App/Navbar';
 import { UserPostsData } from './UserPostsData';
-import { UserPostsheader } from './UserPostsheader';
-
-const UserPostsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
+import { UserPostsContent } from './UserPostsContent';
 
 const WithNavbarContainer = styled.div`
   display: flex;
-  flex: 1;
+  width: 100%;
 `;
 
 const UserPosts: FC<RouteComponentProps> = props => {
   return (
-    <UserPostsContainer>
-      <UserPostsheader />
-      <WithNavbarContainer>
-        <Navbar {...props}>
-          <UserPostsData />
-        </Navbar>
-      </WithNavbarContainer>
-    </UserPostsContainer>
+    <WithNavbarContainer>
+      <Navbar {...props}>
+        <UserPostsData />
+      </Navbar>
+      <UserPostsContent />
+    </WithNavbarContainer>
   );
 };
 

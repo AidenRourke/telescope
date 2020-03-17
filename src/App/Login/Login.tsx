@@ -30,7 +30,7 @@ const Male = styled.img`
   object-fit: cover;
 `;
 
-const LoginForm = styled.div`
+const LoginForm = styled.form`
   z-index: 1;
   display: flex;
   justify-content: center;
@@ -55,7 +55,7 @@ const Submit = styled(Button)`
   margin-top: 2rem;
 `;
 
-const Login: FC<RouteComponentProps> = ({history}) => {
+const Login: FC<RouteComponentProps> = ({ history }) => {
   const [loginInput, setLoginInput] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {
     email: '',
     password: '',
@@ -67,7 +67,7 @@ const Login: FC<RouteComponentProps> = ({history}) => {
   };
 
   return (
-    <LoginView>
+    <LoginView onSubmit={() => history.push('/posts')}>
       <Male src={require('assets/login_male.gif')} />
       <Female src={require('assets/login_female.gif')} />
 
@@ -81,7 +81,9 @@ const Login: FC<RouteComponentProps> = ({history}) => {
           onChange={handleInput}
           value={loginInput.password}
         />
-        <Submit color="white" onClick={() => history.push("/posts")}>LOGIN</Submit>
+        <Submit type="submit" color="white">
+          LOGIN
+        </Submit>
       </LoginForm>
     </LoginView>
   );

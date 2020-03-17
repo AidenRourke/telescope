@@ -7,8 +7,22 @@ body {
   margin: 0;
   font-family: Druk;
   font-size: 16px;
+  color: white;
+  background-color: black;
 }
 
 h1 {
-    margin: 0;
+  margin: 0 0 0.5rem 0;
+}
+
+p {
+  margin: 0;
+}
+
+h2 {
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
 }

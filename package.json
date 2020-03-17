@@ -15,6 +15,7 @@
         "react": "^16.13.0",
         "react-dom": "^16.13.0",
         "react-globe": "^4.0.0",
+        "react-photo-gallery": "^8.0.0",
         "react-router-dom": "^5.1.2",
         "react-scripts": "3.4.0",
         "styled-components": "^5.0.1",
@@ -53,9 +54,9 @@
         "@storybook/addons": "^5.3.14",
         "@storybook/preset-create-react-app": "^2.0.0",
         "@storybook/react": "^5.3.14",
+        "@storybook/theming": "^5.3.17",
         "@typescript-eslint/eslint-plugin": "^2.23.0",
         "@typescript-eslint/parser": "^2.23.0",
-        "eslint": "^6.8.0",
-        "@storybook/theming": "^5.3.17"
+        "eslint": "^6.8.0"
     }
 }
