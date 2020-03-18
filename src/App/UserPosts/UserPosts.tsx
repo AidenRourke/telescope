@@ -4,11 +4,18 @@ import styled from 'styled-components';
 
 import { Navbar } from 'App/Navbar';
 import { UserPostsData } from './UserPostsData';
-import { UserPostsContent } from './UserPostsContent';
+import { Tabs } from '../../Components/Tabs';
+import { ListView } from './ListView';
+import { GlobeView } from './GlobeView';
 
 const WithNavbarContainer = styled.div`
   display: flex;
   width: 100%;
+`;
+
+const UserPostsContainer = styled.div`
+  padding: 2rem 4rem;
+  flex: 1;
 `;
 
 const UserPosts: FC<RouteComponentProps> = props => {
@@ -17,7 +24,12 @@ const UserPosts: FC<RouteComponentProps> = props => {
       <Navbar {...props}>
         <UserPostsData />
       </Navbar>
-      <UserPostsContent />
+      <UserPostsContainer>
+        <Tabs>
+          <ListView label="LIST VIEW" />
+          <GlobeView label="GLOBE VIEW" />
+        </Tabs>
+      </UserPostsContainer>
     </WithNavbarContainer>
   );
 };

@@ -9,8 +9,6 @@ interface Props {
 
 const TabsContainer = styled.div`
   height: 100%;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Tab = styled(Button)<{ isActive: boolean }>`
@@ -24,10 +22,7 @@ const Tab = styled(Button)<{ isActive: boolean }>`
 `;
 
 const TabContent = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: 4rem;
 `;
 
 const Tabs: FC<Props> = ({ children }) => {
@@ -49,8 +44,9 @@ const Tabs: FC<Props> = ({ children }) => {
         ))}
       </div>
       <TabContent>
-        {children.map(({ props: { label, children } }) => {
-          if (label === activeTabLabel) return children;
+        {children.map(child => {
+          if (child.props.label === activeTabLabel) return child;
+          return undefined;
         })}
       </TabContent>
     </TabsContainer>

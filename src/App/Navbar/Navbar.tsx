@@ -8,20 +8,20 @@ const NavContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 4rem 4rem 2rem 4rem;
-  h1 {
-    text-align: center;
-  }
+  padding: 2rem;
+`;
+
+const Modu = styled.h1`
+  text-align: center;
+  margin: 0 0 2rem 0;
 `;
 
 const Links = styled.div`
-  display: flex;
-  flex-direction: column;
   margin: 2rem 0;
-  justify-content: center;
 `;
 
 const StyledLink = styled(Link)<{ isActive: boolean }>`
+  display: block;
   margin-bottom: 1rem;
   color: ${({ isActive }) => (isActive ? green : white)};
   opacity: ${({ isActive }) => (isActive ? 1 : 0.3)};
@@ -53,11 +53,11 @@ const links = [
 const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
   return (
     <NavContainer>
-      <h1>MODU</h1>
+      <Modu>MODU</Modu>
       <WidgetContainer>{children}</WidgetContainer>
       <Links>
         {links.map(({ to, name }) => (
-          <StyledLink to={to} isActive={location.pathname.includes(to)}>
+          <StyledLink key={name} to={to} isActive={location.pathname.includes(to)}>
             <h3>{name}</h3>
           </StyledLink>
         ))}

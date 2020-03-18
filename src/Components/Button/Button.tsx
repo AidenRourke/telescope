@@ -1,16 +1,15 @@
 import React, { FC, ButtonHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import * as colors from 'styles/colors';
-
-type ButtonColors = 'white' | 'red' | 'green' | 'blue' | 'black';
+import { colorTypes } from 'styles/colorTypes';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  color: ButtonColors;
+  color: colorTypes;
   isOutlined?: boolean;
   isText?: boolean;
 }
 
-const getTextColor = (color: ButtonColors, isOutlined: boolean | undefined, isText: boolean | undefined) => {
+const getTextColor = (color: colorTypes, isOutlined: boolean | undefined, isText: boolean | undefined) => {
   if (isOutlined || isText) return colors[color];
 
   switch (color) {
@@ -24,6 +23,7 @@ const getTextColor = (color: ButtonColors, isOutlined: boolean | undefined, isTe
 };
 
 const StyledButton = styled.button<ButtonProps>`
+  display: flex;
   padding: ${({ isText }) => (isText ? '0' : '1rem 2rem')};
   font-size: 1rem;
   font-family: inherit;

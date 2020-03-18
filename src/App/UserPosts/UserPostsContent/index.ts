@@ -1,1 +1,0 @@
-export { UserPostsContent } from './UserPostsContent';

@@ -2,7 +2,9 @@ import React, { FC, useReducer, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 
-import { Button, Input } from '../../Components';
+import { Button, Input } from 'Components';
+import male from 'assets/login_male.gif';
+import female from 'assets/login_female.gif';
 
 const LoginView = styled.div`
   font-size: 1rem;
@@ -44,10 +46,12 @@ const ModuWorld = styled.img`
 `;
 
 const Email = styled(Input)`
+  width: 50%;
   margin-top: 4rem;
 `;
 
 const Password = styled(Input)`
+  width: 50%;
   margin-top: 2rem;
 `;
 
@@ -68,8 +72,8 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
 
   return (
     <LoginView onSubmit={() => history.push('/posts')}>
-      <Male src={require('assets/login_male.gif')} />
-      <Female src={require('assets/login_female.gif')} />
+      <Male src={male} />
+      <Female src={female} />
 
       <LoginForm>
         <ModuWorld src={require('assets/modu_world.png')} />
