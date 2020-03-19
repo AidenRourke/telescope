@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Auth } from 'aws-amplify';
 
 import Router from './Router';
 
@@ -15,12 +16,30 @@ const Time = styled.div`
 `;
 
 const App: FC = () => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [time, setTime] = useState<string>();
+
+  useEffect(() => {
+    onLoad();
+  }, []);
+
+  async function onLoad() {
+    try {
+      await Auth.currentSession();
+      setIsAuthenticated(true);
+    } catch (e) {
+      setIsAuthenticated(false);
+    }
+    setIsLoaded(true);
+  }
+
   setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
+
   return (
     <AppContainer>
       <Time>{time}</Time>
-      <Router />
+      {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
     </AppContainer>
   );
 };

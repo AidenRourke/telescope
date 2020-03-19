@@ -23,7 +23,6 @@ const getTextColor = (color: colorTypes, isOutlined: boolean | undefined, isText
 };
 
 const StyledButton = styled.button<ButtonProps>`
-  display: flex;
   padding: ${({ isText }) => (isText ? '0' : '1rem 2rem')};
   font-size: 1rem;
   font-family: inherit;

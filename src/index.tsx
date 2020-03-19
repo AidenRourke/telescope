@@ -4,6 +4,20 @@ import './index.css';
 import App from 'App/App';
 import 'fonts/DrukWide-Bold.ttf';
 import * as serviceWorker from './serviceWorker';
+import Amplify from 'aws-amplify';
+import config from './amplify_config';
+
+Amplify.configure({
+  Auth: {
+    mandatorySignIn: true,
+    region: config.cognito.REGION,
+    userPoolId: config.cognito.USER_POOL_ID,
+    identityPoolId: config.cognito.IDENTITY_POOL_ID,
+    userPoolWebClientId: config.cognito.APP_CLIENT_ID,
+  },
+});
+
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

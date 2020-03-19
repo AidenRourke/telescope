@@ -18,7 +18,11 @@ const UserPostsContainer = styled.div`
   flex: 1;
 `;
 
-const UserPosts: FC<RouteComponentProps> = props => {
+interface Props extends RouteComponentProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+const UserPosts: FC<Props> = props => {
   return (
     <WithNavbarContainer>
       <Navbar {...props}>

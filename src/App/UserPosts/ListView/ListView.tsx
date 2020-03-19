@@ -1,14 +1,16 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import Gallery from 'react-photo-gallery';
 
 import { FilterSearch } from 'Components/index';
-import { blue } from 'styles/colors';
 
 import male from 'assets/login_male.gif';
 import female from 'assets/login_female.gif';
 
-const ListViewContainer = styled.div``;
+const ListViewContainer = styled.div`
+  min-width: 0px;
+  overflow: scroll;
+`;
 
 interface Props {
   label: string;

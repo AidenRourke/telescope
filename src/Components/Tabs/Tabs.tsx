@@ -8,6 +8,8 @@ interface Props {
 }
 
 const TabsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
 `;
 
@@ -22,7 +24,11 @@ const Tab = styled(Button)<{ isActive: boolean }>`
 `;
 
 const TabContent = styled.div`
-  margin-top: 4rem;
+  flex: 1;
+  min-width: 0px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Tabs: FC<Props> = ({ children }) => {

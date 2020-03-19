@@ -1,18 +1,33 @@
-import * as React from 'react';
+import React, { FC } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { Login } from 'App/Login';
 import { UserPosts } from 'App/UserPosts';
 
-const Router = () => {
+interface Props {
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+const Router: FC<Props> = ({ isAuthenticated, setIsAuthenticated }) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact={true} path="/login" component={Login} />
+        <Route
+          exact={true}
+          path="/login"
+          render={props => <Login {...props} setIsAuthenticated={setIsAuthenticated} />}
+        />
         <Route
           exact={true}
           path={'/posts'}
-          component={UserPosts}
+          render={props =>
+            isAuthenticated ? (
+              <UserPosts {...props} setIsAuthenticated={setIsAuthenticated} />
+            ) : (
+              <Redirect to="/login" />
+            )
+          }
         />
         {/* Not Found */}
         <Route component={() => <Redirect to="/login" />} />

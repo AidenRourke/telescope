@@ -1,8 +1,11 @@
 import React, { FC } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Auth } from 'aws-amplify';
+
 import { Button } from 'Components/Button';
 import { green, white } from 'styles/colors';
+import sidebar from 'assets/SIDEBAR.png';
 
 const NavContainer = styled.div`
   display: flex;
@@ -11,9 +14,9 @@ const NavContainer = styled.div`
   padding: 2rem;
 `;
 
-const Modu = styled.h1`
-  text-align: center;
+const Modu = styled.img`
   margin: 0 0 2rem 0;
+  max-width: 15rem;
 `;
 
 const Links = styled.div`
@@ -50,10 +53,22 @@ const links = [
   { to: '/worlds', name: 'SERVERS' },
 ];
 
-const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
+interface Props extends RouteComponentProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+const Navbar: FC<Props> = ({ history, location, children, setIsAuthenticated }) => {
+  const handleLogout = async (e: any) => {
+    e.preventDefault();
+
+    await Auth.signOut();
+    setIsAuthenticated(false);
+    history.push('/login');
+  };
+
   return (
     <NavContainer>
-      <Modu>MODU</Modu>
+      <Modu src={sidebar} />
       <WidgetContainer>{children}</WidgetContainer>
       <Links>
         {links.map(({ to, name }) => (
@@ -62,7 +77,7 @@ const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
           </StyledLink>
         ))}
       </Links>
-      <Button isOutlined={true} color="green" onClick={() => history.push('/login')}>
+      <Button isOutlined={true} color="green" onClick={handleLogout}>
         LOGOUT
       </Button>
     </NavContainer>

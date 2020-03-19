@@ -1,6 +1,7 @@
 import React, { FC, useReducer, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
 
 import { Button, Input } from 'Components';
 import male from 'assets/login_male.gif';
@@ -59,7 +60,11 @@ const Submit = styled(Button)`
   margin-top: 2rem;
 `;
 
-const Login: FC<RouteComponentProps> = ({ history }) => {
+interface Props extends RouteComponentProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
   const [loginInput, setLoginInput] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {
     email: '',
     password: '',
@@ -70,8 +75,18 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
     setLoginInput({ [name]: value });
   };
 
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const { email, password } = loginInput;
+    try {
+      await Auth.signIn(email, password);
+      setIsAuthenticated(true);
+      history.push('/posts');
+    } catch (e) {}
+  };
+
   return (
-    <LoginView onSubmit={() => history.push('/posts')}>
+    <LoginView onSubmit={handleSubmit}>
       <Male src={male} />
       <Female src={female} />
 
