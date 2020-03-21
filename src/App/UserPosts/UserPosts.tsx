@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import { Navbar } from 'App/Navbar';
 import { UserPostsData } from './UserPostsData';
@@ -23,6 +24,16 @@ interface Props extends RouteComponentProps {
 }
 
 const UserPosts: FC<Props> = props => {
+useEffect(() => {
+    async function getTodos() {
+      const result = await axios.get('/posts', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('cognito-token')}` },
+      });
+      console.log(result);
+    }
+    getTodos();
+  }, []);
+
   return (
     <WithNavbarContainer>
       <Navbar {...props}>

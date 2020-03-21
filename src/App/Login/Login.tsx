@@ -79,7 +79,8 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
     e.preventDefault();
     const { email, password } = loginInput;
     try {
-      await Auth.signIn(email, password);
+      const user = await Auth.signIn(email, password);
+      localStorage.setItem('cognito-token', user.signInUserSession.accessToken.jwtToken);
       setIsAuthenticated(true);
       history.push('/posts');
     } catch (e) {}
