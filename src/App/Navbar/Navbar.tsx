@@ -15,12 +15,11 @@ const NavContainer = styled.div`
 `;
 
 const Modu = styled.img`
-  margin: 0 0 2rem 0;
   max-width: 15rem;
 `;
 
 const Links = styled.div`
-  margin: 2rem 0;
+  margin-bottom: 2rem;
 `;
 
 const StyledLink = styled(Link)<{ isActive: boolean }>`
@@ -44,6 +43,7 @@ const WidgetContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 1rem 0;
 `;
 
 const links = [
@@ -77,7 +77,7 @@ const Navbar: FC<Props> = ({ history, location, children, setIsAuthenticated }) 
           </StyledLink>
         ))}
       </Links>
-      <Button isOutlined={true} color="green" onClick={handleLogout}>
+      <Button isOutlined={true} size="small" color="green" onClick={handleLogout}>
         LOGOUT
       </Button>
     </NavContainer>

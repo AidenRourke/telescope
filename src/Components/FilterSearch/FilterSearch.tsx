@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect, useRef, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -34,19 +34,22 @@ const DropdownMenu = styled.ul`
   z-index: 1;
   position: absolute;
   top: 100%;
-  width: 100%;
   background-color: ${black};
   border: 3px solid ${blue};
   list-style: none;
-  padding: 0;
+  padding: 0.5rem;
+  cursor: pointer;
 `;
 
-const DropdownItem = styled.li`
-  padding: 0 1rem 1rem 1rem;
-  &:first-child {
-    padding: 1rem;
-  }
-  cursor: pointer;
+const DropdownItem = styled.button`
+  padding: 0.5rem;
+  display: block;
+  width: 100%;
+  background: none;
+  font: inherit;
+  color: ${white};
+  border: none;
+  text-align: left;
   :hover {
     text-decoration: underline;
   }
@@ -62,15 +65,39 @@ const SearchButton = styled(Button)`
   padding: 0 2rem;
 `;
 
+interface Props {
+  setIsOpen: (value: boolean) => void;
+  isOpen: boolean;
+}
+
 const options = ['LOCATION', 'USER', 'DATE'];
 
-const FilterSearch: FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
   const [selection, setSelection] = useState<string>(options[0]);
+
+  const menu = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (e: any) => {
+    if (menu.current && !menu.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  });
+
+  const handleSelection = (option: string) => {
+    setIsOpen(false);
+    setSelection(option);
+  };
 
   return (
     <TagFilter>
-      <Dropdown>
+      <Dropdown ref={menu}>
         <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
           {selection}
           <Icon isOpen={isOpen} icon={faChevronRight} />
@@ -78,7 +105,7 @@ const FilterSearch: FC = () => {
         {isOpen && (
           <DropdownMenu>
             {options.map(option => (
-              <DropdownItem onClick={() => setSelection(option)}>{option}</DropdownItem>
+              <DropdownItem onClick={() => handleSelection(option)}>{option}</DropdownItem>
             ))}
           </DropdownMenu>
         )}

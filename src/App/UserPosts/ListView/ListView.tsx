@@ -1,15 +1,37 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import Gallery from 'react-photo-gallery';
+import Gallery, { RenderImageProps } from 'react-photo-gallery';
+import { useHistory } from 'react-router-dom';
 
 import { FilterSearch } from 'Components/index';
 
-import male from 'assets/login_male.gif';
-import female from 'assets/login_female.gif';
+import image_1 from 'assets/IMG_7302.gif';
+import image_2 from 'assets/IMG_7305.gif';
+import image_4 from 'assets/IMG_7306.gif';
+import image_5 from 'assets/IMG_7317.gif';
+import image_6 from 'assets/IMG_7301.gif';
+import image_7 from 'assets/IMG_7308.gif';
+import image_8 from 'assets/IMG_7319.gif';
+import image_9 from 'assets/IMG_7321.gif';
+import image_10 from 'assets/IMG_6285.gif';
+
+// import image_11 from 'assets/';
 
 const ListViewContainer = styled.div`
-  min-width: 0px;
   overflow: scroll;
+  img {
+    object-fit: cover;
+  }
+`;
+
+const ImageContainer = styled.div<{ top?: number; left?: number }>`
+  position: absolute;
+  top: ${props => props.top}px;
+  left: ${props => props.left}px;
+`;
+
+const Image = styled.img`
+  cursor: pointer;
 `;
 
 interface Props {
@@ -18,58 +40,79 @@ interface Props {
 
 const photos = [
   {
-    src: 'https://source.unsplash.com/2ShvY8Lf6l0/800x599',
-    width: 4,
-    height: 3,
-  },
-  {
-    src: 'https://source.unsplash.com/Dm-qxdynoEc/800x799',
-    width: 1,
-    height: 1,
-  },
-  {
-    src: female,
+    src: image_1,
     width: 3,
     height: 4,
+    key: '1',
   },
   {
-    src: male,
+    src: image_2,
     width: 3,
     height: 4,
+    key: '2',
   },
   {
-    src: 'https://source.unsplash.com/epcsn8Ed8kY/600x799',
+    src: image_8,
     width: 3,
     height: 4,
+    key: '3',
   },
   {
-    src: 'https://source.unsplash.com/NQSWvyVRIJk/800x599',
-    width: 4,
-    height: 3,
-  },
-  {
-    src: 'https://source.unsplash.com/zh7GEuORbUw/600x799',
+    src: image_9,
     width: 3,
     height: 4,
+    key: '4',
   },
   {
-    src: 'https://source.unsplash.com/PpOHJezOalU/800x599',
-    width: 4,
-    height: 3,
+    src: image_4,
+    width: 3,
+    height: 4,
+    key: '5',
   },
   {
-    src: 'https://source.unsplash.com/I1ASdgphUH4/800x599',
-    width: 4,
-    height: 3,
+    src: image_5,
+    width: 3,
+    height: 4,
+    key: '6',
+  },
+  {
+    src: image_6,
+    width: 3,
+    height: 4,
+    key: '7',
+  },
+  {
+    src: image_7,
+    width: 3,
+    height: 4,
+    key: '8',
+  },
+  {
+    src: image_10,
+    width: 3,
+    height: 4,
+    key: '9',
   },
 ];
 
 const ListView: FC<Props> = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const history = useHistory();
+
+  const imageRenderer = ({ index, left, top, photo: { sizes, srcSet, key, ...photoProps } }: RenderImageProps) => {
+    return (
+      <ImageContainer key={key} top={top} left={left}>
+        <Image {...photoProps} onClick={() => history.push(`/posts/${key}`)} />
+      </ImageContainer>
+    );
+  };
+
   return (
     <>
-      <FilterSearch />
+      <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen} />
       <ListViewContainer>
-        <Gallery photos={photos} direction="column" />
+        <Gallery photos={photos} direction="column" renderImage={imageRenderer} />
       </ListViewContainer>
     </>
   );
