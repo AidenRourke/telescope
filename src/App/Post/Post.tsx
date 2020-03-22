@@ -88,7 +88,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     <PostContainer>
       <SideBar>
         <SideBarHeader>
-          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
+          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push("/posts")} />
           <Modu src={sidebar} />
         </SideBarHeader>
         <SideBarContent>
