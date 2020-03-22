@@ -19,10 +19,10 @@ const PostContainer = styled.div`
 const SideBar = styled.div`
   color: ${white};
   background-color: ${green};
-  padding: 2rem 5rem 2rem 2rem;
+  padding: 2rem 8rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-  width: 15rem;
+  width: 20rem;
 `;
 
 const SideBarHeader = styled.div`
@@ -68,7 +68,7 @@ const ImageContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  left: 18rem;
+  left: 23rem;
   color: ${blue};
   padding-right: 2rem;
 `;
