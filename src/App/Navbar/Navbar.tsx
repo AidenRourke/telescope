@@ -11,7 +11,7 @@ const NavContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 15%;
+  max-width: 15rem;
   padding: 2rem;
 `;
 

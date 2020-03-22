@@ -22,7 +22,7 @@ const SideBar = styled.div`
   padding: 2rem 4rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-  width: 15%;
+  width: 15rem;
 `;
 
 const SideBarHeader = styled.div`
@@ -68,7 +68,7 @@ const ImageContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  left: 20%;
+  left: 17rem;
   color: ${blue};
   padding-right: 2rem;
 `;
