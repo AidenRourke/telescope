@@ -15,7 +15,7 @@ const WithNavbarContainer = styled.div`
 `;
 
 const UserPostsContainer = styled.div`
-  padding: 2rem;
+  padding: 2rem 2rem 2rem 3rem;
   flex: 1;
 `;
 
