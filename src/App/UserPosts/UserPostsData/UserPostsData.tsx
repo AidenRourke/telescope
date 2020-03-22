@@ -22,7 +22,7 @@ const UserPostsData: FC = () => {
       {mockData.map(({ name, value }) => (
         <DataContainer key={name}>
           <h1>{value}</h1>
-          <h2>{name}</h2>
+          <h3>{name}</h3>
         </DataContainer>
       ))}
     </div>

@@ -11,11 +11,12 @@ const NavContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  width: 15%;
   padding: 2rem;
 `;
 
 const Modu = styled.img`
-  max-width: 15rem;
+  width: 100%;
 `;
 
 const Links = styled.div`
