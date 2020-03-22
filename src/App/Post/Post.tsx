@@ -3,10 +3,13 @@ import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useParams } from 'react-router-dom';
 
-import { green, white } from 'styles/colors';
+import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
 import { Button } from 'Components/Button';
+
+import { photos } from 'App/mockData';
 
 const PostContainer = styled.div`
   display: flex;
@@ -57,9 +60,29 @@ const TextHeader = styled.p`
 
 const SideBarFooter = styled.div`
   display: inline-flex;
-`
+`;
+
+const ImageContainer = styled.div`
+  position: absolute;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  left: 20rem;
+  color: ${blue};
+  padding-right: 2rem;
+`;
+
+const Image = styled.img`
+  height: 80%;
+`;
+
+const Description = styled.div`
+  margin-left: 1rem;
+`;
 
 const Post: FC<RouteComponentProps> = ({ history }) => {
+  const { id } = useParams();
+
   return (
     <PostContainer>
       <SideBar>
@@ -95,6 +118,18 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </Button>
         </SideBarFooter>
       </SideBar>
+      <ImageContainer>
+        <Image src={photos.find(photo => photo.key === id)?.src} />
+        <Description>
+          <h1>THE MARKET</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut consequat elit. Nulla condimentum
+            sit amet justo eget sagittis. Nulla congue sodales ante. Morbi cursus ultrices elit, at consectetur nisl
+            malesuada nec. In quam libero, ultricies vel eros egestas, venenatis aliquet lacus. Phasellus feugiat porta
+            est a tempus. Fusce ut ante sed ante placerat suscipit a id lectus. Vestibulum dapibus
+          </p>
+        </Description>
+      </ImageContainer>
     </PostContainer>
   );
 };
