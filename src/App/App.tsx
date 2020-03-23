@@ -26,7 +26,8 @@ const App: FC = () => {
 
   async function onLoad() {
     try {
-      await Auth.currentSession();
+      const session = await Auth.currentSession();
+      localStorage.setItem('cognito-token', session.getAccessToken().getJwtToken());
       setIsAuthenticated(true);
     } catch (e) {
       setIsAuthenticated(false);

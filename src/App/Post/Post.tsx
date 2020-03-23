@@ -78,7 +78,7 @@ const Image = styled.img`
 `;
 
 const Description = styled.div`
-  margin-left: 1rem;
+  margin-left: 2rem;
 `;
 
 const Post: FC<RouteComponentProps> = ({ history }) => {
