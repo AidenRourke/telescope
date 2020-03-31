@@ -25,9 +25,7 @@ const DropdownHeader = styled.button`
   font-size: 1rem;
   font-family: inherit;
   padding: 1rem;
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 `;
 
 const DropdownMenu = styled.ul`
@@ -38,10 +36,10 @@ const DropdownMenu = styled.ul`
   border: 3px solid ${blue};
   list-style: none;
   padding: 0.5rem;
-  cursor: pointer;
 `;
 
 const DropdownItem = styled.button`
+  cursor: pointer;
   padding: 0.5rem;
   display: block;
   width: 100%;

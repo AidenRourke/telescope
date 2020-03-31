@@ -1,4 +1,4 @@
-import React, { FC, useReducer, ChangeEvent } from 'react';
+import React, { FC, useReducer, useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
@@ -69,6 +69,7 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
     email: '',
     password: '',
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -77,6 +78,8 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    setIsLoading(true);
     const { email, password } = loginInput;
     try {
       const user = await Auth.signIn(email, password);
@@ -84,6 +87,7 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
       setIsAuthenticated(true);
       history.push('/posts');
     } catch (e) {}
+    setIsLoading(false);
   };
 
   return (
@@ -101,7 +105,7 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
           onChange={handleInput}
           value={loginInput.password}
         />
-        <Submit type="submit" color="white">
+        <Submit type="submit" color="white" isLoading={isLoading}>
           LOGIN
         </Submit>
       </LoginForm>

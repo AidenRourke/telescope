@@ -21,7 +21,7 @@ const Router: FC<Props> = ({ isAuthenticated, setIsAuthenticated }) => {
         />
         <Route
           exact={true}
-          path={'/posts'}
+          path="/posts"
           render={props =>
             isAuthenticated ? (
               <UserPosts {...props} setIsAuthenticated={setIsAuthenticated} />

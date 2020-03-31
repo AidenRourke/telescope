@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import { Navbar } from 'App/Navbar';
-import { UserPostsData } from './UserPostsData';
+// import { UserPostsData } from './UserPostsData';
 import { Tabs } from '../../Components/Tabs';
 import { ListView } from './ListView';
 import { GlobeView } from './GlobeView';
@@ -24,7 +24,7 @@ interface Props extends RouteComponentProps {
 }
 
 const UserPosts: FC<Props> = props => {
-useEffect(() => {
+  useEffect(() => {
     async function getTodos() {
       const result = await axios.get('/posts', {
         headers: { Authorization: `Bearer ${localStorage.getItem('cognito-token')}` },
@@ -36,9 +36,7 @@ useEffect(() => {
 
   return (
     <WithNavbarContainer>
-      <Navbar {...props}>
-        <UserPostsData />
-      </Navbar>
+      <Navbar {...props}>{/*<UserPostsData />*/}</Navbar>
       <UserPostsContainer>
         <Tabs>
           <ListView label="LIST VIEW" />

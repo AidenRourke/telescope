@@ -1,5 +1,5 @@
 import React, { FC, ButtonHTMLAttributes } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import * as colors from 'styles/colors';
 import { colorTypes } from 'styles/colorTypes';
 
@@ -10,6 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isOutlined?: boolean;
   isText?: boolean;
   size?: buttonSizes;
+  isLoading?: boolean;
 }
 
 const getTextColor = (color: colorTypes, isOutlined: boolean | undefined, isText: boolean | undefined) => {
@@ -43,6 +44,7 @@ const getFontSize = (size: buttonSizes | undefined) => {
       return 1;
   }
 };
+
 const StyledButton = styled.button<ButtonProps>`
   padding: ${({ isText, size }) => getPadding(isText, size)};
   font-size: ${({ size }) => getFontSize(size)}rem;
@@ -53,8 +55,34 @@ const StyledButton = styled.button<ButtonProps>`
   color: ${({ color, isOutlined, isText }) => getTextColor(color, isOutlined, isText)};
 `;
 
-const Button: FC<ButtonProps> = ({ children, ...rest }) => {
-  return <StyledButton {...rest}>{children}</StyledButton>;
+const ellipsis = keyframes`
+  to {
+    width: 1.25rem;  
+    margin-right: 0;  
+  }
+`;
+
+const LoadingDiv = styled.div`
+  &::after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    animation: ${ellipsis} steps(4, end) 900ms infinite;
+    content: '\\2026'; /* ascii code for the ellipsis character */
+    width: 0;
+    margin-right: 1.25rem;
+  }
+`;
+
+const Button: FC<ButtonProps> = ({ isLoading, children, ...rest }) => {
+  const renderContent = () => {
+    if (isLoading) {
+      return <LoadingDiv>Loading</LoadingDiv>;
+    }
+    return children;
+  };
+
+  return <StyledButton {...rest}>{renderContent()}</StyledButton>;
 };
 
 export { Button };
