@@ -19,7 +19,7 @@ const PostContainer = styled.div`
 const SideBar = styled.div`
   color: ${white};
   background-color: ${green};
-  padding: 2rem 8rem 2rem 2rem;
+  padding: 2rem 4rem 2rem 2rem;
   display: flex;
   flex-direction: column;
   width: 20rem;
@@ -68,7 +68,7 @@ const ImageContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  left: 23rem;
+  left: 22rem;
   color: ${blue};
   padding-right: 2rem;
 `;
@@ -114,7 +114,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </TextSection>
         </SideBarContent>
         <SideBarFooter>
-          <Button color="white" size="small">
+          <Button color="white">
             ADD TO ISSUE
           </Button>
         </SideBarFooter>

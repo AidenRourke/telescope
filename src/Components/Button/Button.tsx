@@ -77,7 +77,7 @@ const LoadingDiv = styled.div`
 const Button: FC<ButtonProps> = ({ isLoading, children, ...rest }) => {
   const renderContent = () => {
     if (isLoading) {
-      return <LoadingDiv>Loading</LoadingDiv>;
+      return <LoadingDiv>LOADING</LoadingDiv>;
     }
     return children;
   };

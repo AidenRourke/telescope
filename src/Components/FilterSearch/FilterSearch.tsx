@@ -26,6 +26,7 @@ const DropdownHeader = styled.button`
   font-family: inherit;
   padding: 1rem;
   cursor: pointer;
+  align-items: center;
 `;
 
 const DropdownMenu = styled.ul`
@@ -68,7 +69,7 @@ interface Props {
   isOpen: boolean;
 }
 
-const options = ['LOCATION', 'USER', 'DATE'];
+const options = ['LOCATION', 'USER', 'DATE', 'TAG'];
 
 const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
   const [selection, setSelection] = useState<string>(options[0]);
