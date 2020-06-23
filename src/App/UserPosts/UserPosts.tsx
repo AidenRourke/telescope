@@ -1,13 +1,13 @@
-import React, { FC, useEffect } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import React, {FC, useEffect} from 'react';
+import {RouteComponentProps} from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import { Navbar } from 'App/Navbar';
+import {Navbar} from 'App/Navbar';
 // import { UserPostsData } from './UserPostsData';
-import { Tabs } from '../../Components/Tabs';
-import { ListView } from './ListView';
-import { GlobeView } from './GlobeView';
+// import {Tabs} from '../../Components/Tabs';
+import {ListView} from './ListView';
+// import {GlobeView} from './GlobeView';
 
 const WithNavbarContainer = styled.div`
   display: flex;
@@ -16,6 +16,10 @@ const WithNavbarContainer = styled.div`
 
 const UserPostsContainer = styled.div`
   padding: 2rem 2rem 2rem 3rem;
+  min-width: 0px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `;
 
@@ -27,10 +31,11 @@ const UserPosts: FC<Props> = props => {
   useEffect(() => {
     async function getTodos() {
       const result = await axios.get('/posts', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('cognito-token')}` },
+        headers: {Authorization: `Bearer ${localStorage.getItem('cognito-token')}`},
       });
       console.log(result);
     }
+
     getTodos();
   }, []);
 
@@ -38,13 +43,10 @@ const UserPosts: FC<Props> = props => {
     <WithNavbarContainer>
       <Navbar {...props}>{/*<UserPostsData />*/}</Navbar>
       <UserPostsContainer>
-        <Tabs>
-          <ListView label="LIST VIEW" />
-          <GlobeView label="GLOBE VIEW" />
-        </Tabs>
+        <ListView label="LIST VIEW"/>
       </UserPostsContainer>
     </WithNavbarContainer>
   );
 };
 
-export { UserPosts };
+export {UserPosts};
