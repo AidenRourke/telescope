@@ -6,6 +6,12 @@ import 'fonts/DrukWide-Bold.ttf';
 import * as serviceWorker from './serviceWorker';
 import Amplify from 'aws-amplify';
 import config from './amplify_config';
+import ApolloClient from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { createHttpLink } from 'apollo-link-http';
+import { ApolloProvider } from '@apollo/react-hooks';
+import {Auth} from 'aws-amplify';
+import { setContext } from 'apollo-link-context';
 
 Amplify.configure({
   Auth: {
@@ -19,7 +25,29 @@ Amplify.configure({
 
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3001/graphql',
+});
+
+const authLink = setContext(async (_, something) => {
+  // get the authentication token from local storage if it exists
+  const token = (await Auth.currentSession()).getAccessToken().getJwtToken();
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...something.headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
+
+
+ReactDOM.render(<ApolloProvider client={client}><App /></ApolloProvider>, document.getElementById('root'));
 
 // If you want your App to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

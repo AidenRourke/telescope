@@ -9,7 +9,7 @@ import { blue, black, white } from 'styles/colors';
 const TagFilter = styled.div`
   width: 100%;
   display: flex;
-  margin: 2rem 0;
+  margin-bottom: 2rem;
 `;
 
 const Dropdown = styled.div`

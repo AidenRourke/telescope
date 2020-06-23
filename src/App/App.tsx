@@ -9,11 +9,11 @@ const AppContainer = styled.div`
   display: flex;
 `;
 
-const Time = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-`;
+// const Time = styled.div`
+//   position: absolute;
+//   top: 1rem;
+//   right: 1rem;
+// `;
 
 const App: FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -26,8 +26,7 @@ const App: FC = () => {
 
   async function onLoad() {
     try {
-      const session = await Auth.currentSession();
-      localStorage.setItem('cognito-token', session.getAccessToken().getJwtToken());
+      await Auth.currentSession();
       setIsAuthenticated(true);
     } catch (e) {
       setIsAuthenticated(false);
@@ -39,7 +38,7 @@ const App: FC = () => {
 
   return (
     <AppContainer>
-      <Time>{time}</Time>
+      {/*<Time>{time}</Time>*/}
       {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
     </AppContainer>
   );
