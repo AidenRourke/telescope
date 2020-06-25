@@ -1,10 +1,10 @@
-import React, {FC} from "react"
+import React, {FC, useState} from "react"
 import {RouteComponentProps} from "react-router";
 import {Navbar} from "../Navbar";
 import {UserPostsData} from "../UserPosts/UserPostsData";
 import styled from "styled-components";
-import { gql } from 'apollo-boost';
-import {useQuery} from "@apollo/react-hooks";
+import {gql} from 'apollo-boost';
+import {useQuery, useMutation} from "@apollo/react-hooks";
 
 interface Props extends RouteComponentProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -15,32 +15,44 @@ const AdminContainer = styled.div`
   min-width: 0px;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
   flex: 1;
+  align-items: center;
 `;
 
 const GET_WORLDS = gql`
   {
-    worlds {
-      title
-      description
-      createdAt
+    publishers {
+      id
+      name
     }
   }
 `;
 
-const Admin: FC<Props> = (props) => {
-  const { loading, data } = useQuery(GET_WORLDS);
+const ATTACH_USER = gql`
+  mutation CreateAccount($publisherId: ID!) {
+    createAccount(publisherId: $publisherId) {
+      errors
+    }
+  }
+`;
 
-  console.log(data);
+const WORLDS = "worlds";
+const PUBLISHERS = "publishers";
+
+const Admin: FC<Props> = (props) => {
+  const [selection, setSelection] = useState<String>(WORLDS);
+
+  const {loading, data} = useQuery(GET_WORLDS);
+  const [attachUser] = useMutation(ATTACH_USER);
 
   return <>
     <Navbar {...props}>{<UserPostsData/>}</Navbar>
     <AdminContainer>
-      <div>Worlds</div>
-      {!loading && data.worlds.map((world:any) => <p>{world.title}</p>)}
-      <div>Publishers</div>
-      <div>Users</div>
+      <div>
+        <h1>Publishers</h1>
+        {data?.publishers.map((publisher: any) => <p
+          onClick={() => attachUser({variables: {publisherId: publisher.id}})}>{publisher.name}</p>)}
+      </div>
     </AdminContainer>
   </>
 
