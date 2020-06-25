@@ -5,14 +5,9 @@ import styled from 'styled-components';
 import {Navbar} from 'App/Navbar';
 import {UserPostsData} from './UserPostsData';
 import {ListView} from './ListView';
-// import {GlobeView} from './GlobeView';
+import {GlobeView} from './GlobeView';
 import { gql } from 'apollo-boost';
 import {useQuery} from "@apollo/react-hooks";
-
-const WithNavbarContainer = styled.div`
-  display: flex;
-  width: 100%;
-`;
 
 const UserPostsContainer = styled.div`
   padding: 2rem 2rem 2rem 3rem;
@@ -27,29 +22,33 @@ interface Props extends RouteComponentProps {
   setIsAuthenticated: (value: boolean) => void;
 }
 
-const POSTS = gql`
+const GET_POSTS = gql`
   {
-    post(id: "1") {
+    posts {
       title
       description
+      createdAt
+      worlds {
+        title
+      }
     }
   }
 `;
 
 const UserPosts: FC<Props> = props => {
 
-  const { loading, error, data } = useQuery(POSTS);
+  const { loading, data } = useQuery(GET_POSTS);
 
-  console.log(data)
+  console.log(data);
 
 
   return (
-    <WithNavbarContainer>
+    <>
       <Navbar {...props}>{<UserPostsData/>}</Navbar>
       <UserPostsContainer>
         <ListView label="LIST VIEW"/>
       </UserPostsContainer>
-    </WithNavbarContainer>
+    </>
   );
 };
 

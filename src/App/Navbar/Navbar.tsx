@@ -50,8 +50,7 @@ const WidgetContainer = styled.div`
 const links = [
   { to: '/worlds', name: 'WORLDS' },
   { to: '/posts', name: 'USER POSTS' },
-  { to: '/analytics', name: 'ANALYTICS' },
-  { to: '/worlds', name: 'SERVERS' },
+  { to: '/admin', name: 'ADMIN' },
 ];
 
 interface Props extends RouteComponentProps {

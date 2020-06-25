@@ -9,16 +9,9 @@ const AppContainer = styled.div`
   display: flex;
 `;
 
-// const Time = styled.div`
-//   position: absolute;
-//   top: 1rem;
-//   right: 1rem;
-// `;
-
 const App: FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [time, setTime] = useState<string>();
 
   useEffect(() => {
     onLoad();
@@ -34,11 +27,8 @@ const App: FC = () => {
     setIsLoaded(true);
   }
 
-  setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
-
   return (
     <AppContainer>
-      {/*<Time>{time}</Time>*/}
       {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
     </AppContainer>
   );
