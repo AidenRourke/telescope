@@ -1,12 +1,12 @@
 import React, {FC, useState} from 'react';
 import styled from 'styled-components';
+import {gql} from 'apollo-boost';
 import Gallery, {RenderImageProps} from 'react-photo-gallery';
 import {useHistory} from 'react-router-dom';
 
 import {FilterSearch} from 'Components/index';
 
-import {photos} from 'App/mockData';
-import {blue} from 'styles/colors';
+import {useQuery} from "@apollo/react-hooks";
 
 const ListViewContainer = styled.div`
   overflow: scroll;
@@ -27,7 +27,7 @@ const Image = styled.img<{ sx: number; sy: number }>`
   object-fit: cover;
   transition: transform .135s cubic-bezier(0.0,0.0,0.2,1),opacity linear .15s;
   &:hover {
-     transform: translateZ(0px) scale3d(${({ sx, sy }) => `${sx}, ${sy}`}, 2);
+     transform: translateZ(0px) scale3d(${({sx, sy}) => `${sx}, ${sy}`}, 2);
   }
 `;
 
@@ -35,8 +35,19 @@ interface Props {
   label: string;
 }
 
+const GET_POSTS = gql`
+  query GetPosts {
+    posts {
+      id
+      frame1S3
+    }
+  }
+`;
+
 const ListView: FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const {loading, data} = useQuery(GET_POSTS);
 
   const history = useHistory();
 
@@ -54,11 +65,21 @@ const ListView: FC<Props> = () => {
     );
   };
 
+  const getPhotos = () => {
+    return data.posts.map((post: any) => ({
+        src: post.frame1S3,
+        width: 3,
+        height: 4,
+        key: post.id,
+      })
+    )
+  };
+
   return (
     <>
       <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen}/>
       <ListViewContainer>
-        <Gallery photos={photos} direction="column" renderImage={imageRenderer}/>
+        {!loading && <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer}/>}
       </ListViewContainer>
     </>
   );

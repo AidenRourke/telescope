@@ -35,7 +35,7 @@ const Router: FC<Props> = ({ isAuthenticated, setIsAuthenticated }) => {
         <Route
           exact={true}
           path={'/admin'}
-          render={props => (isAuthenticated ? <Admin {...props} /> : <Redirect to="/login" />)}
+          render={props => (isAuthenticated ? <Admin {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />)}
         />
         <Route component={() => <Redirect to="/login" />} />
       </Switch>

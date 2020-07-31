@@ -80,9 +80,9 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
     e.preventDefault();
 
     setIsLoading(true);
-    const { email, password } = loginInput;
+    const { username, password } = loginInput;
     try {
-      await Auth.signIn(email, password);
+      await Auth.signIn(username, password);
       setIsAuthenticated(true);
       history.push('/posts');
     } catch (e) {}
@@ -96,7 +96,7 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
 
       <LoginForm>
         <ModuWorld src={require('assets/modu_world.png')} />
-        <Email type="text" placeholder="EMAIL" name="email" onChange={handleInput} value={loginInput.email} />
+        <Email type="text" placeholder="USERNAME" name="username" onChange={handleInput} value={loginInput.username} />
         <Password
           type="password"
           placeholder="PASSWORD"

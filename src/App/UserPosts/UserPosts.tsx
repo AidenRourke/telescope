@@ -6,7 +6,6 @@ import {Navbar} from 'App/Navbar';
 import {UserPostsData} from './UserPostsData';
 import {ListView} from './ListView';
 import {GlobeView} from './GlobeView';
-import { gql } from 'apollo-boost';
 import {useQuery} from "@apollo/react-hooks";
 
 const UserPostsContainer = styled.div`
@@ -22,26 +21,7 @@ interface Props extends RouteComponentProps {
   setIsAuthenticated: (value: boolean) => void;
 }
 
-const GET_POSTS = gql`
-  {
-    posts {
-      title
-      description
-      createdAt
-      worlds {
-        title
-      }
-    }
-  }
-`;
-
 const UserPosts: FC<Props> = props => {
-
-  const { loading, data } = useQuery(GET_POSTS);
-
-  console.log(data);
-
-
   return (
     <>
       <Navbar {...props}>{<UserPostsData/>}</Navbar>

@@ -1,15 +1,16 @@
-import React, { FC } from 'react';
-import { RouteComponentProps } from 'react-router';
+import React, {FC, useRef, useState} from 'react';
+import {RouteComponentProps} from 'react-router';
 import styled from 'styled-components';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useParams } from 'react-router-dom';
+import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {useParams} from 'react-router-dom';
+import {gql} from 'apollo-boost';
 
-import { green, white, blue } from 'styles/colors';
+import {green, white, blue} from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import { Button } from 'Components/Button';
+import {Button} from 'Components/Button';
 
-import { photos } from 'App/mockData';
+import {useQuery} from "@apollo/react-hooks";
 
 const PostContainer = styled.div`
   display: flex;
@@ -81,15 +82,37 @@ const Description = styled.div`
   margin-left: 2rem;
 `;
 
-const Post: FC<RouteComponentProps> = ({ history }) => {
-  const { id } = useParams();
+const GET_POST = gql`
+  query GetPost($id: ID!) {
+    post(id: $id) {
+      id
+      title
+      description
+      frame1S3
+      frame2S3
+      frame3S3
+      frame4S3
+      submittedBy
+      tags {
+        name
+      }
+    }
+  }
+`;
+
+const Post: FC<RouteComponentProps> = ({history}) => {
+  const {id} = useParams();
+
+  const {loading, data} = useQuery(GET_POST, {variables: {id}});
+
+  if (loading) return null;
 
   return (
     <PostContainer>
       <SideBar>
         <SideBarHeader>
-          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push("/posts")} />
-          <Modu src={sidebar} />
+          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push("/posts")}/>
+          <Modu src={sidebar}/>
         </SideBarHeader>
         <SideBarContent>
           <TextSection>
@@ -110,7 +133,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </TextSection>
           <TextSection>
             <TextHeader>TAGS:</TextHeader>
-            <h3>FASHION, ART, STREETWEAR</h3>
+            <h3>{data.post.tags.map((tag: any) => tag.name).join(", ")}</h3>
           </TextSection>
         </SideBarContent>
         <SideBarFooter>
@@ -120,14 +143,11 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         </SideBarFooter>
       </SideBar>
       <ImageContainer>
-        <Image src={photos.find(photo => photo.key === id)?.src} />
+        <Image src={data.post.frame1S3}/>
         <Description>
-          <h1>THE MARKET</h1>
+          <h1>{data.post.title}</h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut consequat elit. Nulla condimentum
-            sit amet justo eget sagittis. Nulla congue sodales ante. Morbi cursus ultrices elit, at consectetur nisl
-            malesuada nec. In quam libero, ultricies vel eros egestas, venenatis aliquet lacus. Phasellus feugiat porta
-            est a tempus. Fusce ut ante sed ante placerat suscipit a id lectus. Vestibulum dapibus
+            {data.post.description}
           </p>
         </Description>
       </ImageContainer>
@@ -135,4 +155,4 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export { Post };
+export {Post};

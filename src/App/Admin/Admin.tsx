@@ -4,7 +4,7 @@ import {Navbar} from "../Navbar";
 import {UserPostsData} from "../UserPosts/UserPostsData";
 import styled from "styled-components";
 import {gql} from 'apollo-boost';
-import {useQuery, useMutation} from "@apollo/react-hooks";
+import {useMutation} from "@apollo/react-hooks";
 
 interface Props extends RouteComponentProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -19,18 +19,14 @@ const AdminContainer = styled.div`
   align-items: center;
 `;
 
-const GET_WORLDS = gql`
-  {
-    publishers {
-      id
-      name
-    }
-  }
-`;
-
 const ATTACH_USER = gql`
-  mutation CreateAccount($publisherId: ID!) {
-    createAccount(publisherId: $publisherId) {
+  mutation CreatePost($input: PostInput!) {
+    createPost(input: $input) {
+      post {
+        tags {
+          name
+        }
+      }
       errors
     }
   }
@@ -42,17 +38,15 @@ const PUBLISHERS = "publishers";
 const Admin: FC<Props> = (props) => {
   const [selection, setSelection] = useState<String>(WORLDS);
 
-  const {loading, data} = useQuery(GET_WORLDS);
-  const [attachUser] = useMutation(ATTACH_USER);
+  const [attachUser, {data}] = useMutation(ATTACH_USER);
+
+  console.log(data);
 
   return <>
     <Navbar {...props}>{<UserPostsData/>}</Navbar>
     <AdminContainer>
-      <div>
-        <h1>Publishers</h1>
-        {data?.publishers.map((publisher: any) => <p
-          onClick={() => attachUser({variables: {publisherId: publisher.id}})}>{publisher.name}</p>)}
-      </div>
+      <button onClick={() => attachUser({variables: {input: {title: "Real Shit", tags: ["Tag_1", "tag_2"]}}})}>Click Me
+      </button>
     </AdminContainer>
   </>
 
