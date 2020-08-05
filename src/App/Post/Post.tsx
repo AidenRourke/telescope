@@ -1,16 +1,16 @@
-import React, {FC, useRef, useState} from 'react';
-import {RouteComponentProps} from 'react-router';
+import React, { FC } from 'react';
+import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {useParams} from 'react-router-dom';
-import {gql} from 'apollo-boost';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useParams } from 'react-router-dom';
+import { gql } from 'apollo-boost';
 
-import {green, white, blue} from 'styles/colors';
+import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import {Button} from 'Components/Button';
+import { Button } from 'Components/Button';
 
-import {useQuery} from "@apollo/react-hooks";
+import { useQuery } from '@apollo/react-hooks';
 
 const PostContainer = styled.div`
   display: flex;
@@ -100,10 +100,10 @@ const GET_POST = gql`
   }
 `;
 
-const Post: FC<RouteComponentProps> = ({history}) => {
-  const {id} = useParams();
+const Post: FC<RouteComponentProps> = ({ history }) => {
+  const { id } = useParams();
 
-  const {loading, data} = useQuery(GET_POST, {variables: {id}});
+  const { loading, data } = useQuery(GET_POST, { variables: { id } });
 
   if (loading) return null;
 
@@ -111,8 +111,8 @@ const Post: FC<RouteComponentProps> = ({history}) => {
     <PostContainer>
       <SideBar>
         <SideBarHeader>
-          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push("/posts")}/>
-          <Modu src={sidebar}/>
+          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push('/posts')} />
+          <Modu src={sidebar} />
         </SideBarHeader>
         <SideBarContent>
           <TextSection>
@@ -133,26 +133,22 @@ const Post: FC<RouteComponentProps> = ({history}) => {
           </TextSection>
           <TextSection>
             <TextHeader>TAGS:</TextHeader>
-            <h3>{data.post.tags.map((tag: any) => tag.name).join(", ")}</h3>
+            <h3>{data.post.tags.map((tag: any) => tag.name).join(', ')}</h3>
           </TextSection>
         </SideBarContent>
         <SideBarFooter>
-          <Button color="white">
-            ADD TO ISSUE
-          </Button>
+          <Button color="white">ADD TO ISSUE</Button>
         </SideBarFooter>
       </SideBar>
       <ImageContainer>
-        <Image src={data.post.frame1S3}/>
+        <Image src={data.post.frame1S3} />
         <Description>
           <h1>{data.post.title}</h1>
-          <p>
-            {data.post.description}
-          </p>
+          <p>{data.post.description}</p>
         </Description>
       </ImageContainer>
     </PostContainer>
   );
 };
 
-export {Post};
+export { Post };

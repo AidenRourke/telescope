@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
+import { red } from 'styles/colors';
 import { Button, Input } from 'Components';
 import male from 'assets/login_male.gif';
 import female from 'assets/login_female.gif';
@@ -60,11 +61,18 @@ const Submit = styled(Button)`
   margin-top: 2rem;
 `;
 
+const Error = styled.p<{error: boolean}>`
+  margin-top: 1rem;
+  color: ${red};
+  opacity: ${({error}) => error ? 1 : 0};
+`;
+
 interface Props extends RouteComponentProps {
   setIsAuthenticated: (value: boolean) => void;
 }
 
 const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
+  const [error, setError] = useState<boolean>(false);
   const [loginInput, setLoginInput] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {
     email: '',
     password: '',
@@ -84,8 +92,11 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
     try {
       await Auth.signIn(username, password);
       setIsAuthenticated(true);
+      setError(false);
       history.push('/posts');
-    } catch (e) {}
+    } catch (e) {
+      setError(true);
+    }
     setIsLoading(false);
   };
 
@@ -107,6 +118,7 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
         <Submit type="submit" color="white" isLoading={isLoading}>
           LOGIN
         </Submit>
+        <Error error={error}>Incorrect username or password.</Error>
       </LoginForm>
     </LoginView>
   );
