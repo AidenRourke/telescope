@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -102,8 +102,26 @@ const GET_POST = gql`
 
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
-
+  const [currentImage, setCurrentImage] = useState<number>(1);
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
+
+  const incrementImage = (currentImage: number) => {
+    if (currentImage === 3) {
+      return 1;
+    } else {
+      return currentImage + 1;
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage(incrementImage);
+    }, 142.5);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   if (loading) return null;
 
@@ -141,7 +159,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         </SideBarFooter>
       </SideBar>
       <ImageContainer>
-        <Image src={data.post.frame1S3} />
+        <Image src={data.post[`frame${currentImage}S3`]} />
         <Description>
           <h1>{data.post.title}</h1>
           <p>{data.post.description}</p>
