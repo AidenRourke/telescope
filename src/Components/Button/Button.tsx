@@ -53,6 +53,9 @@ const StyledButton = styled.button<ButtonProps>`
   border: 3px solid ${({ isOutlined, color, isText }) => (isOutlined && !isText ? colors[color] : 'transparent')};
   background-color: ${({ isOutlined, isText, color }) => (isOutlined || isText ? 'transparent' : colors[color])};
   color: ${({ color, isOutlined, isText }) => getTextColor(color, isOutlined, isText)};
+  &:not(:last-child) {
+    margin-right: 0.5rem;
+  }
 `;
 
 const ellipsis = keyframes`

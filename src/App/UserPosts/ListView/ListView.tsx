@@ -35,7 +35,7 @@ interface Props {
   label: string;
 }
 
-const GET_POSTS = gql`
+export const GET_POSTS = gql`
   query GetPosts {
     posts {
       id
@@ -43,6 +43,22 @@ const GET_POSTS = gql`
     }
   }
 `;
+
+export interface TagType {
+  name: string
+}
+
+export interface PostType {
+  id: string
+  description?: string
+  frame1S3?: string
+  frame2S3?: string
+  frame3S3?: string
+  frame4S3?: string
+  preferredUsername?: string
+  tags?: TagType[]
+  title?: string
+}
 
 const ListView: FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -66,7 +82,7 @@ const ListView: FC<Props> = () => {
   };
 
   const getPhotos = () => {
-    return data.posts.map((post: any) => ({
+    return data.posts.map((post: PostType) => ({
         src: post.frame1S3,
         width: 3,
         height: 4,
