@@ -101,11 +101,11 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
   };
 
   return (
-    <LoginView onSubmit={handleSubmit}>
+    <LoginView>
       <Male src={male} />
       <Female src={female} />
 
-      <LoginForm>
+      <LoginForm onSubmit={handleSubmit}>
         <ModuWorld src={require('assets/modu_world.png')} />
         <Email type="text" placeholder="USERNAME" name="username" onChange={handleInput} value={loginInput.username} />
         <Password

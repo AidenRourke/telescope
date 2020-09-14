@@ -1,15 +1,33 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect, useRef, useReducer } from 'react';
+import qs from 'query-string';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Button, Input } from 'Components/index';
 import { blue, black, white } from 'styles/colors';
+import { FilterTag } from './FilterTag';
+import { FilterType } from './FilterTag/FilterTag';
+
+const FilterForm = styled.form`
+  flex: 1;
+  display: flex;
+`;
+
+const Filters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const FilterSearchContainer = styled.div`
+  margin-bottom: 1rem;
+`;
 
 const TagFilter = styled.div`
   width: 100%;
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 `;
 
 const Dropdown = styled.div`
@@ -69,10 +87,30 @@ interface Props {
   isOpen: boolean;
 }
 
-const options = ['LOCATION', 'USER', 'DATE', 'TAG'];
+const options = ['LOCATION', 'USER'];
+
+const filtersToQueries = (filters: any) => {
+  return qs.stringify(filters, { arrayFormat: 'comma' });
+};
+
+const queriesToFilters = (location: any) => {
+  return qs.parse(location.search, { arrayFormat: 'comma' });
+};
 
 const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
-  const [selection, setSelection] = useState<string>(options[0]);
+  const history = useHistory();
+  const location = useLocation();
+
+  const [selection, setSelection] = useState(options[0]);
+  const [tagInputValue, setTagInputValue] = useState<string>('');
+  const [filters, setFilters] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    queriesToFilters(location),
+  );
+
+  useEffect(() => {
+    history.push({ search: filtersToQueries(filters) });
+  }, [filters]);
 
   const menu = useRef<HTMLDivElement>(null);
 
@@ -94,26 +132,67 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
     setSelection(option);
   };
 
+  const addTag = (e: any) => {
+    e.preventDefault();
+    const currentTags = filters[selection] || [];
+    setFilters({
+      [selection]: [...currentTags, tagInputValue],
+    });
+    setTagInputValue('');
+  };
+
+  const removeTag = ({ type, name }: FilterType) => {
+    setFilters({
+      [type]: Array.isArray(filters[type]) ? filters[type].filter((filter: any) => filter !== name) : [],
+    });
+  };
+
+  const renderFilters = () => {
+    const tags: any[] = [];
+    Object.keys(filters).map(key => {
+      if (Array.isArray(filters[key])) {
+        filters[key].map((filter: string) => {
+          tags.push(<FilterTag filter={{ type: key, name: filter }} onClick={removeTag} />);
+        });
+      } else {
+        tags.push(<FilterTag filter={{ type: key, name: filters[key] }} onClick={removeTag} />);
+      }
+    });
+    return tags;
+  };
+
   return (
-    <TagFilter>
-      <Dropdown ref={menu}>
-        <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
-          {selection}
-          <Icon isOpen={isOpen} icon={faChevronRight} />
-        </DropdownHeader>
-        {isOpen && (
-          <DropdownMenu>
-            {options.map(option => (
-              <DropdownItem onClick={() => handleSelection(option)}>{option}</DropdownItem>
-            ))}
-          </DropdownMenu>
-        )}
-      </Dropdown>
-      <Input color="blue" />
-      <SearchButton color="blue">
-        <FontAwesomeIcon icon={faSearch} size="lg" />
-      </SearchButton>
-    </TagFilter>
+    <FilterSearchContainer>
+      <TagFilter>
+        <Dropdown ref={menu}>
+          <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
+            {selection}
+            <Icon isOpen={isOpen} icon={faChevronRight} />
+          </DropdownHeader>
+          {isOpen && (
+            <DropdownMenu>
+              {options.map(option => (
+                <DropdownItem key={option} onClick={() => handleSelection(option)}>
+                  {option}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          )}
+        </Dropdown>
+        <FilterForm onSubmit={addTag}>
+          <Input
+            color="blue"
+            value={tagInputValue}
+            onChange={(e: any) => setTagInputValue(e.target.value)}
+            type="text"
+          />
+          <SearchButton color="blue">
+            <FontAwesomeIcon icon={faSearch} size="lg" type="submit" />
+          </SearchButton>
+        </FilterForm>
+      </TagFilter>
+      <Filters>{renderFilters()}</Filters>
+    </FilterSearchContainer>
   );
 };
 

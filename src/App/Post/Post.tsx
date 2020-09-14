@@ -1,17 +1,16 @@
-import React, {FC, useEffect, useState} from 'react';
-import {RouteComponentProps} from 'react-router';
+import React, { FC, useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import {faArrowLeft, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {useParams} from 'react-router-dom';
-import {gql} from 'apollo-boost';
-
-import {green, white, blue} from 'styles/colors';
+import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useParams } from 'react-router-dom';
+import { gql } from 'apollo-boost';
+import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import {Button} from 'Components/Button';
+import { Button } from 'Components/Button';
 
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {GET_POSTS, PostType, TagType} from "../UserPosts/ListView/ListView";
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { GET_POSTS, PostType, TagType } from '../UserPosts/ListView/ListView';
 
 const PostContainer = styled.div`
   display: flex;
@@ -21,7 +20,7 @@ const PostContainer = styled.div`
 const SideBar = styled.div`
   color: ${white};
   background-color: ${green};
-  padding: 2rem 4rem 2rem 2rem;
+  padding: 2rem 5rem 2rem 2rem;
   display: flex;
   flex-direction: column;
   width: 20rem;
@@ -68,7 +67,7 @@ const ImageContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  left: 22rem;
+  left: 23rem;
   color: ${blue};
   padding-right: 2rem;
 `;
@@ -113,19 +112,28 @@ const REMOVE_POST = gql`
   }
 `;
 
-const Post: FC<RouteComponentProps> = ({history}) => {
-  const {id} = useParams();
+const Post: FC<RouteComponentProps> = ({ history }) => {
+  const { id } = useParams();
   const [currentImage, setCurrentImage] = useState<number>(1);
 
-  const {loading, data} = useQuery(GET_POST, {variables: {id}});
+  const { loading, data } = useQuery(GET_POST, { variables: { id } });
   const [removePost] = useMutation(REMOVE_POST, {
-    update(cache, {data: {removePost: {post: {id}}}}) {
-      const data:any = cache.readQuery({query: GET_POSTS});
+    update(
+      cache,
+      {
+        data: {
+          removePost: {
+            post: { id },
+          },
+        },
+      },
+    ) {
+      const data: any = cache.readQuery({ query: GET_POSTS });
       cache.writeQuery({
         query: GET_POSTS,
-        data: {posts: data?.posts.filter((post: PostType) => post.id !== id.toString())}
+        data: { posts: data?.posts.filter((post: PostType) => post.id !== id.toString()) },
       });
-    }
+    },
   });
 
   const incrementImage = (currentImage: number) => {
@@ -147,7 +155,7 @@ const Post: FC<RouteComponentProps> = ({history}) => {
   }, []);
 
   const handleDeletePost = (postId: string) => {
-    removePost({variables: {postId}});
+    removePost({ variables: { postId } });
     history.push('/posts');
   };
 
@@ -159,8 +167,8 @@ const Post: FC<RouteComponentProps> = ({history}) => {
     <PostContainer>
       <SideBar>
         <SideBarHeader>
-          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push('/posts')}/>
-          <Modu src={sidebar}/>
+          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push('/posts')} />
+          <Modu src={sidebar} />
         </SideBarHeader>
         <SideBarContent>
           <TextSection>
@@ -177,7 +185,7 @@ const Post: FC<RouteComponentProps> = ({history}) => {
           </TextSection>
           <TextSection>
             <TextHeader>SUBMISSION DATE:</TextHeader>
-            <h3>{data.post.createdAt.split("T")[0]}</h3>
+            <h3>{data.post.createdAt.split('T')[0]}</h3>
           </TextSection>
           <TextSection>
             <TextHeader>TAGS:</TextHeader>
@@ -189,12 +197,12 @@ const Post: FC<RouteComponentProps> = ({history}) => {
             ADD TO ISSUE
           </Button>
           <Button color="red" size="small" onClick={() => handleDeletePost(data.post.id)}>
-            <FontAwesomeIcon icon={faTrashAlt} size="lg"/>
+            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
           </Button>
         </SideBarFooter>
       </SideBar>
       <ImageContainer>
-        <Image src={data.post[`frame${currentImage}S3`]}/>
+        <Image src={data.post[`frame${currentImage}S3`]} />
         <Description>
           <h1>{data.post.title}</h1>
           <p>{data.post.description}</p>
@@ -204,4 +212,4 @@ const Post: FC<RouteComponentProps> = ({history}) => {
   );
 };
 
-export {Post};
+export { Post };

@@ -24,7 +24,9 @@ interface Props extends RouteComponentProps {
 const UserPosts: FC<Props> = props => {
   return (
     <>
-      <Navbar {...props}>{<UserPostsData/>}</Navbar>
+      <Navbar {...props}>
+        <UserPostsData/>
+      </Navbar>
       <UserPostsContainer>
         <ListView label="LIST VIEW"/>
       </UserPostsContainer>

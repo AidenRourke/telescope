@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { BrowserRouter, Route, Switch, Redirect, RouteComponentProps, RouteProps } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { Login } from 'App/Login';
 import { UserPosts } from 'App/UserPosts';
