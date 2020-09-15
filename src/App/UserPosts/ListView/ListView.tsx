@@ -1,12 +1,14 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useEffect, useReducer, useState } from 'react';
 import styled from 'styled-components';
-import {gql} from 'apollo-boost';
-import Gallery, {RenderImageProps} from 'react-photo-gallery';
-import {useHistory} from 'react-router-dom';
+import { gql } from 'apollo-boost';
+import Gallery, { RenderImageProps } from 'react-photo-gallery';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import {FilterSearch} from 'Components/index';
+import { FilterSearch } from 'Components/index';
 
-import {useQuery} from "@apollo/react-hooks";
+import { useQuery } from '@apollo/react-hooks';
+import qs from 'query-string';
+import { FilterType } from '../../../Components/FilterSearch/FilterTag/FilterTag';
 
 const ListViewContainer = styled.div`
   overflow: scroll;
@@ -14,20 +16,20 @@ const ListViewContainer = styled.div`
 
 const ImageContainer = styled.div<{ top?: number; left?: number; height: number; width: number }>`
   position: absolute;
-  top: ${({top}) => top}px;
-  left: ${({left}) => left}px;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
   cursor: pointer;
   overflow: hidden;
-  height: ${({height}) => height}px;
-  width: ${({width}) => width}px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
   margin: 2px;
 `;
 
 const Image = styled.img<{ sx: number; sy: number }>`
   object-fit: cover;
-  transition: transform .135s cubic-bezier(0.0,0.0,0.2,1),opacity linear .15s;
+  transition: transform 0.135s cubic-bezier(0, 0, 0.2, 1), opacity linear 0.15s;
   &:hover {
-     transform: translateZ(0px) scale3d(${({sx, sy}) => `${sx}, ${sy}`}, 2);
+    transform: translateZ(0px) scale3d(${({ sx, sy }) => `${sx}, ${sy}`}, 2);
   }
 `;
 
@@ -36,8 +38,8 @@ interface Props {
 }
 
 export const GET_POSTS = gql`
-  query GetPosts {
-    posts {
+  query GetPosts($filter: FilterInput!) {
+    posts(filter: $filter) {
       id
       frame1S3
     }
@@ -45,60 +47,108 @@ export const GET_POSTS = gql`
 `;
 
 export interface TagType {
-  name: string
+  name: string;
 }
 
 export interface PostType {
-  id: string
-  description?: string
-  frame1S3?: string
-  frame2S3?: string
-  frame3S3?: string
-  frame4S3?: string
-  preferredUsername?: string
-  tags?: TagType[]
-  title?: string
+  id: string;
+  description?: string;
+  frame1S3?: string;
+  frame2S3?: string;
+  frame3S3?: string;
+  frame4S3?: string;
+  preferredUsername?: string;
+  tags?: TagType[];
+  title?: string;
 }
+
+const filtersToQueries = (filters: any) => {
+  return qs.stringify(filters, { arrayFormat: 'comma' });
+};
+
+const queriesToFilters = (location: any) => {
+  return qs.parse(location.search, { arrayFormat: 'comma' });
+};
 
 const ListView: FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const {loading, data} = useQuery(GET_POSTS);
-
   const history = useHistory();
+  const location = useLocation();
 
-  const imageRenderer = ({index, left, top, photo}: RenderImageProps) => {
-    const {sizes, srcSet, key, ...photoProps} = photo;
-    const {height, width} = photoProps;
+  const [filters, setFilters] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    queriesToFilters(location),
+  );
+
+  useEffect(() => {
+    history.push({ search: filtersToQueries(filters) });
+  }, [filters]);
+
+  const { loading, data } = useQuery(GET_POSTS, {
+    variables: {
+      filter: {
+        preferredUsernames: filters['USER'],
+        locations: filters['LOCATION'],
+      },
+    },
+  });
+
+  const addTag = ({ name, type }: FilterType) => {
+    const oldFilters = filters[type];
+    const newFilter = name.toLowerCase();
+    let newFilters;
+    if (Array.isArray(oldFilters)) {
+      newFilters = [...oldFilters, newFilter];
+    } else if (oldFilters) {
+      newFilters = [oldFilters, newFilter];
+    } else {
+      newFilters = [newFilter];
+    }
+    setFilters({
+      [type]: newFilters,
+    });
+  };
+
+  const removeTag = ({ type, name }: FilterType) => {
+    setFilters({
+      [type]: Array.isArray(filters[type]) ? filters[type].filter((filter: any) => filter !== name) : [],
+    });
+  };
+
+  const imageRenderer = ({ index, left, top, photo }: RenderImageProps) => {
+    const { sizes, srcSet, key, ...photoProps } = photo;
+    const { height, width } = photoProps;
 
     const sx = (100 - (10 / width) * 100) / 100;
     const sy = (100 - (10 / height) * 100) / 100;
 
     return (
       <ImageContainer key={key} top={top} left={left} height={height} width={width}>
-        <Image {...photoProps} onClick={() => history.push(`/posts/${key}`)} sx={sx} sy={sy}/>
+        <Image {...photoProps} onClick={() => history.push(`/posts/${key}`)} sx={sx} sy={sy} />
       </ImageContainer>
     );
   };
 
   const getPhotos = () => {
     return data.posts.map((post: PostType) => ({
-        src: post.frame1S3,
-        width: 3,
-        height: 4,
-        key: post.id,
-      })
-    )
+      src: post.frame1S3,
+      width: 3,
+      height: 4,
+      key: post.id,
+    }));
   };
 
   return (
     <>
-      <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen}/>
+      <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen} addTag={addTag} filters={filters} removeTag={removeTag} />
       <ListViewContainer>
-        {!loading && <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer}/>}
+        {!loading && data.posts.length > 0 && (
+          <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />
+        )}
       </ListViewContainer>
     </>
   );
 };
 
-export {ListView};
+export { ListView };

@@ -89,7 +89,8 @@ const GET_POST = gql`
       title
       preferredUsername
       createdAt
-      location
+      city
+      countryCode
       description
       frame1S3
       frame2S3
@@ -161,8 +162,6 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   if (loading) return null;
 
-  console.log(data);
-
   return (
     <PostContainer>
       <SideBar>
@@ -177,7 +176,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </TextSection>
           <TextSection>
             <TextHeader>LOCATION:</TextHeader>
-            <h3>{data.post.location}</h3>
+            <h3>{`${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`}</h3>
           </TextSection>
           <TextSection>
             <TextHeader>FILTER:</TextHeader>

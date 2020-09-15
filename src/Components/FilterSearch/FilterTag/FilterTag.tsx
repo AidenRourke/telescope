@@ -44,7 +44,7 @@ const FilterTag: FC<Props> = ({ filter, onClick }) => {
   return (
     <Tag onClick={() => onClick(filter)}>
       <FontAwesomeIcon icon={getIcon()} size="sm" />
-      <p>{name}</p>
+      <p>{name.toUpperCase()}</p>
       <FontAwesomeIcon icon={faTimes} />
     </Tag>
   );

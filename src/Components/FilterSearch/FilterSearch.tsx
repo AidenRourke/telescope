@@ -1,9 +1,7 @@
-import React, { FC, useState, useEffect, useRef, useReducer } from 'react';
-import qs from 'query-string';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { Button, Input } from 'Components/index';
 import { blue, black, white } from 'styles/colors';
@@ -85,32 +83,16 @@ const SearchButton = styled(Button)`
 interface Props {
   setIsOpen: (value: boolean) => void;
   isOpen: boolean;
+  filters: { [index: string]: any };
+  addTag: (tag: FilterType) => void;
+  removeTag: (tag: FilterType) => void;
 }
 
-const options = ['LOCATION', 'USER'];
+const options = ['USER', 'LOCATION'];
 
-const filtersToQueries = (filters: any) => {
-  return qs.stringify(filters, { arrayFormat: 'comma' });
-};
-
-const queriesToFilters = (location: any) => {
-  return qs.parse(location.search, { arrayFormat: 'comma' });
-};
-
-const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
-  const history = useHistory();
-  const location = useLocation();
-
+const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, filters, addTag, removeTag }) => {
   const [selection, setSelection] = useState(options[0]);
   const [tagInputValue, setTagInputValue] = useState<string>('');
-  const [filters, setFilters] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    queriesToFilters(location),
-  );
-
-  useEffect(() => {
-    history.push({ search: filtersToQueries(filters) });
-  }, [filters]);
 
   const menu = useRef<HTMLDivElement>(null);
 
@@ -132,19 +114,10 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
     setSelection(option);
   };
 
-  const addTag = (e: any) => {
+  const submitForm = (e: any) => {
     e.preventDefault();
-    const currentTags = filters[selection] || [];
-    setFilters({
-      [selection]: [...currentTags, tagInputValue],
-    });
+    addTag({ name: tagInputValue, type: selection });
     setTagInputValue('');
-  };
-
-  const removeTag = ({ type, name }: FilterType) => {
-    setFilters({
-      [type]: Array.isArray(filters[type]) ? filters[type].filter((filter: any) => filter !== name) : [],
-    });
   };
 
   const renderFilters = () => {
@@ -179,7 +152,7 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen }) => {
             </DropdownMenu>
           )}
         </Dropdown>
-        <FilterForm onSubmit={addTag}>
+        <FilterForm onSubmit={submitForm}>
           <Input
             color="blue"
             value={tagInputValue}
