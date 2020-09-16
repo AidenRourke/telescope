@@ -75,7 +75,7 @@ const ImageContainer = styled.div`
 const Image = styled.img`
   object-fit: cover;
   height: 80%;
-  width: 30%;
+  width: 20rem;
 `;
 
 const Description = styled.div`
@@ -87,6 +87,7 @@ const GET_POST = gql`
     post(id: $id) {
       id
       title
+      latitude
       preferredUsername
       createdAt
       city
@@ -162,6 +163,12 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   if (loading) return null;
 
+  const renderLocation = () => {
+    if (data.post.city && data.post.countryCode)
+      return `${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`;
+    return 'UNKNOWN';
+  };
+  
   return (
     <PostContainer>
       <SideBar>
@@ -172,11 +179,11 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         <SideBarContent>
           <TextSection>
             <TextHeader>CREATED BY:</TextHeader>
-            <h3>{data.post.preferredUsername}</h3>
+            <h3>{data.post.preferredUsername.toUpperCase()}</h3>
           </TextSection>
           <TextSection>
             <TextHeader>LOCATION:</TextHeader>
-            <h3>{`${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`}</h3>
+            <h3>{renderLocation()}</h3>
           </TextSection>
           <TextSection>
             <TextHeader>FILTER:</TextHeader>
@@ -188,7 +195,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </TextSection>
           <TextSection>
             <TextHeader>TAGS:</TextHeader>
-            <h3>{data.post.tags.map((tag: TagType) => tag.name).join(', ')}</h3>
+            <h3>{data.post.tags.map((tag: TagType) => tag.name.toUpperCase()).join(', ')}</h3>
           </TextSection>
         </SideBarContent>
         <SideBarFooter>

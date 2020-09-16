@@ -44,7 +44,14 @@ const Admin: FC<Props> = (props) => {
   return <>
     <Navbar {...props}>{<UserPostsData/>}</Navbar>
     <AdminContainer>
-      <button onClick={() => attachUser({variables: {input: {lattitude: 45.399913, longitude: 45.399913, submittedBy: "652f90f8-f6cd-4d6a-84d3-05a59a76d769", title: "Real Shit", tags: ["Tag_1", "tag_2"]}}})}>Click Me
+      <button onClick={() => attachUser({
+        variables: {
+          input: {
+            // lattitude: 45.399913, longitude: 45.399913,
+            submittedBy: "9e1c56f6-b9f1-4401-91e5-37ecb7778464", title: "Real Shit", tags: ["Tag_1", "tag_2"]
+          }
+        }
+      })}>Click Me
       </button>
     </AdminContainer>
   </>
