@@ -1,10 +1,10 @@
-import React, {FC, useState} from "react"
-import {RouteComponentProps} from "react-router";
-import {Navbar} from "../Navbar";
-import {UserPostsData} from "../UserPosts/UserPostsData";
-import styled from "styled-components";
-import {gql} from 'apollo-boost';
-import {useMutation} from "@apollo/react-hooks";
+import React, { FC, useState } from 'react';
+import { RouteComponentProps } from 'react-router';
+import { Navbar } from '../Navbar';
+import { UserPostsData } from '../UserPosts/UserPostsData';
+import styled from 'styled-components';
+import { gql } from 'apollo-boost';
+import { useMutation } from '@apollo/react-hooks';
 
 interface Props extends RouteComponentProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -27,35 +27,68 @@ const ATTACH_USER = gql`
           name
         }
       }
+      errors
     }
   }
 `;
 
-const WORLDS = "worlds";
-const PUBLISHERS = "publishers";
+// const ATTACH_USER = gql`
+//   mutation CreateWorld($input: CreateWorldInput!) {
+//     createWorld(input: $input) {
+//       world {
+//         id
+//       }
+//     }
+//   }
+// `;
 
-const Admin: FC<Props> = (props) => {
-  const [selection, setSelection] = useState<String>(WORLDS);
+const Admin: FC<Props> = props => {
+  const [attachUser, { data }] = useMutation(ATTACH_USER);
+  return (
+    <>
+      <Navbar {...props}>{<UserPostsData />}</Navbar>
+      <AdminContainer>
+        {/*<button*/}
+        {/*onClick={() =>*/}
+        {/*attachUser({*/}
+        {/*variables: {*/}
+        {/*input: {*/}
+        {/*publisherNames: ['MODU'], // Hard coded for now*/}
+        {/*},*/}
+        {/*},*/}
+        {/*})*/}
+        {/*}*/}
+        {/*>*/}
+        {/*Click Me*/}
+        {/*</button>*/}
 
-  const [attachUser, {data}] = useMutation(ATTACH_USER);
-
-  console.log(data);
-
-  return <>
-    <Navbar {...props}>{<UserPostsData/>}</Navbar>
-    <AdminContainer>
-      <button onClick={() => attachUser({
-        variables: {
-          input: {
-            // lattitude: 45.399913, longitude: 45.399913,
-            submittedBy: "9e1c56f6-b9f1-4401-91e5-37ecb7778464", title: "Real Shit", tags: ["Tag_1", "tag_2"]
+        <button
+          onClick={() =>
+            attachUser({
+              variables: {
+                input: {
+                  frame1S3: 'https://orion-storage-us-east.s3.amazonaws.com/BF6E89EE-BD11-4D2A-B9A0-03578F4B2FE6.png',
+                  frame2S3: 'https://orion-storage-us-east.s3.amazonaws.com/8D92FADA-436B-461B-901E-FD8E8A893F47.png',
+                  frame3S3: 'https://orion-storage-us-east.s3.amazonaws.com/C385FBD3-9852-42EE-9DC5-5D7E54235BFD.png',
+                  frame4S3: 'https://orion-storage-us-east.s3.amazonaws.com/21E461EA-9711-401C-AD52-22D8228DD559.png',
+                  nsfwFlag: false,
+                  phaseOfCapture: 'Day',
+                  reported: false,
+                  description:
+                    'Where did she come from, where did she go?',
+                  submittedBy: '9e1c56f6-b9f1-4401-91e5-37ecb7778464',
+                  title: 'Mystery Image',
+                  tags: [],
+                },
+              },
+            })
           }
-        }
-      })}>Click Me
-      </button>
-    </AdminContainer>
-  </>
+        >
+          Click Me
+        </button>
+      </AdminContainer>
+    </>
+  );
+};
 
-}
-
-export {Admin}
+export { Admin };

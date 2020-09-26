@@ -4,11 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLocationArrow, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import * as colors from 'styles/colors';
-
-export interface FilterType {
-  type: string;
-  name: string;
-}
+import { FilterType } from 'Types/types';
 
 interface Props {
   filter: FilterType;

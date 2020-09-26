@@ -4,7 +4,9 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Login } from 'App/Login';
 import { UserPosts } from 'App/UserPosts';
 import { Post } from 'App/Post';
-import { Admin } from "App/Admin";
+import { Admin } from 'App/Admin';
+import { Worlds } from 'App/Worlds';
+import { World } from 'App/World';
 
 interface Props {
   isAuthenticated: boolean;
@@ -24,7 +26,11 @@ const Router: FC<Props> = ({ isAuthenticated, setIsAuthenticated }) => {
           exact={true}
           path="/posts"
           render={props =>
-            isAuthenticated ? <UserPosts {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />
+            isAuthenticated ? (
+              <UserPosts {...props} setIsAuthenticated={setIsAuthenticated} />
+            ) : (
+              <Redirect to="/login" />
+            )
           }
         />
         <Route
@@ -34,8 +40,22 @@ const Router: FC<Props> = ({ isAuthenticated, setIsAuthenticated }) => {
         />
         <Route
           exact={true}
+          path="/worlds"
+          render={props =>
+            isAuthenticated ? <Worlds {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />
+          }
+        />
+        <Route
+          exact={true}
+          path="/worlds/:id"
+          render={props => (isAuthenticated ? <World {...props} /> : <Redirect to="/login" />)}
+        />
+        <Route
+          exact={true}
           path={'/admin'}
-          render={props => (isAuthenticated ? <Admin {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />)}
+          render={props =>
+            isAuthenticated ? <Admin {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />
+          }
         />
         <Route component={() => <Redirect to="/login" />} />
       </Switch>

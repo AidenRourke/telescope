@@ -6,7 +6,7 @@ import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input } from 'Components/index';
 import { blue, black, white } from 'styles/colors';
 import { FilterTag } from './FilterTag';
-import { FilterType } from './FilterTag/FilterTag';
+import {FilterType, TagType} from 'Types/types';
 
 const FilterForm = styled.form`
   flex: 1;
@@ -86,11 +86,10 @@ interface Props {
   filters: { [index: string]: any };
   addTag: (tag: FilterType) => void;
   removeTag: (tag: FilterType) => void;
+  options: string[];
 }
 
-const options = ['USER', 'LOCATION'];
-
-const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, filters, addTag, removeTag }) => {
+const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, filters, addTag, removeTag, options }) => {
   const [selection, setSelection] = useState(options[0]);
   const [tagInputValue, setTagInputValue] = useState<string>('');
 

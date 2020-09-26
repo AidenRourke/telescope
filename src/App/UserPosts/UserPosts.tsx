@@ -1,12 +1,12 @@
-import React, {FC} from 'react';
-import {RouteComponentProps} from 'react-router-dom';
+import React, { FC } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
-import {Navbar} from 'App/Navbar';
-import {UserPostsData} from './UserPostsData';
-import {ListView} from './ListView';
-import {GlobeView} from './GlobeView';
-import {useQuery} from "@apollo/react-hooks";
+import { Navbar } from 'App/Navbar';
+import { UserPostsData } from './UserPostsData';
+import { ListView } from './ListView';
+import { GlobeView } from './GlobeView';
+import { useQuery } from '@apollo/react-hooks';
 
 const UserPostsContainer = styled.div`
   padding: 2rem 2rem 2rem 3rem;
@@ -25,13 +25,13 @@ const UserPosts: FC<Props> = props => {
   return (
     <>
       <Navbar {...props}>
-        <UserPostsData/>
+        <UserPostsData />
       </Navbar>
       <UserPostsContainer>
-        <ListView label="LIST VIEW"/>
+        <ListView label="LIST VIEW" />
       </UserPostsContainer>
     </>
   );
 };
 
-export {UserPosts};
+export { UserPosts };

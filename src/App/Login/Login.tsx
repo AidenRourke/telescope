@@ -13,7 +13,7 @@ const LoginView = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  padding-left: 4rem;
+  padding: 0 4rem;
 `;
 
 const Female = styled.img`
@@ -23,6 +23,9 @@ const Female = styled.img`
   height: 80%;
   width: 30%;
   object-fit: cover;
+  @media (max-width: 800px) {
+    display: none;
+  }
 `;
 
 const Male = styled.img`
@@ -32,6 +35,9 @@ const Male = styled.img`
   height: 90%;
   width: 30%;
   object-fit: cover;
+  @media (max-width: 800px) {
+    display: none;
+  }
 `;
 
 const LoginForm = styled.form`
@@ -41,6 +47,9 @@ const LoginForm = styled.form`
   align-items: flex-start;
   flex-direction: column;
   width: 50%;
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const ModuWorld = styled.img`
@@ -50,21 +59,33 @@ const ModuWorld = styled.img`
 const Email = styled(Input)`
   width: 50%;
   margin-top: 4rem;
+  @media (max-width: 800px) {
+    box-sizing: border-box;
+    width: 100%;
+  }
 `;
 
 const Password = styled(Input)`
   width: 50%;
   margin-top: 2rem;
+  @media (max-width: 800px) {
+    box-sizing: border-box;
+    width: 100%;
+  }
 `;
 
 const Submit = styled(Button)`
   margin-top: 2rem;
 `;
 
-const Error = styled.p<{error: boolean}>`
+const Error = styled.p<{ error: boolean }>`
+  width: 50%;
   margin-top: 1rem;
   color: ${red};
-  opacity: ${({error}) => error ? 1 : 0};
+  opacity: ${({ error }) => (error ? 1 : 0)};
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 interface Props extends RouteComponentProps {

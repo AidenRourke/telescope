@@ -7,10 +7,14 @@ import { useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import { Button } from 'Components/Button';
+import { Button, Modal } from 'Components';
+import { Film3d } from './Film3d';
+import { AddToWorld } from './AddToWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { GET_POSTS, PostType, TagType } from '../UserPosts/ListView/ListView';
+import { PostType, TagType } from 'Types/types';
+// TODO: stop being lazy you know why this is here
+import { GET_POSTS } from '../UserPosts/ListView/ListView';
 
 const PostContainer = styled.div`
   display: flex;
@@ -72,12 +76,6 @@ const ImageContainer = styled.div`
   padding-right: 2rem;
 `;
 
-const Image = styled.img`
-  object-fit: cover;
-  height: 80%;
-  width: 20rem;
-`;
-
 const Description = styled.div`
   margin-left: 2rem;
 `;
@@ -116,45 +114,13 @@ const REMOVE_POST = gql`
 
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
-  const [currentImage, setCurrentImage] = useState<number>(1);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
+
   const [removePost] = useMutation(REMOVE_POST, {
-    update(
-      cache,
-      {
-        data: {
-          removePost: {
-            post: { id },
-          },
-        },
-      },
-    ) {
-      const data: any = cache.readQuery({ query: GET_POSTS });
-      cache.writeQuery({
-        query: GET_POSTS,
-        data: { posts: data?.posts.filter((post: PostType) => post.id !== id.toString()) },
-      });
-    },
+    refetchQueries: [{ query: GET_POSTS }],
   });
-
-  const incrementImage = (currentImage: number) => {
-    if (currentImage === 3) {
-      return 1;
-    } else {
-      return currentImage + 1;
-    }
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage(incrementImage);
-    }, 142.5);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   const handleDeletePost = (postId: string) => {
     removePost({ variables: { postId } });
@@ -168,7 +134,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
       return `${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`;
     return 'UNKNOWN';
   };
-  
+
   return (
     <PostContainer>
       <SideBar>
@@ -199,7 +165,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </TextSection>
         </SideBarContent>
         <SideBarFooter>
-          <Button color="white" size="small">
+          <Button color="white" size="small" onClick={() => setIsOpen(true)}>
             ADD TO ISSUE
           </Button>
           <Button color="red" size="small" onClick={() => handleDeletePost(data.post.id)}>
@@ -208,12 +174,15 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         </SideBarFooter>
       </SideBar>
       <ImageContainer>
-        <Image src={data.post[`frame${currentImage}S3`]} />
+        <Film3d images={[data.post.frame1S3, data.post.frame2S3, data.post.frame3S3, data.post.frame4S3]} />
         <Description>
           <h1>{data.post.title}</h1>
           <p>{data.post.description}</p>
         </Description>
       </ImageContainer>
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+        <AddToWorld />
+      </Modal>
     </PostContainer>
   );
 };

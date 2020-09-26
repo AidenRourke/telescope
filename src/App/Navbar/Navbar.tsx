@@ -45,6 +45,7 @@ const WidgetContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin: 1rem 0;
+  overflow: scroll;
 `;
 
 const links = [

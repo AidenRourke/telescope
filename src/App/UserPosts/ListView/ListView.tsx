@@ -8,7 +8,7 @@ import { FilterSearch } from 'Components/index';
 
 import { useQuery } from '@apollo/react-hooks';
 import qs from 'query-string';
-import { FilterType } from '../../../Components/FilterSearch/FilterTag/FilterTag';
+import { PostType, FilterType } from 'Types/types';
 
 const ListViewContainer = styled.div`
   overflow: scroll;
@@ -46,22 +46,6 @@ export const GET_POSTS = gql`
   }
 `;
 
-export interface TagType {
-  name: string;
-}
-
-export interface PostType {
-  id: string;
-  description?: string;
-  frame1S3?: string;
-  frame2S3?: string;
-  frame3S3?: string;
-  frame4S3?: string;
-  preferredUsername?: string;
-  tags?: TagType[];
-  title?: string;
-}
-
 const filtersToQueries = (filters: any) => {
   return qs.stringify(filters, { arrayFormat: 'comma' });
 };
@@ -69,6 +53,8 @@ const filtersToQueries = (filters: any) => {
 const queriesToFilters = (location: any) => {
   return qs.parse(location.search, { arrayFormat: 'comma' });
 };
+
+// TODO: keep scroll pos
 
 const ListView: FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -88,8 +74,9 @@ const ListView: FC<Props> = () => {
   const { loading, data } = useQuery(GET_POSTS, {
     variables: {
       filter: {
-        preferredUsernames: filters['USER'],
-        locations: filters['LOCATION'],
+        preferredUsernames: filters['USER'] || [],
+        locations: filters['LOCATION'] || [],
+        tags: filters['TAG'] || [],
       },
     },
   });
@@ -141,7 +128,14 @@ const ListView: FC<Props> = () => {
 
   return (
     <>
-      <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen} addTag={addTag} filters={filters} removeTag={removeTag} />
+      <FilterSearch
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        addTag={addTag}
+        filters={filters}
+        removeTag={removeTag}
+        options={['USER', 'LOCATION', 'TAG']}
+      />
       <ListViewContainer>
         {!loading && data.posts.length > 0 && (
           <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />
