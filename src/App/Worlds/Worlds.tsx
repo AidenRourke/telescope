@@ -3,7 +3,7 @@ import { RouteComponentProps, useHistory } from 'react-router';
 import { gql } from 'apollo-boost';
 
 import { Navbar } from '../Navbar';
-
+import * as colors from 'styles/colors';
 import styled from 'styled-components';
 import { useQuery } from '@apollo/react-hooks';
 import { PublisherType, WorldType } from 'Types/types';
@@ -21,12 +21,16 @@ const WorldsContainer = styled.div`
 
 const World = styled.img<{ selected: boolean }>`
   object-fit: cover;
-  width: 25rem;
+  width: 20rem;
   height: 80%;
-  opacity: ${({ selected }) => (selected ? 100 : 20)}%;
+  opacity: ${({ selected }) => (selected ? 0.8 : 0.2)};
+  // border: 3px solid ${({ selected }) => (selected ? colors.blue : 'transparent')};
   cursor: pointer;
-  transition: opacity linear 0.15s;
   margin-right: 2rem;
+  transition: transform 0.135s cubic-bezier(0, 0, 0.2, 1);
+  &:hover {
+    transform: scale(0.97);
+  }
 `;
 
 const WorldMetaData = styled.div`
@@ -71,19 +75,19 @@ const Worlds: FC<Props> = props => {
   const { loading, data } = useQuery(GET_WORLDS);
 
   const renderMetaData = () => {
-    const { worlds } = data;
+    if (loading) return null;
 
     return (
       <WorldMetaData>
         <h4>TITLE</h4>
-        <small>{worlds[preview].title}</small>
+        <small>{data.worlds[preview]?.title}</small>
         <h4>PUBLISHER</h4>
-        <small>{worlds[preview].publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</small>
+        <small>{data.worlds[preview]?.publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</small>
         <h4>POSTS</h4>
-        <small>{worlds[preview].posts.length}</small>
+        <small>{data.worlds[preview]?.posts.length}</small>
         <h4>CURATORS</h4>
         <small>
-          {worlds[preview].publishers
+          {data.worlds[preview]?.publishers
             .map((publisher: any) => publisher.accounts.map((account: any) => account.user.preferredUsername))
             .join(', ')}
         </small>
@@ -91,23 +95,25 @@ const Worlds: FC<Props> = props => {
     );
   };
 
-  if (loading) return null;
+  const renderWorlds = () => {
+    if (loading) return null;
+
+    return data.worlds.map((world: WorldType, i: number) => (
+      // I'd like to use the photo gallery for this
+      <World
+        key={world.id}
+        src={world.coverS3}
+        onMouseOver={() => setPreview(i)}
+        selected={preview === 0}
+        onClick={() => history.push(`/worlds/${world.id}`)}
+      />
+    ));
+  };
 
   return (
     <>
       <Navbar {...props}>{renderMetaData()}</Navbar>
-      <WorldsContainer>
-        {data.worlds.map((world: WorldType, i: number) => (
-          // I'd like to use the photo gallery for this
-          <World
-            key={world.id}
-            src={world.coverS3}
-            onMouseOver={() => setPreview(i)}
-            selected={preview === 0}
-            onClick={() => history.push(`/worlds/${world.id}`)}
-          />
-        ))}
-      </WorldsContainer>
+      <WorldsContainer>{renderWorlds()}</WorldsContainer>
     </>
   );
 };

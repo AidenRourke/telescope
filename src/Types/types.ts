@@ -36,11 +36,17 @@ export interface WorldType {
   coverS3?: string;
   title?: string;
   description?: string;
-  post?: PostType[];
+  posts?: PostType[];
   publishers?: PublisherType[];
 }
 
 export interface FilterType {
   type: string;
   name: string;
+}
+
+export interface DragItem {
+  index: number;
+  id: string;
+  type: string;
 }

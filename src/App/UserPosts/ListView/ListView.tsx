@@ -27,7 +27,7 @@ const ImageContainer = styled.div<{ top?: number; left?: number; height: number;
 
 const Image = styled.img<{ sx: number; sy: number }>`
   object-fit: cover;
-  transition: transform 0.135s cubic-bezier(0, 0, 0.2, 1), opacity linear 0.15s;
+  transition: transform 0.135s cubic-bezier(0, 0, 0.2, 1);
   &:hover {
     transform: translateZ(0px) scale3d(${({ sx, sy }) => `${sx}, ${sy}`}, 2);
   }

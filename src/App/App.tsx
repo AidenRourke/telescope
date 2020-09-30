@@ -1,6 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Auth } from 'aws-amplify';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Router from './Router';
 
@@ -29,7 +31,9 @@ const App: FC = () => {
 
   return (
     <AppContainer>
-      {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
+      <DndProvider backend={HTML5Backend}>
+        {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
+      </DndProvider>
     </AppContainer>
   );
 };

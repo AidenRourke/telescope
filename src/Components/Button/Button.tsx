@@ -21,6 +21,8 @@ const getTextColor = (color: colorTypes, isOutlined: boolean | undefined, isText
       return colors.white;
     case 'red':
       return colors.white;
+    case 'green':
+      return colors.white;
     default:
       return colors.black;
   }

@@ -32,35 +32,37 @@ const ATTACH_USER = gql`
   }
 `;
 
-// const ATTACH_USER = gql`
-//   mutation CreateWorld($input: CreateWorldInput!) {
-//     createWorld(input: $input) {
-//       world {
-//         id
-//       }
-//     }
-//   }
-// `;
+const CREATE_WORLD = gql`
+  mutation CreateWorld($input: CreateWorldInput!) {
+    createWorld(input: $input) {
+      world {
+        id
+      }
+    }
+  }
+`;
 
 const Admin: FC<Props> = props => {
-  const [attachUser, { data }] = useMutation(ATTACH_USER);
+  const [attachUser] = useMutation(ATTACH_USER);
+  const [createWorld] = useMutation(CREATE_WORLD);
   return (
     <>
       <Navbar {...props}>{<UserPostsData />}</Navbar>
       <AdminContainer>
-        {/*<button*/}
-        {/*onClick={() =>*/}
-        {/*attachUser({*/}
-        {/*variables: {*/}
-        {/*input: {*/}
-        {/*publisherNames: ['MODU'], // Hard coded for now*/}
-        {/*},*/}
-        {/*},*/}
-        {/*})*/}
-        {/*}*/}
-        {/*>*/}
-        {/*Click Me*/}
-        {/*</button>*/}
+        <button
+          onClick={() =>
+            createWorld({
+              variables: {
+                input: {
+                  publisherNames: ['MODU'], // Hard coded for now
+                  title: 'Current Joys'
+                },
+              },
+            })
+          }
+        >
+          Create World
+        </button>
 
         <button
           onClick={() =>
@@ -74,8 +76,7 @@ const Admin: FC<Props> = props => {
                   nsfwFlag: false,
                   phaseOfCapture: 'Day',
                   reported: false,
-                  description:
-                    'Where did she come from, where did she go?',
+                  description: 'Where did she come from, where did she go?',
                   submittedBy: '9e1c56f6-b9f1-4401-91e5-37ecb7778464',
                   title: 'Mystery Image',
                   tags: [],
@@ -84,7 +85,7 @@ const Admin: FC<Props> = props => {
             })
           }
         >
-          Click Me
+          Create Post
         </button>
       </AdminContainer>
     </>

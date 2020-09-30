@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -12,9 +12,7 @@ import { Film3d } from './Film3d';
 import { AddToWorld } from './AddToWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { PostType, TagType } from 'Types/types';
-// TODO: stop being lazy you know why this is here
-import { GET_POSTS } from '../UserPosts/ListView/ListView';
+import { TagType } from 'Types/types';
 
 const PostContainer = styled.div`
   display: flex;
@@ -64,7 +62,9 @@ const TextHeader = styled.p`
   opacity: 0.7;
 `;
 
-const SideBarFooter = styled.div``;
+const SideBarFooter = styled.div`
+  display: flex;
+`;
 
 const ImageContainer = styled.div`
   position: absolute;
@@ -119,7 +119,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
 
   const [removePost] = useMutation(REMOVE_POST, {
-    refetchQueries: [{ query: GET_POSTS }],
+    refetchQueries: ['GetPosts'],
   });
 
   const handleDeletePost = (postId: string) => {
@@ -166,7 +166,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         </SideBarContent>
         <SideBarFooter>
           <Button color="white" size="small" onClick={() => setIsOpen(true)}>
-            ADD TO ISSUE
+            ADD TO WORLD
           </Button>
           <Button color="red" size="small" onClick={() => handleDeletePost(data.post.id)}>
             <FontAwesomeIcon icon={faTrashAlt} size="lg" />
@@ -181,7 +181,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         </Description>
       </ImageContainer>
       <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-        <AddToWorld />
+        <AddToWorld postId={data.post.id} />
       </Modal>
     </PostContainer>
   );
