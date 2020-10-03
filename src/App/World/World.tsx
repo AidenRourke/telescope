@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { RouteComponentProps, useParams } from 'react-router';
 import styled from 'styled-components';
 import { gql } from 'apollo-boost';
@@ -9,14 +9,13 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button } from 'Components';
+import { Dropzone, Button, Loading } from 'Components';
 import { WorldPostsList } from './WorldPostsList';
 
 const WorldContainer = styled.div`
   display: flex;
   flex: 1;
   padding: 3rem 2rem;
-  color: ${colors.blue};
 `;
 
 const WorldData = styled.div`
@@ -28,28 +27,55 @@ const WorldData = styled.div`
 const BackArrow = styled(FontAwesomeIcon)`
   margin-bottom: 2rem;
   cursor: pointer;
-  color: ${colors.white};
   opacity: 0.7;
   &:hover {
     opacity: 1;
   }
 `;
 const Status = styled.h4`
+  color: ${colors.blue};
   span {
     opacity: 0.7;
   }
 `;
 
 const Title = styled.h1`
+  cursor: pointer;
   color: ${colors.green};
 `;
 
+const TitleTextArea = styled.textarea`
+  color: ${colors.green};
+  background: none;
+  font-size: 2em;
+  font-family: inherit;
+  resize: none;
+  border: none;
+  height: 2.625rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+`;
+
 const Description = styled.p`
+  cursor: pointer;
+  overflow: auto;
   color: ${colors.green};
   flex: 1;
 `;
 
+const DescriptionTextArea = styled.textarea`
+  border: none;
+  font-size: 1em;
+  font-family: inherit;
+  background: none;
+  color: ${colors.green};
+  flex: 1;
+  resize: none;
+  padding: 0;
+`;
+
 const WorldInfo = styled.div`
+  color: ${colors.blue};
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
@@ -74,7 +100,6 @@ const DropZoneContent = styled.div<{ url: string }>`
   background-position: center;
   align-items: center;
   small {
-    color: ${colors.white};
     width: 50%;
     margin-left: 1rem;
   }
@@ -146,19 +171,48 @@ const REMOVE_WORLD = gql`
   }
 `;
 
+const UPDATE_WORLD_TITLE = gql`
+  mutation UpdateWorldTitle($worldId: ID!, $title: String!) {
+    updateWorldTitle(worldId: $worldId, title: $title) {
+      world {
+        id
+        title
+      }
+    }
+  }
+`;
+
+const UPDATE_WORLD_DESCRIPTION = gql`
+  mutation UpdateWorldDescription($worldId: ID!, $description: String!) {
+    updateWorldDescription(worldId: $worldId, description: $description) {
+      world {
+        id
+        description
+      }
+    }
+  }
+`;
+
 const World: FC<RouteComponentProps> = ({ history }) => {
+  const [titleEditMode, setTitleEditMode] = useState(false);
+  const [descriptionEditMode, setDescriptionEditMode] = useState(false);
+
   const { id } = useParams();
 
   const { loading, data: worldData } = useQuery(GET_WORLD, { variables: { id } });
 
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
 
-  const [updateWorldImage] = useMutation(UPDATE_WORLD_IMAGE);
+  const [updateWorldTitle] = useMutation(UPDATE_WORLD_TITLE);
 
-  const [removeWorld] = useMutation(REMOVE_WORLD, { refetchQueries: ['GetWorlds'] });
+  const [updateWorldDescription] = useMutation(UPDATE_WORLD_DESCRIPTION);
 
-  const handleRemoveWorld = (worldId: string) => {
-    removeWorld({ variables: { worldId } });
+  const [updateWorldImage, { loading: isUpdatingWorldImage }] = useMutation(UPDATE_WORLD_IMAGE);
+
+  const [removeWorld] = useMutation(REMOVE_WORLD, { refetchQueries: ['GetWorlds'], awaitRefetchQueries: true });
+
+  const handleRemoveWorld = async (worldId: string) => {
+    await removeWorld({ variables: { worldId } });
     history.push('/worlds');
   };
 
@@ -182,9 +236,65 @@ const World: FC<RouteComponentProps> = ({ history }) => {
     updateWorldImage({ variables: { worldId: worldData.world.id, imageUrl: url } });
   };
 
+  const changeTitle = async (title: string, worldId: string) => {
+    await updateWorldTitle({
+      variables: {
+        worldId,
+        title,
+      },
+    });
+    // setTitleEditMode(false);
+  };
+
+  const changeDescription = async (description: string, worldId: string) => {
+    await updateWorldDescription({
+      variables: {
+        worldId,
+        description,
+      },
+    });
+    setDescriptionEditMode(false);
+  };
+
   if (loading) return null;
 
   const { world } = worldData;
+
+  const renderTitle = () => {
+    if (titleEditMode) {
+      return (
+        <TitleTextArea
+          autoFocus
+          onBlur={(e: any) => changeTitle(e.target.value, world.id)}
+          onFocus={(e: any) => {
+            e.target.value = '';
+            e.target.value = world.title;
+          }}
+        >
+          {world.title}
+        </TitleTextArea>
+      );
+    }
+    return <Title onClick={() => setTitleEditMode(true)}>{world.title}</Title>;
+  };
+
+  const renderDescription = () => {
+    if (descriptionEditMode) {
+      return (
+        <DescriptionTextArea
+          autoFocus
+          onBlur={(e: any) => changeDescription(e.target.value, world.id)}
+          onFocus={(e: any) => {
+            e.target.value = '';
+            e.target.value = world.description;
+          }}
+        >
+          {world.description}
+        </DescriptionTextArea>
+      );
+    }
+    return <Description onClick={() => setDescriptionEditMode(true)}>{world.description}</Description>;
+  };
 
   return (
     <WorldContainer>
@@ -193,8 +303,8 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         <Status>
           WORLD <span>({world.status.toUpperCase()})</span>
         </Status>
-        <Title>{world.title}</Title>
-        <Description>{world.description}</Description>
+        {renderTitle()}
+        {renderDescription()}
         <WorldInfo>
           <div>
             <h4>CURATORS</h4>
@@ -217,7 +327,13 @@ const World: FC<RouteComponentProps> = ({ history }) => {
           </Dropzone>
           <Dropzone onDrop={(files: File[]) => onDrop(files, true)} accept="image/png">
             <DropZoneContent url={world.coverS3}>
-              <small>EDIT COVER IMAGE</small>
+              {isUpdatingWorldImage ? (
+                <Loading>
+                  <small>UPDATING</small>
+                </Loading>
+              ) : (
+                <small>EDIT COVER IMAGE</small>
+              )}
             </DropZoneContent>
           </Dropzone>
         </DropZones>

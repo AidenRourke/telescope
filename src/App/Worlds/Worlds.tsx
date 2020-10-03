@@ -76,7 +76,6 @@ const Worlds: FC<Props> = props => {
 
   const renderMetaData = () => {
     if (loading) return null;
-
     return (
       <WorldMetaData>
         <h4>TITLE</h4>
@@ -104,7 +103,7 @@ const Worlds: FC<Props> = props => {
         key={world.id}
         src={world.coverS3}
         onMouseOver={() => setPreview(i)}
-        selected={preview === 0}
+        selected={preview === i}
         onClick={() => history.push(`/worlds/${world.id}`)}
       />
     ));

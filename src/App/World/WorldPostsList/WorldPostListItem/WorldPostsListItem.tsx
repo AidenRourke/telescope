@@ -4,12 +4,23 @@ import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styled from 'styled-components';
 import { DragItem } from 'Types/types';
+import { gql } from 'apollo-boost';
+import { useMutation } from '@apollo/react-hooks';
+import * as colors from 'styles/colors';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus } from '@fortawesome/free-solid-svg-icons';
+import { Loading } from 'Components';
 
-const WorldPostsListItemContainer = styled.div`
+const WorldPostsListItemContainer = styled.div<{ isDragging: boolean }>`
   margin-bottom: 0.5rem;
   cursor: move;
   display: flex;
   align-items: center;
+  opacity: ${({ isDragging }) => isDragging && 0};
+`;
+
+const PostInformation = styled.div`
+  flex: 1;
 `;
 
 const WorldPostImage = styled.img`
@@ -20,80 +31,136 @@ const WorldPostImage = styled.img`
   margin-right: 1rem;
 `;
 
+const Title = styled.p`
+  color: ${colors.green};
+`;
+
+const Author = styled.p`
+  color: ${colors.blue};
+`;
+
+const RemovePostButton = styled.button`
+  margin-left: 0.5rem;
+  color: ${colors.red};
+  cursor: pointer;
+  background: none;
+  border: none;
+`;
+
+const REMOVE_POST_FROM_WORLD = gql`
+  mutation RemovePostFromWorld($worldId: ID!, $postId: ID!) {
+    removePostFromWorld(worldId: $worldId, postId: $postId) {
+      world {
+        id
+        posts {
+          id
+        }
+      }
+    }
+  }
+`;
+
 interface Props {
   post: PostType;
+  worldId: string;
   index: number;
+  updatePost: (dragIndex: number, dropIndex: number) => void;
   movePost: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const WorldPostsListItem: FC<Props> = ({ post, index, movePost }) => {
+const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worldId }) => {
   const ref = useRef<HTMLDivElement>(null);
+
+  const [removePostFromWorld, { loading: isRemoving }] = useMutation(REMOVE_POST_FROM_WORLD);
+
+  const dropFunction = (
+    item: DragItem,
+    monitor: DropTargetMonitor,
+    handler: (dragIndex: number, hoverIndex: number) => void,
+  ) => {
+    if (!ref.current) {
+      return;
+    }
+    const dragIndex = item.index;
+    const hoverIndex = index;
+
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+
+    const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+    const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    const clientOffset = monitor.getClientOffset();
+
+    const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+    if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      return;
+    }
+
+    if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      return;
+    }
+
+    handler(dragIndex, hoverIndex);
+
+    item.index = hoverIndex;
+  };
+
   const [, drop] = useDrop({
     accept: 'post',
-    drop(item: DragItem, monitor: DropTargetMonitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
-      // Get vertical middle
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-
-      // Get pixels to the top
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      // Time to actually perform the action
-      movePost(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex;
+    hover(item: DragItem, monitor: DropTargetMonitor) {
+      dropFunction(item, monitor, movePost);
     },
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type: 'post', id: post.id, index },
+    item: { type: 'post', id: post.id, index, originalIndex: index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
+    end: (dropResult, monitor) => {
+      const { index, originalIndex } = monitor.getItem();
+      const didDrop = monitor.didDrop();
+      if (didDrop && dropResult) {
+        updatePost(index, dropResult.index);
+      } else {
+        movePost(index, originalIndex);
+      }
+    },
   });
 
   drag(drop(ref));
+
+  const handleDelete = () => {
+    removePostFromWorld({
+      variables: {
+        postId: post.id,
+        worldId,
+      },
+    });
+  };
+
   return (
-    <WorldPostsListItemContainer ref={ref}>
+    <WorldPostsListItemContainer ref={ref} isDragging={isDragging}>
       <WorldPostImage src={post.frame1S3} />
-      <div>
-        <p>{post.title}</p>
-        <p>{post.preferredUsername}</p>
-      </div>
+      {isRemoving ? (
+        <Loading>
+          <small>REMOVING</small>
+        </Loading>
+      ) : (
+        <>
+          <PostInformation>
+            <Title>{post.title}</Title>
+            <Author>{post.preferredUsername}</Author>
+          </PostInformation>
+        </>
+      )}
+      <RemovePostButton onClick={handleDelete}>
+        <FontAwesomeIcon icon={faMinus} size="lg" />
+      </RemovePostButton>
     </WorldPostsListItemContainer>
   );
 };

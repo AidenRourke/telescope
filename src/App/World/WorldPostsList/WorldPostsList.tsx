@@ -1,12 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { PostType } from 'Types/types';
 import { WorldPostsListItem } from './WorldPostListItem';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import update from 'immutability-helper';
 
 const WorldPostListContainer = styled.div`
-  width: 15rem;
+  width: 18rem;
 `;
 
 const UPDATE_POST_ORDER = gql`
@@ -28,24 +29,42 @@ interface Props {
 }
 
 const WorldPostsList: FC<Props> = ({ posts, worldId }) => {
+  const [postsArray, setPostsArray] = useState<PostType[]>(posts);
+
+  useEffect(() => {
+    setPostsArray(posts);
+  }, [posts]);
+
   const [updatePostOrder] = useMutation(UPDATE_POST_ORDER);
 
   const movePost = (dragIndex: number, hoverIndex: number) => {
-    const dragCard = posts[dragIndex];
+    const dragCard = postsArray[dragIndex];
+    setPostsArray(
+      update(postsArray, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragCard],
+        ],
+      }),
+    );
+  };
+
+  const updatePost = (dragIndex: number, dropIndex: number) => {
+    const dragCard = postsArray[dragIndex];
     updatePostOrder({
       variables: {
         worldId,
         postId: dragCard.id,
-        position: hoverIndex + 1,
+        position: dropIndex + 1,
       },
     });
   };
 
   const renderPost = (post: PostType, index: number) => {
-    return <WorldPostsListItem post={post} index={index} movePost={movePost} />;
+    return <WorldPostsListItem key={post.id} post={post} index={index} updatePost={updatePost} movePost={movePost} worldId={worldId}/>;
   };
 
-  return <WorldPostListContainer>{posts.map((post, i) => renderPost(post, i))}</WorldPostListContainer>;
+  return <WorldPostListContainer>{postsArray.map((post, i) => renderPost(post, i))}</WorldPostListContainer>;
 };
 
 export { WorldPostsList };

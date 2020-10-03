@@ -25,13 +25,14 @@ const CloseModalButton = styled.button`
 
 interface Props {
   isOpen: boolean;
-  setIsOpen: (status: boolean) => void;
+  closeModal: () => void;
 }
 
-const Modal: FC<Props> = ({ isOpen, setIsOpen, children }) => {
+const Modal: FC<Props> = ({ isOpen, closeModal, children }) => {
   return (
     <ReactModal
       isOpen={isOpen}
+      onRequestClose={closeModal}
       style={{
         overlay: {
           backgroundColor: 'rgba(0, 0, 0, 0.75)',
@@ -54,7 +55,7 @@ const Modal: FC<Props> = ({ isOpen, setIsOpen, children }) => {
     >
       <ModalContainer>
         <Header>
-          <CloseModalButton onClick={() => setIsOpen(false)}>
+          <CloseModalButton onClick={closeModal}>
             <FontAwesomeIcon icon={faTimes} size="lg" />
           </CloseModalButton>
         </Header>

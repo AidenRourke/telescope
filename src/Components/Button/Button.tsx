@@ -1,7 +1,8 @@
 import React, { FC, ButtonHTMLAttributes } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import * as colors from 'styles/colors';
 import { colorTypes } from 'styles/colorTypes';
+import { Loading } from '../Loading';
 
 type buttonSizes = 'small' | 'regular';
 
@@ -60,29 +61,10 @@ const StyledButton = styled.button<ButtonProps>`
   }
 `;
 
-const ellipsis = keyframes`
-  to {
-    width: 1.25rem;  
-    margin-right: 0;  
-  }
-`;
-
-const LoadingDiv = styled.div`
-  &::after {
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: bottom;
-    animation: ${ellipsis} steps(4, end) 900ms infinite;
-    content: '\\2026'; /* ascii code for the ellipsis character */
-    width: 0;
-    margin-right: 1.25rem;
-  }
-`;
-
 const Button: FC<ButtonProps> = ({ isLoading, children, ...rest }) => {
   const renderContent = () => {
     if (isLoading) {
-      return <LoadingDiv>LOADING</LoadingDiv>;
+      return <Loading>LOADING</Loading>;
     }
     return children;
   };

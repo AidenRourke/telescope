@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import * as colors from 'styles/colors';
 import { WorldType } from 'Types/types';
+import { Loading } from 'Components';
 
 import { gql } from 'apollo-boost';
 
@@ -29,25 +30,6 @@ const WorldEnabled = styled(World)`
 const WorldDisabled = styled(World)`
   cursor: not-allowed;
   opacity: 1;
-`;
-
-const ellipsis = keyframes`
-  to {
-    width: 1.25rem;  
-    margin-right: 0;  
-  }
-`;
-
-const LoadingDiv = styled.div`
-  &::after {
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: bottom;
-    animation: ${ellipsis} steps(4, end) 900ms infinite;
-    content: '\\2026'; /* ascii code for the ellipsis character */
-    width: 0;
-    margin-right: 1.25rem;
-  }
 `;
 
 const ADD_TO_WORLD = gql`
@@ -84,7 +66,7 @@ const AddWorldImage: FC<Props> = ({ world, postId }) => {
     return (
       <WorldDisabled key={world.id}>
         <WorldThumbnail src={world.coverS3} />
-        {!isAddingToWorld ? <p>{world.title}</p> : <LoadingDiv>ADDING</LoadingDiv>}
+        {!isAddingToWorld ? <p>{world.title}</p> : <Loading>ADDING</Loading>}
       </WorldDisabled>
     );
   }
@@ -92,7 +74,7 @@ const AddWorldImage: FC<Props> = ({ world, postId }) => {
   return (
     <WorldEnabled key={world.id} onClick={() => handleAddToWorld(world.id)}>
       <WorldThumbnail src={world.coverS3} />
-      {!isAddingToWorld ? <p>{world.title}</p> : <LoadingDiv>ADDING</LoadingDiv>}
+      {!isAddingToWorld ? <p>{world.title}</p> : <Loading>ADDING</Loading>}
     </WorldEnabled>
   );
 };
