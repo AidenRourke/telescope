@@ -11,14 +11,11 @@ const UsersTable = styled.table`
   }
 `;
 
-const InputCell = styled.td`
-  //display: flex;
-`;
-
 const Error = styled.p<{ error: boolean }>`
   margin-top: 1rem;
   color: ${colors.red};
   opacity: ${({ error }) => (error ? 1 : 0)};
+  height: 1.25rem;
 `;
 
 interface Props {
@@ -40,6 +37,15 @@ const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
       if (error.includes('Publisher already exists')) {
         return 'PUBLISHER ALREADY EXISTS';
       }
+      if (error.includes('Account already exists')) {
+        return 'ACCOUNT ALREADY EXISTS';
+      }
+      if (error.includes('Publisher does not exists')) {
+        return 'PUBLISHER DOES NOT EXIST';
+      }
+      if (error.includes('User does not exists')) {
+        return 'USER DOES NOT EXIST';
+      }
     }
   };
 
@@ -58,9 +64,9 @@ const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
       }
       if (type === 'text') {
         return (
-          <InputCell key={name}>
+          <td key={name}>
             <Input name={name} color="blue" inputSize="small" />
-          </InputCell>
+          </td>
         );
       }
     });
@@ -72,6 +78,7 @@ const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
     try {
       await adminOption.mutation(e);
       setError(null);
+      e.target.reset();
     } catch (e) {
       setError(e.message);
     }
@@ -79,7 +86,7 @@ const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
 
   return (
     <div>
-      <h1>USERS</h1>
+      <h1>{adminOption.name}</h1>
       <form onSubmit={handleSubmit}>
         <UsersTable>
           <tbody>

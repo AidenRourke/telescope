@@ -8,14 +8,16 @@ import { Loading } from 'Components';
 import { gql } from 'apollo-boost';
 
 const WorldThumbnail = styled.img`
-  width: 8rem;
   height: 10rem;
   object-fit: cover;
   border: 3px solid ${colors.blue};
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const World = styled.div`
   margin: 0.5rem;
+  width: 8rem;
 `;
 
 const WorldEnabled = styled(World)`
@@ -30,11 +32,17 @@ const WorldEnabled = styled(World)`
 const WorldDisabled = styled(World)`
   cursor: not-allowed;
   opacity: 1;
+  p {
+    white-space: nowrap;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
-const ADD_TO_WORLD = gql`
-  mutation AddPostToWorld($postId: ID!, $worldId: ID!) {
-    addPostToWorld(postId: $postId, worldId: $worldId) {
+const CREATE_WORLD_POST = gql`
+  mutation CreateWorldPost($postId: ID!, $worldId: ID!) {
+    createWorldPost(postId: $postId, worldId: $worldId) {
       post {
         id
         worlds {
@@ -56,17 +64,17 @@ interface Props {
 }
 
 const AddWorldImage: FC<Props> = ({ world, postId }) => {
-  const [addPostToWorld, { loading: isAddingToWorld }] = useMutation(ADD_TO_WORLD);
+  const [createWorldPost, { loading: isCreatingWorldPost }] = useMutation(CREATE_WORLD_POST);
 
   const handleAddToWorld = async (worldId: string) => {
-    await addPostToWorld({ variables: { postId, worldId } });
+    await createWorldPost({ variables: { postId, worldId } });
   };
 
-  if (isAddingToWorld || world?.posts?.some(post => post.id === postId)) {
+  if (isCreatingWorldPost || world?.posts?.some(post => post.id === postId)) {
     return (
       <WorldDisabled key={world.id}>
         <WorldThumbnail src={world.coverS3} />
-        {!isAddingToWorld ? <p>{world.title}</p> : <Loading>ADDING</Loading>}
+        {!isCreatingWorldPost ? <p title={world.title}>{world.title}</p> : <Loading>ADDING</Loading>}
       </WorldDisabled>
     );
   }
@@ -74,7 +82,7 @@ const AddWorldImage: FC<Props> = ({ world, postId }) => {
   return (
     <WorldEnabled key={world.id} onClick={() => handleAddToWorld(world.id)}>
       <WorldThumbnail src={world.coverS3} />
-      {!isAddingToWorld ? <p>{world.title}</p> : <Loading>ADDING</Loading>}
+      {!isCreatingWorldPost ? <p title={world.title}>{world.title}</p> : <Loading>ADDING</Loading>}
     </WorldEnabled>
   );
 };

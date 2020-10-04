@@ -30,7 +30,7 @@ const App: FC = () => {
   }
 
   return (
-    <AppContainer>
+    <AppContainer id="app">
       <DndProvider backend={HTML5Backend}>
         {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
       </DndProvider>

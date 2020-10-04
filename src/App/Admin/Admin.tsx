@@ -61,9 +61,9 @@ const OptionDetails = styled.div`
   padding: 2rem 0;
 `;
 
-const ADD_USER = gql`
-  mutation AddUser($preferredUsername: String!, $admin: Boolean!) {
-    addUser(preferredUsername: $preferredUsername, admin: $admin) {
+const CREATE_USER = gql`
+  mutation CreateUser($preferredUsername: String!, $admin: Boolean!) {
+    createUser(preferredUsername: $preferredUsername, admin: $admin) {
       user {
         id
       }
@@ -71,9 +71,9 @@ const ADD_USER = gql`
   }
 `;
 
-const ADD_PUBLISHER = gql`
-  mutation AddPublisher($publisherName: String!, $organizationFlag: Boolean!) {
-    addPublisher(publisherName: $publisherName, organizationFlag: $organizationFlag) {
+const CREATE_PUBLISHER = gql`
+  mutation CreatePublisher($publisherName: String!, $organizationFlag: Boolean!) {
+    createPublisher(publisherName: $publisherName, organizationFlag: $organizationFlag) {
       publisher {
         id
       }
@@ -81,9 +81,9 @@ const ADD_PUBLISHER = gql`
   }
 `;
 
-const ADD_ACCOUNT = gql`
-  mutation AddAccount($publisherName: String!, $preferredUsername: String!) {
-    addAccount(publisherName: $publisherName, preferredUsername: $preferredUsername) {
+const CREATE_ACCOUNT = gql`
+  mutation CreateAccount($publisherName: String!, $preferredUsername: String!) {
+    createAccount(publisherName: $publisherName, preferredUsername: $preferredUsername) {
       account {
         id
       }
@@ -96,22 +96,21 @@ const Admin: FC<Props> = props => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [attachUser] = useMutation(ATTACH_USER);
-  const [addUser, { loading: isAddingUser }] = useMutation(ADD_USER, { errorPolicy: 'all' });
-  const [addPublisher, { loading: isAddingPublisher }] = useMutation(ADD_PUBLISHER, { errorPolicy: 'all' });
-  const [addAccount, { loading: isAddingAccount }] = useMutation(ADD_ACCOUNT, { errorPolicy: 'all' });
+  const [createUser, { loading: isCreatingUser }] = useMutation(CREATE_USER, { errorPolicy: 'all' });
+  const [createPublisher, { loading: isCreatingPublisher }] = useMutation(CREATE_PUBLISHER, { errorPolicy: 'all' });
+  const [createAccount, { loading: isCreatingAccount }] = useMutation(CREATE_ACCOUNT, { errorPolicy: 'all' });
 
-  const handleAddUser = async (e: any) => {
-    await addUser({
+  const handleCreateUser = async (e: any) => {
+    await createUser({
       variables: {
         preferredUsername: e.target.preferredUsername.value,
         admin: e.target.isAdmin.checked,
       },
     });
-    e.target.reset();
   };
 
-  const handleAddPublisher = async (e: any) => {
-    await addPublisher({
+  const handleCreatePublisher = async (e: any) => {
+    await createPublisher({
       variables: {
         publisherName: e.target.publisherName.value,
         organizationFlag: e.target.isOrganization.checked,
@@ -119,8 +118,8 @@ const Admin: FC<Props> = props => {
     });
   };
 
-  const handleAddAccount = async (e: any) => {
-    await addAccount({
+  const handleCreateAccount = async (e: any) => {
+    await createAccount({
       variables: {
         publisherName: e.target.publisherName.value,
         preferredUsername: e.target.preferredUsername.value,
@@ -164,7 +163,7 @@ const Admin: FC<Props> = props => {
         { name: 'preferredUsername', type: 'text', display: 'USER NAME' },
         { name: 'isAdmin', type: 'checkbox', display: 'ADMIN?' },
       ],
-      mutation: handleAddUser,
+      mutation: handleCreateUser,
     },
     {
       name: 'ADD PUBLISHERS',
@@ -173,7 +172,7 @@ const Admin: FC<Props> = props => {
         { name: 'publisherName', type: 'text', display: 'PUBLISHER NAME' },
         { name: 'isOrganization', type: 'checkbox', display: 'ORGANIZATION?' },
       ],
-      mutation: handleAddPublisher,
+      mutation: handleCreatePublisher,
     },
     {
       name: 'ADD ACCOUNTS',
@@ -182,7 +181,7 @@ const Admin: FC<Props> = props => {
         { name: 'preferredUsername', type: 'text', display: 'USER NAME' },
         { name: 'publisherName', type: 'text', display: 'PUBLISHER NAME' },
       ],
-      mutation: handleAddAccount,
+      mutation: handleCreateAccount,
     },
   ];
 
@@ -206,7 +205,7 @@ const Admin: FC<Props> = props => {
         <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)}>
           <AdminOptionModal
             adminOption={ADMIN_OPTIONS[selectedOption]}
-            loading={isAddingUser || isAddingPublisher}
+            loading={isCreatingUser || isCreatingPublisher || isCreatingAccount}
           />
         </Modal>
       </AdminContainer>

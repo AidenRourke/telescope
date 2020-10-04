@@ -10,10 +10,11 @@ import * as colors from 'styles/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Loading } from 'Components';
+import { useHistory } from 'react-router';
 
 const WorldPostsListItemContainer = styled.div<{ isDragging: boolean }>`
   margin-bottom: 0.5rem;
-  cursor: move;
+  cursor: pointer;
   display: flex;
   align-items: center;
   opacity: ${({ isDragging }) => isDragging && 0};
@@ -47,9 +48,9 @@ const RemovePostButton = styled.button`
   border: none;
 `;
 
-const REMOVE_POST_FROM_WORLD = gql`
-  mutation RemovePostFromWorld($worldId: ID!, $postId: ID!) {
-    removePostFromWorld(worldId: $worldId, postId: $postId) {
+const REMOVE_WORLD_POST = gql`
+  mutation RemoveWorldPost($worldId: ID!, $postId: ID!) {
+    removeWorldPost(worldId: $worldId, postId: $postId) {
       world {
         id
         posts {
@@ -71,7 +72,9 @@ interface Props {
 const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worldId }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const [removePostFromWorld, { loading: isRemoving }] = useMutation(REMOVE_POST_FROM_WORLD);
+  const history = useHistory();
+
+  const [removeWorldPost, { loading: isRemoving }] = useMutation(REMOVE_WORLD_POST);
 
   const dropFunction = (
     item: DragItem,
@@ -134,8 +137,9 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
 
   drag(drop(ref));
 
-  const handleDelete = () => {
-    removePostFromWorld({
+  const handleDelete = (e: any) => {
+    e.stopPropagation();
+    removeWorldPost({
       variables: {
         postId: post.id,
         worldId,
@@ -144,7 +148,7 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
   };
 
   return (
-    <WorldPostsListItemContainer ref={ref} isDragging={isDragging}>
+    <WorldPostsListItemContainer ref={ref} isDragging={isDragging} onClick={() => history.push(`/posts/${post.id}`)}>
       <WorldPostImage src={post.frame1S3} />
       {isRemoving ? (
         <PostInformation>

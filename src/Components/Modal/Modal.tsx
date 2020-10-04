@@ -28,7 +28,7 @@ interface Props {
   closeModal: () => void;
 }
 
-ReactModal.setAppElement('#root')
+// ReactModal.setAppElement('#app')
 
 
 const Modal: FC<Props> = ({ isOpen, closeModal, children }) => {

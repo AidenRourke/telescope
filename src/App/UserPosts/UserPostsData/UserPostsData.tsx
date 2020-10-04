@@ -8,6 +8,9 @@ const DataContainer = styled.div`
   &:not(:last-of-type) {
     margin-bottom: 2rem;
   }
+  h1 {
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const UserPostsData: FC = () => {

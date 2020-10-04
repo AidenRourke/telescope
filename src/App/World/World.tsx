@@ -303,7 +303,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
   return (
     <WorldContainer>
       <WorldData>
-        <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push('/worlds')} />
+        <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
         <Status>
           WORLD <span>({world.status.toUpperCase()})</span>
         </Status>
