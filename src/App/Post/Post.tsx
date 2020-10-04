@@ -136,54 +136,56 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   };
 
   return (
-    <PostContainer>
-      <SideBar>
-        <SideBarHeader>
-          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push('/posts')} />
-          <Modu src={sidebar} />
-        </SideBarHeader>
-        <SideBarContent>
-          <TextSection>
-            <TextHeader>CREATED BY:</TextHeader>
-            <h3>{data.post.preferredUsername.toUpperCase()}</h3>
-          </TextSection>
-          <TextSection>
-            <TextHeader>LOCATION:</TextHeader>
-            <h3>{renderLocation()}</h3>
-          </TextSection>
-          <TextSection>
-            <TextHeader>FILTER:</TextHeader>
-            <h3>90210</h3>
-          </TextSection>
-          <TextSection>
-            <TextHeader>SUBMISSION DATE:</TextHeader>
-            <h3>{data.post.createdAt.split('T')[0]}</h3>
-          </TextSection>
-          <TextSection>
-            <TextHeader>TAGS:</TextHeader>
-            <h3>{data.post.tags.map((tag: TagType) => tag.name.toUpperCase()).join(', ')}</h3>
-          </TextSection>
-        </SideBarContent>
-        <SideBarFooter>
-          <Button color="white" size="small" onClick={() => setIsOpen(true)}>
-            ADD TO WORLD
-          </Button>
-          <Button color="red" size="small" onClick={() => handleDeletePost(data.post.id)}>
-            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
-          </Button>
-        </SideBarFooter>
-      </SideBar>
-      <ImageContainer>
-        <Film3d images={[data.post.frame1S3, data.post.frame2S3, data.post.frame3S3, data.post.frame4S3]} />
-        <Description>
-          <h1>{data.post.title}</h1>
-          <p>{data.post.description}</p>
-        </Description>
-      </ImageContainer>
+    <>
+      <PostContainer>
+        <SideBar>
+          <SideBarHeader>
+            <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push('/posts')} />
+            <Modu src={sidebar} />
+          </SideBarHeader>
+          <SideBarContent>
+            <TextSection>
+              <TextHeader>CREATED BY:</TextHeader>
+              <h3>{data.post.preferredUsername.toUpperCase()}</h3>
+            </TextSection>
+            <TextSection>
+              <TextHeader>LOCATION:</TextHeader>
+              <h3>{renderLocation()}</h3>
+            </TextSection>
+            <TextSection>
+              <TextHeader>FILTER:</TextHeader>
+              <h3>90210</h3>
+            </TextSection>
+            <TextSection>
+              <TextHeader>SUBMISSION DATE:</TextHeader>
+              <h3>{data.post.createdAt.split('T')[0]}</h3>
+            </TextSection>
+            <TextSection>
+              <TextHeader>TAGS:</TextHeader>
+              <h3>{data.post.tags.map((tag: TagType) => tag.name.toUpperCase()).join(', ')}</h3>
+            </TextSection>
+          </SideBarContent>
+          <SideBarFooter>
+            <Button color="white" size="small" onClick={() => setIsOpen(true)}>
+              ADD TO WORLD
+            </Button>
+            <Button color="red" size="small" onClick={() => handleDeletePost(data.post.id)}>
+              <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+            </Button>
+          </SideBarFooter>
+        </SideBar>
+        <ImageContainer>
+          <Film3d images={[data.post.frame1S3, data.post.frame2S3, data.post.frame3S3, data.post.frame4S3]} />
+          <Description>
+            <h1>{data.post.title}</h1>
+            <p>{data.post.description}</p>
+          </Description>
+        </ImageContainer>
+      </PostContainer>
       <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)}>
         <AddToWorld postId={data.post.id} />
       </Modal>
-    </PostContainer>
+    </>
   );
 };
 

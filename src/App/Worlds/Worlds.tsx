@@ -68,6 +68,16 @@ export const GET_WORLDS = gql`
   }
 `;
 
+const CREATE_WORLD = gql`
+  mutation CreateWorld($input: CreateWorldInput!) {
+    createWorld(input: $input) {
+      world {
+        id
+      }
+    }
+  }
+`;
+
 const Worlds: FC<Props> = props => {
   const [preview, setPreview] = useState<number>(0);
   const history = useHistory();

@@ -10,9 +10,9 @@ const WorldPostListContainer = styled.div`
   width: 18rem;
 `;
 
-const UPDATE_POST_ORDER = gql`
-  mutation UpdatePostOrder($worldId: ID!, $postId: ID!, $position: Int!) {
-    updatePostOrder(worldId: $worldId, postId: $postId, position: $position) {
+const UPDATE_WORLD_POSTS_ORDER = gql`
+  mutation UpdateWorldPostsOrder($worldId: ID!, $postId: ID!, $position: Int!) {
+    updateWorldPostsOrder(worldId: $worldId, postId: $postId, position: $position) {
       world {
         id
         posts {
@@ -35,7 +35,7 @@ const WorldPostsList: FC<Props> = ({ posts, worldId }) => {
     setPostsArray(posts);
   }, [posts]);
 
-  const [updatePostOrder] = useMutation(UPDATE_POST_ORDER);
+  const [updateWorldPostsOrder] = useMutation(UPDATE_WORLD_POSTS_ORDER);
 
   const movePost = (dragIndex: number, hoverIndex: number) => {
     const dragCard = postsArray[dragIndex];
@@ -51,7 +51,7 @@ const WorldPostsList: FC<Props> = ({ posts, worldId }) => {
 
   const updatePost = (dragIndex: number, dropIndex: number) => {
     const dragCard = postsArray[dragIndex];
-    updatePostOrder({
+    updateWorldPostsOrder({
       variables: {
         worldId,
         postId: dragCard.id,
@@ -61,7 +61,16 @@ const WorldPostsList: FC<Props> = ({ posts, worldId }) => {
   };
 
   const renderPost = (post: PostType, index: number) => {
-    return <WorldPostsListItem key={post.id} post={post} index={index} updatePost={updatePost} movePost={movePost} worldId={worldId}/>;
+    return (
+      <WorldPostsListItem
+        key={post.id}
+        post={post}
+        index={index}
+        updatePost={updatePost}
+        movePost={movePost}
+        worldId={worldId}
+      />
+    );
   };
 
   return <WorldPostListContainer>{postsArray.map((post, i) => renderPost(post, i))}</WorldPostListContainer>;

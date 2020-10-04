@@ -3,14 +3,13 @@ import styled from 'styled-components';
 import * as colors from 'styles/colors';
 import { colorTypes } from 'styles/colorTypes';
 import { Loading } from '../Loading';
-
-type buttonSizes = 'small' | 'regular';
+import { Sizes } from 'Types/types';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color: colorTypes;
   isOutlined?: boolean;
   isText?: boolean;
-  size?: buttonSizes;
+  size?: Sizes;
   isLoading?: boolean;
 }
 
@@ -29,7 +28,7 @@ const getTextColor = (color: colorTypes, isOutlined: boolean | undefined, isText
   }
 };
 
-const getPadding = (isText: boolean | undefined, size: buttonSizes | undefined) => {
+const getPadding = (isText: boolean | undefined, size: Sizes | undefined) => {
   if (isText) return '0';
   switch (size) {
     case 'small':
@@ -39,7 +38,7 @@ const getPadding = (isText: boolean | undefined, size: buttonSizes | undefined) 
   }
 };
 
-const getFontSize = (size: buttonSizes | undefined) => {
+const getFontSize = (size: Sizes | undefined) => {
   switch (size) {
     case 'small':
       return 0.75;

@@ -1,5 +1,7 @@
 // Types bitch
 
+export type Sizes = 'small' | 'regular';
+
 export interface TagType {
   id: string;
   name: string;
@@ -49,4 +51,17 @@ export interface DragItem {
   index: number;
   id: string;
   type: string;
+}
+
+export interface AdminOptionFieldType {
+  name: string;
+  type: string;
+  display: string;
+}
+
+export interface AdminOptionType {
+  name: string;
+  description: string;
+  fields: AdminOptionFieldType[];
+  mutation: (e: any) => Promise<any>;
 }

@@ -6,7 +6,7 @@ import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input } from 'Components/index';
 import { blue, black, white } from 'styles/colors';
 import { FilterTag } from './FilterTag';
-import {FilterType, TagType} from 'Types/types';
+import { FilterType } from 'Types/types';
 
 const FilterForm = styled.form`
   flex: 1;

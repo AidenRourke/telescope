@@ -147,16 +147,16 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
     <WorldPostsListItemContainer ref={ref} isDragging={isDragging}>
       <WorldPostImage src={post.frame1S3} />
       {isRemoving ? (
-        <Loading>
-          <small>REMOVING</small>
-        </Loading>
+        <PostInformation>
+          <Loading>
+            <small>REMOVING</small>
+          </Loading>
+        </PostInformation>
       ) : (
-        <>
-          <PostInformation>
-            <Title>{post.title}</Title>
-            <Author>{post.preferredUsername}</Author>
-          </PostInformation>
-        </>
+        <PostInformation>
+          <Title>{post.title}</Title>
+          <Author>{post.preferredUsername}</Author>
+        </PostInformation>
       )}
       <RemovePostButton onClick={handleDelete}>
         <FontAwesomeIcon icon={faMinus} size="lg" />

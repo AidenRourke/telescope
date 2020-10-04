@@ -44,16 +44,18 @@ const Title = styled.h1`
   color: ${colors.green};
 `;
 
-const TitleTextArea = styled.textarea`
+const TextArea = styled.textarea`
   color: ${colors.green};
-  background: none;
-  font-size: 2em;
-  font-family: inherit;
   resize: none;
   border: none;
+  background: none;
+  font-family: inherit;
+`;
+
+const TitleTextArea = styled(TextArea)`
+  font-size: 2em;
   height: 2.625rem;
   margin-bottom: 0.5rem;
-  padding: 0;
 `;
 
 const Description = styled.p`
@@ -63,15 +65,9 @@ const Description = styled.p`
   flex: 1;
 `;
 
-const DescriptionTextArea = styled.textarea`
-  border: none;
+const DescriptionTextArea = styled(TextArea)`
   font-size: 1em;
-  font-family: inherit;
-  background: none;
-  color: ${colors.green};
   flex: 1;
-  resize: none;
-  padding: 0;
 `;
 
 const WorldInfo = styled.div`
@@ -236,23 +232,27 @@ const World: FC<RouteComponentProps> = ({ history }) => {
     updateWorldImage({ variables: { worldId: worldData.world.id, imageUrl: url } });
   };
 
-  const changeTitle = async (title: string, worldId: string) => {
-    await updateWorldTitle({
-      variables: {
-        worldId,
-        title,
-      },
-    });
-    // setTitleEditMode(false);
+  const changeTitle = async (title: string, worldId: string, shouldUpdate: boolean) => {
+    if (shouldUpdate) {
+      await updateWorldTitle({
+        variables: {
+          worldId,
+          title,
+        },
+      });
+    }
+    setTitleEditMode(false);
   };
 
-  const changeDescription = async (description: string, worldId: string) => {
-    await updateWorldDescription({
-      variables: {
-        worldId,
-        description,
-      },
-    });
+  const changeDescription = async (description: string, worldId: string, shouldUpdate: boolean) => {
+    if (shouldUpdate) {
+      await updateWorldDescription({
+        variables: {
+          worldId,
+          description,
+        },
+      });
+    }
     setDescriptionEditMode(false);
   };
 
@@ -265,7 +265,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
       return (
         <TitleTextArea
           autoFocus
-          onBlur={(e: any) => changeTitle(e.target.value, world.id)}
+          onBlur={({ target: { value } }: any) => changeTitle(value, world.id, value !== world.title)}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.title;
@@ -275,7 +275,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         </TitleTextArea>
       );
     }
-    return <Title onClick={() => setTitleEditMode(true)}>{world.title}</Title>;
+    return <Title onClick={() => setTitleEditMode(true)}>{world.title || 'CLICK TO ADD TITLE'}</Title>;
   };
 
   const renderDescription = () => {
@@ -283,7 +283,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
       return (
         <DescriptionTextArea
           autoFocus
-          onBlur={(e: any) => changeDescription(e.target.value, world.id)}
+          onBlur={({ target: { value } }: any) => changeDescription(value, world.id, value !== world.description)}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.description;
@@ -293,7 +293,11 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         </DescriptionTextArea>
       );
     }
-    return <Description onClick={() => setDescriptionEditMode(true)}>{world.description}</Description>;
+    return (
+      <Description onClick={() => setDescriptionEditMode(true)}>
+        {world.description || 'CLICK TO ADD DESCRIPTION'}
+      </Description>
+    );
   };
 
   return (
@@ -321,7 +325,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         </WorldInfo>
         <DropZones>
           <Dropzone onDrop={(files: File[]) => onDrop(files, false)} accept="video/mp4">
-            <DropZoneContent url="fake">
+            <DropZoneContent url="">
               <small>EDIT PRE-ROLL VIDEO</small>
             </DropZoneContent>
           </Dropzone>
