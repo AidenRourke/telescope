@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import { gql } from 'apollo-boost';
-import { Input } from '../../../Components/Input';
+import { Input, Button } from 'Components';
+import styled from 'styled-components';
+import { useMutation } from '@apollo/react-hooks';
 
 const CREATE_WORLD = gql`
   mutation CreateWorld($input: CreateWorldInput!) {
@@ -12,13 +14,30 @@ const CREATE_WORLD = gql`
   }
 `;
 
+const CreateWorldsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const CreateWorld: FC = () => {
+  const [createWorld] = useMutation(CREATE_WORLD);
+
+  const handleCreateWorld = (e: any) => {
+    e.preventDefault();
+    createWorld({
+      variables: {
+        input: { publisherNames: ['MODU'] },
+      },
+    });
+  };
+
   return (
-    <div>
+    <CreateWorldsContainer>
       <h1>CREATE WORLD</h1>
-      <Input placeholder="TITLE"/>
-      <Input placeholder="PUBLISHER"/>
-    </div>
+      <form onSubmit={handleCreateWorld}>
+        <Input placeholder="PUBLISHER" />
+      </form>
+    </CreateWorldsContainer>
   );
 };
 

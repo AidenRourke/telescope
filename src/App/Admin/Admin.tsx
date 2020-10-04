@@ -191,6 +191,7 @@ const Admin: FC<Props> = props => {
       <AdminContainer>
         <h1>SETTINGS AND OPTIONS</h1>
         <AdminOptions>
+          {/*{renderHelpers()}*/}
           {ADMIN_OPTIONS.map((option, i) => (
             <AdminOption
               onMouseOver={() => setSelectedOption(i)}

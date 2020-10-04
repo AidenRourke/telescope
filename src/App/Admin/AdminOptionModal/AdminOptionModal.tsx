@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import * as colors from 'styles/colors';
 import styled from 'styled-components';
 import { Button, Loading, Input } from 'Components';
@@ -24,6 +24,7 @@ interface Props {
 }
 
 const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState();
 
   const renderError = () => {
@@ -40,10 +41,10 @@ const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
       if (error.includes('Account already exists')) {
         return 'ACCOUNT ALREADY EXISTS';
       }
-      if (error.includes('Publisher does not exists')) {
+      if (error.includes('Publisher does not exist')) {
         return 'PUBLISHER DOES NOT EXIST';
       }
-      if (error.includes('User does not exists')) {
+      if (error.includes('User does not exist')) {
         return 'USER DOES NOT EXIST';
       }
     }
@@ -78,16 +79,18 @@ const AdminOptionModal: FC<Props> = ({ adminOption, loading }) => {
     try {
       await adminOption.mutation(e);
       setError(null);
-      e.target.reset();
     } catch (e) {
       setError(e.message);
+    }
+    if (formRef.current) {
+      formRef.current.reset();
     }
   };
 
   return (
     <div>
       <h1>{adminOption.name}</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} ref={formRef}>
         <UsersTable>
           <tbody>
             <tr>

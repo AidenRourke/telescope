@@ -128,7 +128,12 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
 
       <LoginForm onSubmit={handleSubmit}>
         <ModuWorld src={require('assets/modu_world.png')} />
-        <Email type="text" placeholder="USERNAME" name="username" onChange={handleInput} value={loginInput.username} />
+        <Email
+          placeholder="USERNAME"
+          name="username"
+          onChange={handleInput}
+          value={loginInput.username}
+        />
         <Password
           type="password"
           placeholder="PASSWORD"
