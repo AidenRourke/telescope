@@ -182,7 +182,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           </Description>
         </ImageContainer>
       </PostContainer>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title="ADD TO WORLD">
         <AddToWorld postId={data.post.id} />
       </Modal>
     </>

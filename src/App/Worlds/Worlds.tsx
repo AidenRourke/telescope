@@ -152,7 +152,7 @@ const Worlds: FC<Props> = props => {
         {renderAddWorld()}
         {renderWorlds()}
       </WorldsContainer>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title="CREATE WORLD">
         <CreateWorld />
       </Modal>
     </>

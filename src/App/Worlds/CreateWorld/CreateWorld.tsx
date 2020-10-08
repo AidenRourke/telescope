@@ -26,14 +26,13 @@ const CreateWorld: FC = () => {
     e.preventDefault();
     createWorld({
       variables: {
-        input: { publisherNames: ['MODU'] },
+        input: { publisherNames: ['AIDEN'] },
       },
     });
   };
 
   return (
     <CreateWorldsContainer>
-      <h1>CREATE WORLD</h1>
       <form onSubmit={handleCreateWorld}>
         <Input placeholder="PUBLISHER" />
       </form>

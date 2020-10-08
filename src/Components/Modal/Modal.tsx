@@ -26,12 +26,12 @@ const CloseModalButton = styled.button`
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
+  title?: string;
 }
 
 // ReactModal.setAppElement('#app')
 
-
-const Modal: FC<Props> = ({ isOpen, closeModal, children }) => {
+const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -62,6 +62,7 @@ const Modal: FC<Props> = ({ isOpen, closeModal, children }) => {
             <FontAwesomeIcon icon={faTimes} size="lg" />
           </CloseModalButton>
         </Header>
+        {title && <h1>{title}</h1>}
         {children}
       </ModalContainer>
     </ReactModal>

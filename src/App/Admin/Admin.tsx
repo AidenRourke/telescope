@@ -7,7 +7,9 @@ import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
 import * as colors from 'styles/colors';
 import { Modal } from 'Components/Modal';
-import { AdminOptionModal } from './AdminOptionModal';
+import { UsersModalContent } from './UsersModalContent';
+import { AccountsModalContent } from './AccountsModalContent';
+import { PublishersModalContent } from './PublishersModalContent';
 
 const ATTACH_USER = gql`
   mutation CreatePost($input: PostInput!) {
@@ -61,71 +63,11 @@ const OptionDetails = styled.div`
   padding: 2rem 0;
 `;
 
-const CREATE_USER = gql`
-  mutation CreateUser($preferredUsername: String!, $admin: Boolean!) {
-    createUser(preferredUsername: $preferredUsername, admin: $admin) {
-      user {
-        id
-      }
-    }
-  }
-`;
-
-const CREATE_PUBLISHER = gql`
-  mutation CreatePublisher($publisherName: String!, $organizationFlag: Boolean!) {
-    createPublisher(publisherName: $publisherName, organizationFlag: $organizationFlag) {
-      publisher {
-        id
-      }
-    }
-  }
-`;
-
-const CREATE_ACCOUNT = gql`
-  mutation CreateAccount($publisherName: String!, $preferredUsername: String!) {
-    createAccount(publisherName: $publisherName, preferredUsername: $preferredUsername) {
-      account {
-        id
-      }
-    }
-  }
-`;
-
 const Admin: FC<Props> = props => {
   const [selectedOption, setSelectedOption] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
   const [attachUser] = useMutation(ATTACH_USER);
-  const [createUser, { loading: isCreatingUser }] = useMutation(CREATE_USER, { errorPolicy: 'all' });
-  const [createPublisher, { loading: isCreatingPublisher }] = useMutation(CREATE_PUBLISHER, { errorPolicy: 'all' });
-  const [createAccount, { loading: isCreatingAccount }] = useMutation(CREATE_ACCOUNT, { errorPolicy: 'all' });
-
-  const handleCreateUser = async (e: any) => {
-    await createUser({
-      variables: {
-        preferredUsername: e.target.preferredUsername.value,
-        admin: e.target.isAdmin.checked,
-      },
-    });
-  };
-
-  const handleCreatePublisher = async (e: any) => {
-    await createPublisher({
-      variables: {
-        publisherName: e.target.publisherName.value,
-        organizationFlag: e.target.isOrganization.checked,
-      },
-    });
-  };
-
-  const handleCreateAccount = async (e: any) => {
-    await createAccount({
-      variables: {
-        publisherName: e.target.publisherName.value,
-        preferredUsername: e.target.preferredUsername.value,
-      },
-    });
-  };
 
   const renderHelpers = () => (
     <>
@@ -157,33 +99,41 @@ const Admin: FC<Props> = props => {
 
   const ADMIN_OPTIONS = [
     {
-      name: 'ADD USERS',
-      description: 'CREATE USERS',
+      name: 'USERS',
+      description: 'VIEW AND CREATE USERS',
       fields: [
         { name: 'preferredUsername', type: 'text', display: 'USER NAME' },
         { name: 'isAdmin', type: 'checkbox', display: 'ADMIN?' },
       ],
-      mutation: handleCreateUser,
     },
     {
-      name: 'ADD PUBLISHERS',
-      description: 'CREATE PUBLISHERS',
+      name: 'PUBLISHERS',
+      description: 'VIEW AND CREATE PUBLISHERS',
       fields: [
-        { name: 'publisherName', type: 'text', display: 'PUBLISHER NAME' },
-        { name: 'isOrganization', type: 'checkbox', display: 'ORGANIZATION?' },
+        { name: 'name', type: 'text', display: 'PUBLISHER NAME' },
+        { name: 'organizationFlag', type: 'checkbox', display: 'ORGANIZATION?' },
       ],
-      mutation: handleCreatePublisher,
     },
     {
-      name: 'ADD ACCOUNTS',
-      description: 'CREATE ACCOUNTS',
+      name: 'ACCOUNTS',
+      description: 'VIEW AND CREATE ACCOUNTS',
       fields: [
         { name: 'preferredUsername', type: 'text', display: 'USER NAME' },
-        { name: 'publisherName', type: 'text', display: 'PUBLISHER NAME' },
+        { name: 'name', type: 'text', display: 'PUBLISHER NAME' },
       ],
-      mutation: handleCreateAccount,
     },
   ];
+
+  const renderModalContent = () => {
+    switch (ADMIN_OPTIONS[selectedOption].name) {
+      case 'USERS':
+        return <UsersModalContent />;
+      case 'ACCOUNTS':
+        return <AccountsModalContent />;
+      case 'PUBLISHERS':
+        return <PublishersModalContent />;
+    }
+  };
 
   return (
     <>
@@ -203,11 +153,8 @@ const Admin: FC<Props> = props => {
           ))}
         </AdminOptions>
         <OptionDetails>{ADMIN_OPTIONS[selectedOption].description}</OptionDetails>
-        <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)}>
-          <AdminOptionModal
-            adminOption={ADMIN_OPTIONS[selectedOption]}
-            loading={isCreatingUser || isCreatingPublisher || isCreatingAccount}
-          />
+        <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={ADMIN_OPTIONS[selectedOption].name}>
+          {renderModalContent()}
         </Modal>
       </AdminContainer>
     </>

@@ -43,7 +43,6 @@ const AddToWorld: FC<Props> = props => {
 
   return (
     <div>
-      <h2>ADD TO WORLD:</h2>
       <WorldsContainer>{renderWorlds()}</WorldsContainer>
     </div>
   );

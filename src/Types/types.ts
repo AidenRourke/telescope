@@ -1,5 +1,7 @@
 // Types bitch
 
+import {GraphQLType} from "graphql";
+
 export type Sizes = 'small' | 'regular';
 
 export interface TagType {
@@ -19,18 +21,23 @@ export interface PostType {
   title?: string;
 }
 
-export interface UserAccountType {
+export interface UserType {
   id: string;
-  user: {
-    id: string;
-    preferredUsername: string;
-  };
+  preferredUsername?: string;
+  isAdmin?: boolean;
+}
+
+export interface AccountType {
+  id: string;
+  user?: UserType
+  publisher?: PublisherType
 }
 
 export interface PublisherType {
   id: string;
   name: string;
-  accounts: UserAccountType[];
+  accounts?: AccountType[];
+  organizationFlag?: boolean;
 }
 
 export interface WorldType {
@@ -63,5 +70,7 @@ export interface AdminOptionType {
   name: string;
   description: string;
   fields: AdminOptionFieldType[];
-  mutation: (e: any) => Promise<any>;
+  createMutation: (e: any) => Promise<any>;
+  removeMutation: (id: string) => Promise<any>;
+  query: any
 }

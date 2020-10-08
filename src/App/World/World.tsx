@@ -312,7 +312,13 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         <WorldInfo>
           <div>
             <h4>CURATORS</h4>
-            <h3>{world.publishers.reduce((a: number, c: PublisherType) => a + c?.accounts.length, 0)}</h3>
+            <h3>
+              {world.publishers.reduce((a: number, c: PublisherType) => {
+                if (c.accounts) {
+                  return a + c.accounts.length;
+                }
+              }, 0)}
+            </h3>
           </div>
           <div>
             <h4>RELEASE DATE</h4>

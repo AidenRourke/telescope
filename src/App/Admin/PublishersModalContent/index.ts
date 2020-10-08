@@ -1,0 +1,1 @@
+export { PublishersModalContent } from './PublishersModalContent';
