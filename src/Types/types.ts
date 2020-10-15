@@ -1,6 +1,6 @@
 // Types bitch
 
-import {GraphQLType} from "graphql";
+import { GraphQLType } from 'graphql';
 
 export type Sizes = 'small' | 'regular';
 
@@ -25,12 +25,13 @@ export interface UserType {
   id: string;
   preferredUsername?: string;
   isAdmin?: boolean;
+  cognitoId?: string;
 }
 
 export interface AccountType {
   id: string;
-  user?: UserType
-  publisher?: PublisherType
+  user?: UserType;
+  publisher?: PublisherType;
 }
 
 export interface PublisherType {
@@ -60,17 +61,7 @@ export interface DragItem {
   type: string;
 }
 
-export interface AdminOptionFieldType {
-  name: string;
-  type: string;
-  display: string;
-}
-
-export interface AdminOptionType {
-  name: string;
-  description: string;
-  fields: AdminOptionFieldType[];
-  createMutation: (e: any) => Promise<any>;
-  removeMutation: (id: string) => Promise<any>;
-  query: any
+export interface AuthenticatedUserType {
+  id: string;
+  isAdmin: boolean;
 }

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, {FC, useContext, useState} from 'react';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { gql } from 'apollo-boost';
 
@@ -9,10 +9,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { PublisherType, WorldType } from 'Types/types';
 import { Modal } from 'Components/Modal';
 import { CreateWorld } from './CreateWorld';
-
-interface Props extends RouteComponentProps {
-  setIsAuthenticated: (value: boolean) => void;
-}
+import {UserContext} from "../../Contexts/UserContext";
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -92,8 +89,10 @@ export const GET_WORLDS = gql`
   }
 `;
 
-const Worlds: FC<Props> = props => {
-  const [selection, setSelection] = useState<number>(-1);
+const Worlds: FC<RouteComponentProps> = props => {
+  const { user } = useContext(UserContext);
+
+  const [selection, setSelection] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
 
   const history = useHistory();
@@ -149,7 +148,7 @@ const Worlds: FC<Props> = props => {
     <>
       <Navbar {...props}>{renderMetaData()}</Navbar>
       <WorldsContainer>
-        {renderAddWorld()}
+        {user.isAdmin && renderAddWorld()}
         {renderWorlds()}
       </WorldsContainer>
       <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title="CREATE WORLD">

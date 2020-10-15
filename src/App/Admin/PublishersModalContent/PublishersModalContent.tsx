@@ -62,50 +62,48 @@ const PublishersModalContent: FC = () => {
 
   const renderPublishers = () => {
     if (data) {
-      return data.publishers.map((publisher: PublisherType) => <PublisherRow publisher={publisher} />);
+      return data.publishers.map((publisher: PublisherType) => <PublisherRow key={publisher.id} publisher={publisher} />);
     }
   };
 
   return (
-    <div>
-      <Table>
-        <tbody>
-          <tr>
-            <th>PUBLISHER NAME</th>
-            <th>ORGANIZATION?</th>
-            <th>OPTION</th>
-          </tr>
-          {renderPublishers()}
-          <tr>
-            <td>
-              <Input
-                color="blue"
-                inputSize="small"
-                value={publisherName}
-                onChange={(e: any) => setPublisherName(e.target.value)}
-              />
-            </td>
-            <td>
-              <input
-                color="blue"
-                type="checkbox"
-                checked={organizationFlag}
-                onChange={(e: any) => setOrganizationFlag(e.target.checked)}
-              />
-            </td>
-            <td>
-              {loading ? (
-                <Loading>ADDING</Loading>
-              ) : (
-                <Button color="blue" isOutlined={true} size="small" onClick={handleCreatePublisher}>
-                  ADD
-                </Button>
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-    </div>
+    <Table>
+      <tbody>
+        <tr>
+          <th>PUBLISHER NAME</th>
+          <th>ORGANIZATION?</th>
+          <th>OPTION</th>
+        </tr>
+        {renderPublishers()}
+        <tr>
+          <td>
+            <Input
+              color="blue"
+              inputSize="small"
+              value={publisherName}
+              onChange={(e: any) => setPublisherName(e.target.value)}
+            />
+          </td>
+          <td>
+            <input
+              color="blue"
+              type="checkbox"
+              checked={organizationFlag}
+              onChange={(e: any) => setOrganizationFlag(e.target.checked)}
+            />
+          </td>
+          <td>
+            {loading ? (
+              <Loading>ADDING</Loading>
+            ) : (
+              <Button color="blue" isOutlined={true} size="small" onClick={handleCreatePublisher}>
+                ADD
+              </Button>
+            )}
+          </td>
+        </tr>
+      </tbody>
+    </Table>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Auth } from 'aws-amplify';
@@ -6,6 +6,7 @@ import { Auth } from 'aws-amplify';
 import { Button } from 'Components/Button';
 import { green, white } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
+import { UserContext } from '../../Contexts/UserContext';
 
 const NavContainer = styled.div`
   display: flex;
@@ -48,31 +49,36 @@ const WidgetContainer = styled.div`
   overflow: scroll;
 `;
 
-const links = [
+const adminLinks = [
   { to: '/worlds', name: 'WORLDS' },
   { to: '/posts', name: 'USER POSTS' },
   { to: '/admin', name: 'ADMIN' },
 ];
 
-interface Props extends RouteComponentProps {
-  setIsAuthenticated: (value: boolean) => void;
-}
+const links = [
+  { to: '/worlds', name: 'WORLDS' },
+  { to: '/posts', name: 'USER POSTS' },
+];
 
-const Navbar: FC<Props> = ({ history, location, children, setIsAuthenticated }) => {
+const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
+  const { user, logout } = useContext(UserContext);
+
   const handleLogout = async (e: any) => {
     e.preventDefault();
 
     await Auth.signOut();
-    setIsAuthenticated(false);
+    logout();
     history.push('/login');
   };
+
+  const validLinks = user.isAdmin ? adminLinks : links;
 
   return (
     <NavContainer>
       <Modu src={sidebar} />
       <WidgetContainer>{children}</WidgetContainer>
       <Links>
-        {links.map(({ to, name }) => (
+        {validLinks.map(({ to, name }) => (
           <StyledLink key={name} to={to} isActive={location.pathname.includes(to)}>
             <h3>{name}</h3>
           </StyledLink>

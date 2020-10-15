@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Button, Loading } from 'Components';
 import { UserType } from 'Types/types';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { UserContext } from 'Contexts/UserContext';
 
 interface Props {
   user: UserType;
@@ -19,6 +20,8 @@ const REMOVE_USER = gql`
 `;
 
 const UserRow: FC<Props> = ({ user }) => {
+  const { user: currentUser } = useContext(UserContext);
+
   const [removeUser, { loading }] = useMutation(REMOVE_USER, {
     refetchQueries: ['GetUsers'],
     awaitRefetchQueries: true,
@@ -32,19 +35,24 @@ const UserRow: FC<Props> = ({ user }) => {
     });
   };
 
+  const renderRemoveOption = () => {
+    if (user.cognitoId !== currentUser.id) {
+      if (loading) {
+        return <Loading>REMOVING</Loading>;
+      }
+      return (
+        <Button color="red" isOutlined={true} size="small" onClick={handleRemoveUser}>
+          REMOVE
+        </Button>
+      );
+    }
+  };
+
   return (
     <tr>
       <td>{user.preferredUsername}</td>
       <td>{user.isAdmin?.toString()}</td>
-      <td>
-        {loading ? (
-          <Loading>REMOVING</Loading>
-        ) : (
-          <Button color="red" isOutlined={true} size="small" onClick={handleRemoveUser}>
-            REMOVE
-          </Button>
-        )}
-      </td>
+      <td>{renderRemoveOption()}</td>
     </tr>
   );
 };

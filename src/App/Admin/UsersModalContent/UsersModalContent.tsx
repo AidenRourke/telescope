@@ -23,6 +23,7 @@ const GET_USERS = gql`
       id
       isAdmin
       preferredUsername
+      cognitoId
     }
   }
 `;
@@ -64,50 +65,38 @@ const UsersModalContent: FC = () => {
 
   const renderUsers = () => {
     if (data) {
-      return data.users.map((user: UserType) => <UserRow user={user} />);
+      return data.users.map((user: UserType) => <UserRow key={user.id} user={user} />);
     }
   };
 
   return (
-    <div>
-      <Table>
-        <tbody>
-          <tr>
-            <th>USER NAME</th>
-            <th>ADMIN?</th>
-            <th>OPTION</th>
-          </tr>
-          {renderUsers()}
-          <tr>
-            <td>
-              <Input
-                color="blue"
-                inputSize="small"
-                value={username}
-                onChange={(e: any) => setUsername(e.target.value)}
-              />
-            </td>
-            <td>
-              <input
-                color="blue"
-                type="checkbox"
-                checked={isAdmin}
-                onChange={(e: any) => setIsAdmin(e.target.checked)}
-              />
-            </td>
-            <td>
-              {loading ? (
-                <Loading>ADDING</Loading>
-              ) : (
-                <Button color="blue" isOutlined={true} size="small" onClick={handleCreateUser}>
-                  ADD
-                </Button>
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-    </div>
+    <Table>
+      <tbody>
+        <tr>
+          <th>USER NAME</th>
+          <th>ADMIN?</th>
+          <th>OPTION</th>
+        </tr>
+        {renderUsers()}
+        <tr>
+          <td>
+            <Input color="blue" inputSize="small" value={username} onChange={(e: any) => setUsername(e.target.value)} />
+          </td>
+          <td>
+            <input color="blue" type="checkbox" checked={isAdmin} onChange={(e: any) => setIsAdmin(e.target.checked)} />
+          </td>
+          <td>
+            {loading ? (
+              <Loading>ADDING</Loading>
+            ) : (
+              <Button color="blue" isOutlined={true} size="small" onClick={handleCreateUser}>
+                ADD
+              </Button>
+            )}
+          </td>
+        </tr>
+      </tbody>
+    </Table>
   );
 };
 

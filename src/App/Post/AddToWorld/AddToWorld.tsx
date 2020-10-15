@@ -41,11 +41,7 @@ const AddToWorld: FC<Props> = props => {
     return data.worlds.map((world: WorldType) => <AddWorldImage world={world} {...props} />);
   };
 
-  return (
-    <div>
-      <WorldsContainer>{renderWorlds()}</WorldsContainer>
-    </div>
-  );
+  return <WorldsContainer>{renderWorlds()}</WorldsContainer>;
 };
 
 export { AddToWorld };

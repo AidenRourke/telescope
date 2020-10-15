@@ -1,4 +1,4 @@
-import React, { FC, useReducer, useState, ChangeEvent } from 'react';
+import React, { FC, useReducer, useState, ChangeEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
@@ -7,6 +7,7 @@ import { red } from 'styles/colors';
 import { Button, Input } from 'Components';
 import male from 'assets/login_male.gif';
 import female from 'assets/login_female.gif';
+import { UserContext } from '../../Contexts/UserContext';
 
 const LoginView = styled.div`
   font-size: 1rem;
@@ -88,16 +89,15 @@ const Error = styled.p<{ error: boolean }>`
   }
 `;
 
-interface Props extends RouteComponentProps {
-  setIsAuthenticated: (value: boolean) => void;
-}
+const Login: FC<RouteComponentProps> = ({ history }) => {
+  const { login } = useContext(UserContext);
 
-const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
   const [error, setError] = useState<boolean>(false);
   const [loginInput, setLoginInput] = useReducer((state: any, newState: any) => ({ ...state, ...newState }), {
-    email: '',
+    username: '',
     password: '',
   });
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,13 +112,12 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
     const { username, password } = loginInput;
     try {
       await Auth.signIn(username, password);
-      setIsAuthenticated(true);
-      setError(false);
+      await login();
       history.push('/posts');
     } catch (e) {
       setError(true);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -128,12 +127,7 @@ const Login: FC<Props> = ({ history, setIsAuthenticated }) => {
 
       <LoginForm onSubmit={handleSubmit}>
         <ModuWorld src={require('assets/modu_world.png')} />
-        <Email
-          placeholder="USERNAME"
-          name="username"
-          onChange={handleInput}
-          value={loginInput.username}
-        />
+        <Email type="text" placeholder="USERNAME" name="username" onChange={handleInput} value={loginInput.username} />
         <Password
           type="password"
           placeholder="PASSWORD"

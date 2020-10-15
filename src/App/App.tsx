@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Router from './Router';
+import { UserContext } from 'Contexts/UserContext';
 
 const AppContainer = styled.div`
   height: 100vh;
@@ -13,27 +14,47 @@ const AppContainer = styled.div`
 
 const App: FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     onLoad();
   }, []);
 
-  async function onLoad() {
+  const onLoad = async () => {
     try {
       await Auth.currentSession();
-      setIsAuthenticated(true);
+      await login();
     } catch (e) {
-      setIsAuthenticated(false);
+      setUser({});
     }
     setIsLoaded(true);
-  }
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  const login = async () => {
+    const {
+      signInUserSession: {
+        accessToken: { payload },
+      },
+    } = await Auth.currentAuthenticatedUser();
+    setUser({
+      id: payload.username,
+      isAdmin: payload['cognito:groups'].includes('modu-world-admin'),
+    });
+  };
 
   return (
     <AppContainer id="app">
-      <DndProvider backend={HTML5Backend}>
-        {isLoaded && <Router isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}
-      </DndProvider>
+      {isLoaded && (
+        <DndProvider backend={HTML5Backend}>
+          <UserContext.Provider value={{ user, logout, login }}>
+            <Router />
+          </UserContext.Provider>
+        </DndProvider>
+      )}
     </AppContainer>
   );
 };

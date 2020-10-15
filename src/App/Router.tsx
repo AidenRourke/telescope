@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import { Login } from 'App/Login';
@@ -7,54 +7,40 @@ import { Post } from 'App/Post';
 import { Admin } from 'App/Admin';
 import { Worlds } from 'App/Worlds';
 import { World } from 'App/World';
+import { UserContext } from 'Contexts/UserContext';
 
-interface Props {
-  isAuthenticated: boolean;
-  setIsAuthenticated: (value: boolean) => void;
-}
+const Router: FC = () => {
+  const { user } = useContext(UserContext);
 
-const Router: FC<Props> = ({ isAuthenticated, setIsAuthenticated }) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route
-          exact={true}
-          path="/login"
-          render={props => <Login {...props} setIsAuthenticated={setIsAuthenticated} />}
-        />
+        <Route exact={true} path="/login" render={props => <Login {...props} />} />
         <Route
           exact={true}
           path="/posts"
-          render={props =>
-            isAuthenticated ? (
-              <UserPosts {...props} setIsAuthenticated={setIsAuthenticated} />
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
+          render={props => (!!user ? <UserPosts {...props} /> : <Redirect to="/login" />)}
         />
         <Route
           exact={true}
           path={'/posts/:id'}
-          render={props => (isAuthenticated ? <Post {...props} /> : <Redirect to="/login" />)}
+          render={props => (!!user ? <Post {...props} /> : <Redirect to="/login" />)}
         />
         <Route
           exact={true}
           path="/worlds"
-          render={props =>
-            isAuthenticated ? <Worlds {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />
-          }
+          render={props => (!!user ? <Worlds {...props} /> : <Redirect to="/login" />)}
         />
         <Route
           exact={true}
           path="/worlds/:id"
-          render={props => (isAuthenticated ? <World {...props} /> : <Redirect to="/login" />)}
+          render={props => (!!user ? <World {...props} /> : <Redirect to="/login" />)}
         />
         <Route
           exact={true}
           path={'/admin'}
           render={props =>
-            isAuthenticated ? <Admin {...props} setIsAuthenticated={setIsAuthenticated} /> : <Redirect to="/login" />
+            !!user && user.isAdmin ? <Admin {...props}/> : <Redirect to="/login" />
           }
         />
         <Route component={() => <Redirect to="/login" />} />

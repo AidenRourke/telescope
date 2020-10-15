@@ -24,10 +24,6 @@ const ATTACH_USER = gql`
   }
 `;
 
-interface Props extends RouteComponentProps {
-  setIsAuthenticated: (value: boolean) => void;
-}
-
 const AdminContainer = styled.div`
   padding: 2rem 2rem 2rem 3rem;
   min-width: 0;
@@ -55,6 +51,11 @@ const AdminOption = styled.button<{ selected: boolean }>`
   background-color: ${({ selected }) => (selected ? colors.green : 'transparent')};
 `;
 
+const AdminModalContentContainer = styled.div`
+  max-height: 20rem;
+  overflow: scroll;
+`;
+
 const OptionDetails = styled.div`
   text-align: center;
   width: 100%;
@@ -63,7 +64,7 @@ const OptionDetails = styled.div`
   padding: 2rem 0;
 `;
 
-const Admin: FC<Props> = props => {
+const Admin: FC<RouteComponentProps> = props => {
   const [selectedOption, setSelectedOption] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -99,8 +100,8 @@ const Admin: FC<Props> = props => {
 
   const ADMIN_OPTIONS = [
     {
-      name: 'USERS',
-      description: 'VIEW AND CREATE USERS',
+      name: 'WORLD USERS',
+      description: 'VIEW AND CREATE WORLD USERS',
       fields: [
         { name: 'preferredUsername', type: 'text', display: 'USER NAME' },
         { name: 'isAdmin', type: 'checkbox', display: 'ADMIN?' },
@@ -126,7 +127,7 @@ const Admin: FC<Props> = props => {
 
   const renderModalContent = () => {
     switch (ADMIN_OPTIONS[selectedOption].name) {
-      case 'USERS':
+      case 'WORLD USERS':
         return <UsersModalContent />;
       case 'ACCOUNTS':
         return <AccountsModalContent />;
@@ -144,6 +145,7 @@ const Admin: FC<Props> = props => {
           {/*{renderHelpers()}*/}
           {ADMIN_OPTIONS.map((option, i) => (
             <AdminOption
+              key={option.name}
               onMouseOver={() => setSelectedOption(i)}
               selected={selectedOption === i}
               onClick={() => setIsOpen(true)}
@@ -154,7 +156,7 @@ const Admin: FC<Props> = props => {
         </AdminOptions>
         <OptionDetails>{ADMIN_OPTIONS[selectedOption].description}</OptionDetails>
         <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={ADMIN_OPTIONS[selectedOption].name}>
-          {renderModalContent()}
+          <AdminModalContentContainer>{renderModalContent()}</AdminModalContentContainer>
         </Modal>
       </AdminContainer>
     </>

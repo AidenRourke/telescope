@@ -54,11 +54,11 @@ const AccountsModalContent: FC = () => {
     awaitRefetchQueries: true,
   });
 
-  const handleCreateAccount = async (e: any) => {
+  const handleCreateAccount = async () => {
     await createAccount({
       variables: {
-        publisherName: e.target.name.value,
-        preferredUsername: e.target.preferredUsername.value,
+        publisherName,
+        preferredUsername,
       },
     });
     setPublisherName('');
@@ -67,49 +67,47 @@ const AccountsModalContent: FC = () => {
 
   const renderAccounts = () => {
     if (data) {
-      return data.accounts.map((account: AccountType) => <AccountRow account={account} />);
+      return data.accounts.map((account: AccountType) => <AccountRow key={account.id} account={account} />);
     }
   };
   return (
-    <div>
-      <Table>
-        <tbody>
-          <tr>
-            <th>USER NAME</th>
-            <th>PUBLISHER NAME</th>
-            <th>OPTION</th>
-          </tr>
-          {renderAccounts()}
-          <tr>
-            <td>
-              <Input
-                color="blue"
-                inputSize="small"
-                value={publisherName}
-                onChange={(e: any) => setPublisherName(e.target.value)}
-              />
-            </td>
-            <td>
-              <Input
-                color="blue"
-                inputSize="small"
-                value={preferredUsername}
-                onChange={(e: any) => setPreferredUsername(e.target.value)}
-              />
-            </td>
-            <td>
-              {loading ? (
-                <Loading>ADDING</Loading>
-              ) : (
-                <Button color="blue" isOutlined={true} size="small" onClick={handleCreateAccount}>
-                  ADD
-                </Button>
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-    </div>
+    <Table>
+      <tbody>
+        <tr>
+          <th>USER NAME</th>
+          <th>PUBLISHER NAME</th>
+          <th>OPTION</th>
+        </tr>
+        {renderAccounts()}
+        <tr>
+          <td>
+            <Input
+              color="blue"
+              inputSize="small"
+              value={preferredUsername}
+              onChange={(e: any) => setPreferredUsername(e.target.value)}
+            />
+          </td>
+          <td>
+            <Input
+              color="blue"
+              inputSize="small"
+              value={publisherName}
+              onChange={(e: any) => setPublisherName(e.target.value)}
+            />
+          </td>
+          <td>
+            {loading ? (
+              <Loading>ADDING</Loading>
+            ) : (
+              <Button color="blue" isOutlined={true} size="small" onClick={handleCreateAccount}>
+                ADD
+              </Button>
+            )}
+          </td>
+        </tr>
+      </tbody>
+    </Table>
   );
 };
 
