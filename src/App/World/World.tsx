@@ -88,17 +88,30 @@ const DropZones = styled.div`
   margin-bottom: 2rem;
 `;
 
-const DropZoneContent = styled.div<{ url: string }>`
-  display: flex;
+const DropZoneImage = styled.div<{ url: string }>`
   width: 100%;
   height: 8rem;
   background-image: url(${({ url }) => url});
   background-position: center;
-  align-items: center;
-  small {
-    width: 50%;
-    margin-left: 1rem;
-  }
+`;
+
+const DropZoneVideo = styled.video`
+  width: 100%;
+  height: 8rem;
+`;
+
+const DropZoneText = styled.small`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const DropZoneLoading = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const CoverImage = styled.img`
@@ -119,6 +132,7 @@ const GET_WORLD = gql`
       description
       status
       coverS3
+      prerollS3
       posts {
         id
         title
@@ -138,8 +152,8 @@ const GET_WORLD = gql`
 `;
 
 const GET_SIGNED_REQUEST = gql`
-  mutation SignS3 {
-    signS3 {
+  mutation SignS3($type: String!) {
+    signS3(type: $type) {
       signedRequest
       url
     }
@@ -152,6 +166,17 @@ const UPDATE_WORLD_IMAGE = gql`
       world {
         id
         coverS3
+      }
+    }
+  }
+`;
+
+const UPDATE_WORLD_VIDEO = gql`
+  mutation UpdateWorldVideo($worldId: ID!, $videoUrl: String!) {
+    updateWorldVideo(worldId: $worldId, videoUrl: $videoUrl) {
+      world {
+        id
+        prerollS3
       }
     }
   }
@@ -192,6 +217,8 @@ const UPDATE_WORLD_DESCRIPTION = gql`
 const World: FC<RouteComponentProps> = ({ history }) => {
   const [titleEditMode, setTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
+  const [isUpdatingWorldImage, setIsUpdatingWorldImage] = useState(false);
+  const [isUpdatingWorldVideo, setIsUpdatingWorldVideo] = useState(false);
 
   const { id } = useParams();
 
@@ -203,7 +230,9 @@ const World: FC<RouteComponentProps> = ({ history }) => {
 
   const [updateWorldDescription] = useMutation(UPDATE_WORLD_DESCRIPTION);
 
-  const [updateWorldImage, { loading: isUpdatingWorldImage }] = useMutation(UPDATE_WORLD_IMAGE);
+  const [updateWorldImage] = useMutation(UPDATE_WORLD_IMAGE);
+
+  const [updateWorldVideo] = useMutation(UPDATE_WORLD_VIDEO);
 
   const [removeWorld] = useMutation(REMOVE_WORLD, { refetchQueries: ['GetWorlds'], awaitRefetchQueries: true });
 
@@ -222,14 +251,25 @@ const World: FC<RouteComponentProps> = ({ history }) => {
   };
 
   const onDrop = async (acceptedFiles: File[], isImage: boolean) => {
-    const res = await getSignedRequest();
+    if (isImage) setIsUpdatingWorldImage(true);
+    else setIsUpdatingWorldVideo(true);
+
+    const type = isImage ? 'png' : 'mp4';
+    const res = await getSignedRequest({ variables: { type } });
     const {
       data: {
         signS3: { url, signedRequest },
       },
     } = res;
     await uploadToS3(acceptedFiles[0], signedRequest);
-    updateWorldImage({ variables: { worldId: worldData.world.id, imageUrl: url } });
+
+    if (isImage) {
+      await updateWorldImage({ variables: { worldId: worldData.world.id, imageUrl: url } });
+      setIsUpdatingWorldImage(false);
+    } else {
+      await updateWorldVideo({ variables: { worldId: worldData.world.id, videoUrl: url } });
+      setIsUpdatingWorldVideo(false);
+    }
   };
 
   const changeTitle = async (title: string, worldId: string, shouldUpdate: boolean) => {
@@ -331,20 +371,30 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         </WorldInfo>
         <DropZones>
           <Dropzone onDrop={(files: File[]) => onDrop(files, false)} accept="video/mp4">
-            <DropZoneContent url="">
-              <small>EDIT PRE-ROLL VIDEO</small>
-            </DropZoneContent>
-          </Dropzone>
-          <Dropzone onDrop={(files: File[]) => onDrop(files, true)} accept="image/png">
-            <DropZoneContent url={world.coverS3}>
-              {isUpdatingWorldImage ? (
+            <DropZoneVideo autoPlay loop key={world.prerollS3}>
+              <source src={world.prerollS3} type="video/mp4" />
+            </DropZoneVideo>
+            {isUpdatingWorldVideo ? (
+              <DropZoneLoading>
                 <Loading>
                   <small>UPDATING</small>
                 </Loading>
-              ) : (
-                <small>EDIT COVER IMAGE</small>
-              )}
-            </DropZoneContent>
+              </DropZoneLoading>
+            ) : (
+              <DropZoneText>EDIT PRE-ROLL VIDEO</DropZoneText>
+            )}
+          </Dropzone>
+          <Dropzone onDrop={(files: File[]) => onDrop(files, true)} accept="image/png">
+            <DropZoneImage url={world.coverS3} />
+            {isUpdatingWorldImage ? (
+              <DropZoneLoading>
+                <Loading>
+                  <small>UPDATING</small>
+                </Loading>
+              </DropZoneLoading>
+            ) : (
+              <DropZoneText>EDIT COVER IMAGE</DropZoneText>
+            )}
           </Dropzone>
         </DropZones>
         <Buttons>

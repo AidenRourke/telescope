@@ -44,6 +44,7 @@ export interface PublisherType {
 export interface WorldType {
   id: string;
   coverS3?: string;
+  prerollS3?: string;
   title?: string;
   description?: string;
   posts?: PostType[];
