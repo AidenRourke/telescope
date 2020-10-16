@@ -53,9 +53,10 @@ const TextArea = styled.textarea`
 `;
 
 const TitleTextArea = styled(TextArea)`
+  box-sizing: border-box;
   font-size: 2em;
   height: 2.625rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 const Description = styled.p`

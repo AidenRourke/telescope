@@ -1,4 +1,4 @@
-import React, {FC, useContext, useState} from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { gql } from 'apollo-boost';
 
@@ -9,7 +9,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { PublisherType, WorldType } from 'Types/types';
 import { Modal } from 'Components/Modal';
 import { CreateWorld } from './CreateWorld';
-import {UserContext} from "../../Contexts/UserContext";
+import { UserContext } from '../../Contexts/UserContext';
 
 const WorldsContainer = styled.div`
   display: flex;
@@ -99,6 +99,14 @@ const Worlds: FC<RouteComponentProps> = props => {
 
   const { loading, data } = useQuery(GET_WORLDS);
 
+  const getCurators = () => {
+    const curators: string[] = [];
+    data.worlds[selection]?.publishers.map((publisher: any) => {
+      publisher.accounts.map((account: any) => curators.push(account.user.preferredUsername));
+    });
+    return curators.join(', ');
+  };
+
   const renderMetaData = () => {
     if (loading || selection < 0) return null;
     return (
@@ -110,11 +118,7 @@ const Worlds: FC<RouteComponentProps> = props => {
         <h4>POSTS</h4>
         <small>{data.worlds[selection]?.posts.length}</small>
         <h4>CURATORS</h4>
-        <small>
-          {data.worlds[selection]?.publishers
-            .map((publisher: any) => publisher.accounts.map((account: any) => account.user.preferredUsername))
-            .join(', ')}
-        </small>
+        <small>{getCurators()}</small>
       </WorldMetaData>
     );
   };

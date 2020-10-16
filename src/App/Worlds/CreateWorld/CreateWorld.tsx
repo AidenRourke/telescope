@@ -34,7 +34,7 @@ const CreateWorld: FC = () => {
   return (
     <CreateWorldsContainer>
       <form onSubmit={handleCreateWorld}>
-        <Input placeholder="PUBLISHER" />
+        <Input inputSize="small" placeholder="PUBLISHER" />
       </form>
     </CreateWorldsContainer>
   );

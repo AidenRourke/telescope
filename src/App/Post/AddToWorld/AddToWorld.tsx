@@ -37,7 +37,6 @@ const AddToWorld: FC<Props> = props => {
 
   const renderWorlds = () => {
     if (loading) return null;
-    if (data.worlds.length === 0) return <h2>YOU HAVE NO AVAILABLE WORLDS</h2>;
     return data.worlds.map((world: WorldType) => <AddWorldImage world={world} {...props} />);
   };
 
