@@ -1,7 +1,7 @@
 import React, { ReactElement, FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { Button } from 'Components/Button';
+import { Button } from 'Components';
 
 interface Props {
   children: ReactElement[];

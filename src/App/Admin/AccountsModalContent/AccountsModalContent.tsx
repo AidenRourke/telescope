@@ -16,6 +16,7 @@ const Table = styled.table`
     padding: 0.5rem;
   }
 `;
+
 const GET_ACCOUNTS = gql`
   query GetAccounts {
     accounts {

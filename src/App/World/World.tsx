@@ -11,6 +11,7 @@ import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dropzone, Button, Loading } from 'Components';
 import { WorldPostsList } from './WorldPostsList';
+import { GET_WORLDS } from '../Worlds/Worlds';
 
 const WorldContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const WorldData = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 40rem;
 `;
 
 const BackArrow = styled(FontAwesomeIcon)`
@@ -55,7 +57,6 @@ const TextArea = styled.textarea`
 const TitleTextArea = styled(TextArea)`
   box-sizing: border-box;
   font-size: 2em;
-  height: 2.625rem;
   margin-bottom: 1rem;
 `;
 
@@ -235,7 +236,10 @@ const World: FC<RouteComponentProps> = ({ history }) => {
 
   const [updateWorldVideo] = useMutation(UPDATE_WORLD_VIDEO);
 
-  const [removeWorld] = useMutation(REMOVE_WORLD, { refetchQueries: ['GetWorlds'], awaitRefetchQueries: true });
+  const [removeWorld] = useMutation(REMOVE_WORLD, {
+    refetchQueries: [{ query: GET_WORLDS }],
+    awaitRefetchQueries: true,
+  });
 
   const handleRemoveWorld = async (worldId: string) => {
     await removeWorld({ variables: { worldId } });

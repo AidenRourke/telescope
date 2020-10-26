@@ -5,10 +5,8 @@ import { gql } from 'apollo-boost';
 import { Navbar } from '../Navbar';
 import * as colors from 'styles/colors';
 import styled from 'styled-components';
-import { useQuery } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { PublisherType, WorldType } from 'Types/types';
-import { Modal } from 'Components/Modal';
-import { CreateWorld } from './CreateWorld';
 import { UserContext } from '../../Contexts/UserContext';
 
 const WorldsContainer = styled.div`
@@ -42,7 +40,8 @@ const AddWorldButton = styled.div`
 
 const WorldButton = styled.img<{ selected: boolean }>`
   object-fit: cover;
-  width: 20rem;
+  min-width: 20rem;
+  max-width: 20rem;
   height: 80%;
   opacity: ${({ selected }) => (selected ? 0.8 : 0.2)};
   // border: 3px solid ${({ selected }) => (selected ? colors.blue : 'transparent')};
@@ -89,15 +88,35 @@ export const GET_WORLDS = gql`
   }
 `;
 
+const CREATE_WORLD = gql`
+  mutation CreateWorld {
+    createWorld {
+      world {
+        id
+      }
+    }
+  }
+`;
+
 const Worlds: FC<RouteComponentProps> = props => {
   const { user } = useContext(UserContext);
 
   const [selection, setSelection] = useState<number>(0);
-  const [isOpen, setIsOpen] = useState(false);
 
   const history = useHistory();
 
   const { loading, data } = useQuery(GET_WORLDS);
+  const [createWorld] = useMutation(CREATE_WORLD, { refetchQueries: [{ query: GET_WORLDS }] });
+
+  const handleCreateWorld = async () => {
+    const res = await createWorld();
+    const {
+      data: {
+        createWorld: { world },
+      },
+    } = res;
+    history.push(`/worlds/${world.id}`);
+  };
 
   const getCurators = () => {
     const curators: string[] = [];
@@ -125,7 +144,7 @@ const Worlds: FC<RouteComponentProps> = props => {
 
   const renderAddWorld = () => {
     return (
-      <AddWorldButton onMouseOver={() => setSelection(-1)} onClick={() => setIsOpen(true)}>
+      <AddWorldButton onMouseOver={() => setSelection(-1)} onClick={() => handleCreateWorld()}>
         <svg xmlns="http://www.w3.org/2000/svg" height="30%" viewBox="0 0 24 24">
           <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
         </svg>
@@ -155,9 +174,6 @@ const Worlds: FC<RouteComponentProps> = props => {
         {user.isAdmin && renderAddWorld()}
         {renderWorlds()}
       </WorldsContainer>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title="CREATE WORLD">
-        <CreateWorld />
-      </Modal>
     </>
   );
 };

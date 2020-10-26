@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, {FC, useState, useEffect, useRef, useContext} from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import { Button, Input } from 'Components/index';
 import { blue, black, white } from 'styles/colors';
 import { FilterTag } from './FilterTag';
 import { FilterType } from 'Types/types';
+import {FilterContext} from "../../Contexts/FilterContext";
 
 const FilterForm = styled.form`
   flex: 1;
@@ -83,15 +84,14 @@ const SearchButton = styled(Button)`
 interface Props {
   setIsOpen: (value: boolean) => void;
   isOpen: boolean;
-  filters: { [index: string]: any };
-  addTag: (tag: FilterType) => void;
-  removeTag: (tag: FilterType) => void;
   options: string[];
 }
 
-const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, filters, addTag, removeTag, options }) => {
+const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, options }) => {
   const [selection, setSelection] = useState(options[0]);
   const [tagInputValue, setTagInputValue] = useState<string>('');
+
+  const { filters, addFilter, removeFilter } = useContext(FilterContext);
 
   const menu = useRef<HTMLDivElement>(null);
 
@@ -115,7 +115,7 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, filters, addTag, removeTag
 
   const submitForm = (e: any) => {
     e.preventDefault();
-    addTag({ name: tagInputValue, type: selection });
+    addFilter({ name: tagInputValue, type: selection });
     setTagInputValue('');
   };
 
@@ -124,10 +124,10 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, filters, addTag, removeTag
     Object.keys(filters).map(key => {
       if (Array.isArray(filters[key])) {
         filters[key].map((filter: string) => {
-          tags.push(<FilterTag filter={{ type: key, name: filter }} onClick={removeTag} />);
+          tags.push(<FilterTag filter={{ type: key, name: filter }} onClick={removeFilter} />);
         });
       } else {
-        tags.push(<FilterTag filter={{ type: key, name: filters[key] }} onClick={removeTag} />);
+        tags.push(<FilterTag filter={{ type: key, name: filters[key] }} onClick={removeFilter} />);
       }
     });
     return tags;

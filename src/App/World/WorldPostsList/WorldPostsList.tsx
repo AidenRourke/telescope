@@ -8,6 +8,7 @@ import update from 'immutability-helper';
 
 const WorldPostListContainer = styled.div`
   width: 18rem;
+  overflow: auto;
 `;
 
 const UPDATE_WORLD_POSTS_ORDER = gql`

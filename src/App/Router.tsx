@@ -15,7 +15,7 @@ const Router: FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact={true} path="/login" render={props => <Login {...props} />} />
+        <Route exact={true} path="/login" render={props => !!user ? <Redirect to="/posts" /> : <Login {...props} />} />
         <Route
           exact={true}
           path="/posts"

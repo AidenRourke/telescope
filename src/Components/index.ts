@@ -5,3 +5,4 @@ export { FilterSearch } from './FilterSearch';
 export { Modal } from './Modal';
 export { Dropzone } from './Dropzone';
 export { Loading } from './Loading';
+export { Tag } from './Tag';

@@ -87,7 +87,7 @@ const Admin: FC<RouteComponentProps> = props => {
                 description: 'Where did she come from, where did she go?',
                 submittedBy: '9e1c56f6-b9f1-4401-91e5-37ecb7778464',
                 title: 'Mystery Image',
-                tags: [],
+                tags: ["Test1", "Test2"],
               },
             },
           })
@@ -142,7 +142,7 @@ const Admin: FC<RouteComponentProps> = props => {
       <AdminContainer>
         <h1>SETTINGS AND OPTIONS</h1>
         <AdminOptions>
-          {/*{renderHelpers()}*/}
+          {renderHelpers()}
           {ADMIN_OPTIONS.map((option, i) => (
             <AdminOption
               key={option.name}

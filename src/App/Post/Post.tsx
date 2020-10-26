@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -7,12 +7,13 @@ import { useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import { Button, Modal } from 'Components';
+import { Button, Modal, Tag } from 'Components';
 import { Film3d } from './Film3d';
 import { AddToWorld } from './AddToWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { TagType } from 'Types/types';
+import { FilterContext } from '../../Contexts/FilterContext';
 
 const PostContainer = styled.div`
   display: flex;
@@ -60,6 +61,11 @@ const TextSection = styled.section`
 
 const TextHeader = styled.p`
   opacity: 0.7;
+`;
+
+const Tags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const SideBarFooter = styled.div`
@@ -115,16 +121,20 @@ const REMOVE_POST = gql`
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
+
+  const { addFilter } = useContext(FilterContext);
 
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
 
   const [removePost] = useMutation(REMOVE_POST, {
     refetchQueries: ['GetPosts'],
+    awaitRefetchQueries: true,
   });
 
-  const handleDeletePost = (postId: string) => {
-    removePost({ variables: { postId } });
-    history.push('/posts');
+  const handleDeletePost = async (postId: string) => {
+    await removePost({ variables: { postId } });
+    history.push(`/posts${window.location.search}`);
   };
 
   if (loading) return null;
@@ -134,6 +144,18 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
       return `${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`;
     return 'UNKNOWN';
   };
+
+  const addTagToFilter = (name: string) => {
+    addFilter({ name: name, type: 'TAG' });
+    history.push(`/posts${window.location.search}`);
+  };
+
+  const renderTags = () =>
+    data.post.tags.map((tag: TagType) => (
+      <Tag key={tag.id} onClick={() => addTagToFilter(tag.name)}>
+        {tag.name.toUpperCase()}
+      </Tag>
+    ));
 
   return (
     <>
@@ -162,7 +184,12 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
             </TextSection>
             <TextSection>
               <TextHeader>TAGS:</TextHeader>
-              <h3>{data.post.tags.map((tag: TagType) => tag.name.toUpperCase()).join(', ')}</h3>
+              <h3>
+                <Tags>
+                  {renderTags()}
+                  {/*<Tag onClick={() => setIsAddingTag(true)}>ADD TAG</Tag>*/}
+                </Tags>
+              </h3>
             </TextSection>
           </SideBarContent>
           <SideBarFooter>

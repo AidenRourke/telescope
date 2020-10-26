@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
 import { Auth } from 'aws-amplify';
 import { DndProvider } from 'react-dnd';
@@ -6,26 +6,76 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Router from './Router';
 import { UserContext } from 'Contexts/UserContext';
+import { FilterContext } from 'Contexts/FilterContext';
+import qs from 'query-string';
+import { FilterType } from '../Types/types';
 
 const AppContainer = styled.div`
   height: 100vh;
   display: flex;
 `;
 
+const filtersToQueries = (filters: any) => {
+  return qs.stringify(filters, { arrayFormat: 'comma' });
+};
+
+const queriesToFilters = () => {
+  return qs.parse(window.location.search, { arrayFormat: 'comma' });
+};
+
 const App: FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [user, setUser] = useState();
 
+  const [filters, setFilters] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    queriesToFilters(),
+  );
+
   useEffect(() => {
     onLoad();
   }, []);
+
+  useEffect(() => {
+    const newurl =
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      window.location.pathname +
+      '?' +
+      filtersToQueries(filters);
+    window.history.pushState({ path: newurl }, '', newurl);
+  }, [filters]);
+
+  const addFilter = ({ name, type }: FilterType) => {
+    const oldFilters = filters[type];
+    const newFilter = name.toLowerCase();
+    if (oldFilters === newFilter || oldFilters?.includes(newFilter)) return;
+    let newFilters;
+    if (Array.isArray(oldFilters)) {
+      newFilters = [...oldFilters, newFilter];
+    } else if (oldFilters) {
+      newFilters = [oldFilters, newFilter];
+    } else {
+      newFilters = [newFilter];
+    }
+    setFilters({
+      [type]: newFilters,
+    });
+  };
+
+  const removeFilter = ({ type, name }: FilterType) => {
+    setFilters({
+      [type]: Array.isArray(filters[type]) ? filters[type].filter((filter: any) => filter !== name) : [],
+    });
+  };
 
   const onLoad = async () => {
     try {
       await Auth.currentSession();
       await login();
     } catch (e) {
-      setUser({});
+      setUser(null);
     }
     setIsLoaded(true);
   };
@@ -50,8 +100,10 @@ const App: FC = () => {
     <AppContainer id="app">
       {isLoaded && (
         <DndProvider backend={HTML5Backend}>
-          <UserContext.Provider value={{ user, logout, login }}>
-            <Router />
+          <UserContext.Provider value={{ user, logout }}>
+            <FilterContext.Provider value={{ filters, addFilter, removeFilter }}>
+              <Router />
+            </FilterContext.Provider>
           </UserContext.Provider>
         </DndProvider>
       )}

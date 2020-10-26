@@ -113,7 +113,7 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
     try {
       await Auth.signIn(username, password);
       await login();
-      history.push('/posts');
+      history.push(`/posts`);
     } catch (e) {
       setError(true);
       setIsLoading(false);
