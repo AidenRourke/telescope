@@ -121,7 +121,7 @@ const REMOVE_POST = gql`
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
+  const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
 
   const { addFilter } = useContext(FilterContext);
 
@@ -150,12 +150,9 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     history.push({ pathname: `/posts`, search: window.location.search });
   };
 
-  const renderTags = () =>
-    data.post.tags.map((tag: TagType) => (
-      <Tag key={tag.id} onClick={() => addTagToFilter(tag.name)}>
-        {tag.name.toUpperCase()}
-      </Tag>
-    ));
+  const renderAddTagContent = () => {
+    return "ADD TAG"
+  }
 
   return (
     <>
@@ -186,8 +183,12 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
               <TextHeader>TAGS:</TextHeader>
               <h3>
                 <Tags>
-                  {renderTags()}
-                  {/*<Tag onClick={() => setIsAddingTag(true)}>ADD TAG</Tag>*/}
+                  {data.post.tags.map((tag: TagType) => (
+                    <Tag key={tag.id} onClick={() => addTagToFilter(tag.name)}>
+                      {tag.name.toUpperCase()}
+                    </Tag>
+                  ))}
+                  <Tag onClick={() => setIsAddingTag(true)}>{renderAddTagContent()}</Tag>
                 </Tags>
               </h3>
             </TextSection>

@@ -98,7 +98,7 @@ const App: FC = () => {
     <AppContainer id="app">
       {isLoaded && (
         <DndProvider backend={HTML5Backend}>
-          <UserContext.Provider value={{ user, logout }}>
+          <UserContext.Provider value={{ user, login, logout }}>
             <FilterContext.Provider value={{ filters, addFilter, removeFilter }}>
               <Router />
             </FilterContext.Provider>
