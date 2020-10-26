@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import { Button, Modal, Tag } from 'Components';
+import { Button, Modal, Tag, InputTag } from 'Components';
 import { Film3d } from './Film3d';
 import { AddToWorld } from './AddToWorld';
 
@@ -118,6 +118,19 @@ const REMOVE_POST = gql`
   }
 `;
 
+const CREATE_POST_TAG = gql`
+  mutation CreatePostTag($postId: ID!, $tagName: String!) {
+    createPostTag(postId: $postId, tagName: $tagName) {
+      post {
+        id
+        tags {
+          name
+        }
+      }
+    }
+  }
+`;
+
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -127,10 +140,9 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
 
-  const [removePost] = useMutation(REMOVE_POST, {
-    refetchQueries: ['GetPosts'],
-    awaitRefetchQueries: true,
-  });
+  const [removePost] = useMutation(REMOVE_POST);
+
+  const [createPostTag] = useMutation(CREATE_POST_TAG);
 
   const handleDeletePost = async (postId: string) => {
     await removePost({ variables: { postId } });
@@ -150,9 +162,30 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     history.push({ pathname: `/posts`, search: window.location.search });
   };
 
-  const renderAddTagContent = () => {
-    return "ADD TAG"
-  }
+  const handleAddTag = async (tagName: string) => {
+    if (tagName.length > 0) {
+      await createPostTag({
+        variables: {
+          postId: data.post.id,
+          tagName,
+        },
+      });
+    }
+    setIsAddingTag(false);
+  };
+
+  const renderAddTag = () => {
+    if (!isAddingTag) {
+      return (
+        <Tag onClick={() => setIsAddingTag(true)}>
+          <svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 24 24">
+            <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+          </svg>
+        </Tag>
+      );
+    }
+    return <InputTag onSubmit={handleAddTag} />;
+  };
 
   return (
     <>
@@ -188,7 +221,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
                       {tag.name.toUpperCase()}
                     </Tag>
                   ))}
-                  <Tag onClick={() => setIsAddingTag(true)}>{renderAddTagContent()}</Tag>
+                  {renderAddTag()}
                 </Tags>
               </h3>
             </TextSection>

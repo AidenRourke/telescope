@@ -7,17 +7,16 @@ const TagButton = styled.button`
   font: inherit;
   border: none;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${colors.red};
-  color: ${colors.white};
+  background-color: ${colors.white};
+  color: ${colors.black};
   padding: 0.25rem;
   margin: 0.1rem;
 `;
 
 const TagName = styled.small`
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 interface Props {

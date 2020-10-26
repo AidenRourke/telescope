@@ -60,6 +60,7 @@ const ListView: FC<Props> = () => {
         tags: filters['TAG'] || [],
       },
     },
+    fetchPolicy: "network-only"
   });
 
   const imageRenderer = ({ index, left, top, photo }: RenderImageProps) => {

@@ -6,3 +6,4 @@ export { Modal } from './Modal';
 export { Dropzone } from './Dropzone';
 export { Loading } from './Loading';
 export { Tag } from './Tag';
+export { InputTag } from './InputTag';
