@@ -121,7 +121,7 @@ const REMOVE_POST = gql`
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
+  // const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
 
   const { addFilter } = useContext(FilterContext);
 
@@ -134,7 +134,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   const handleDeletePost = async (postId: string) => {
     await removePost({ variables: { postId } });
-    history.push(`/posts${window.location.search}`);
+    history.push({ pathname: `/posts`, search: window.location.search });
   };
 
   if (loading) return null;
@@ -147,7 +147,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   const addTagToFilter = (name: string) => {
     addFilter({ name: name, type: 'TAG' });
-    history.push(`/posts${window.location.search}`);
+    history.push({ pathname: `/posts`, search: window.location.search });
   };
 
   const renderTags = () =>

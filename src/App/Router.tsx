@@ -15,7 +15,11 @@ const Router: FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact={true} path="/login" render={props => !!user ? <Redirect to="/posts" /> : <Login {...props} />} />
+        <Route
+          exact={true}
+          path="/login"
+          render={props => (!!user ? <Redirect to="/posts" /> : <Login {...props} />)}
+        />
         <Route
           exact={true}
           path="/posts"
@@ -39,9 +43,7 @@ const Router: FC = () => {
         <Route
           exact={true}
           path={'/admin'}
-          render={props =>
-            !!user && user.isAdmin ? <Admin {...props}/> : <Redirect to="/login" />
-          }
+          render={props => (!!user && user.isAdmin ? <Admin {...props} /> : <Redirect to="/login" />)}
         />
         <Route component={() => <Redirect to="/login" />} />
       </Switch>

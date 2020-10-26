@@ -49,6 +49,7 @@ export const GET_POSTS = gql`
 const ListView: FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { filters } = useContext(FilterContext);
+
   const history = useHistory();
 
   const { loading, data } = useQuery(GET_POSTS, {
@@ -70,7 +71,12 @@ const ListView: FC<Props> = () => {
 
     return (
       <ImageContainer key={key} top={top} left={left} height={height} width={width}>
-        <Image {...photoProps} onClick={() => history.push(`/posts/${key}${window.location.search}`)} sx={sx} sy={sy} />
+        <Image
+          {...photoProps}
+          onClick={() => history.push({ pathname: `/posts/${key}`, search: window.location.search })}
+          sx={sx}
+          sy={sy}
+        />
       </ImageContainer>
     );
   };

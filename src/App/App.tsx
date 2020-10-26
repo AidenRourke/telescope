@@ -36,15 +36,13 @@ const App: FC = () => {
     onLoad();
   }, []);
 
-  useEffect(() => {
-    const newurl =
-      window.location.protocol +
-      '//' +
-      window.location.host +
-      window.location.pathname +
-      '?' +
-      filtersToQueries(filters);
+  const setQueryStringWithoutPageReload = (qsValue: string) => {
+    const newurl = window.location.protocol + '//' + window.location.host + window.location.pathname + qsValue;
     window.history.pushState({ path: newurl }, '', newurl);
+  };
+
+  useEffect(() => {
+    setQueryStringWithoutPageReload(`?${filtersToQueries(filters)}`);
   }, [filters]);
 
   const addFilter = ({ name, type }: FilterType) => {
