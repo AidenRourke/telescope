@@ -348,7 +348,11 @@ const World: FC<RouteComponentProps> = ({ history }) => {
   return (
     <WorldContainer>
       <WorldData>
-        <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
+        <BackArrow
+          icon={faArrowLeft}
+          size="lg"
+          onClick={() => history.push({ pathname: '/worlds', search: window.location.search })}
+        />
         <Status>
           WORLD <span>({world.status.toUpperCase()})</span>
         </Status>

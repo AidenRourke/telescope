@@ -1,7 +1,5 @@
 // Types bitch
 
-import { GraphQLType } from 'graphql';
-
 export type Sizes = 'small' | 'regular';
 
 export interface TagType {
@@ -62,7 +60,4 @@ export interface DragItem {
   type: string;
 }
 
-export interface AuthenticatedUserType {
-  id: string;
-  isAdmin: boolean;
-}
+export type ColorTypes = 'white' | 'red' | 'green' | 'blue' | 'black';

@@ -13,21 +13,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-const getTextColor = (color: colorTypes, isOutlined: boolean | undefined, isText: boolean | undefined) => {
-  if (isOutlined || isText) return colors[color];
-
-  switch (color) {
-    case 'black':
-      return colors.white;
-    case 'red':
-      return colors.white;
-    case 'green':
-      return colors.white;
-    default:
-      return colors.black;
-  }
-};
-
 const getPadding = (isText: boolean | undefined, size: Sizes | undefined) => {
   if (isText) return '0';
   switch (size) {
@@ -54,7 +39,7 @@ const StyledButton = styled.button<ButtonProps>`
   cursor: pointer;
   border: 3px solid ${({ isOutlined, color, isText }) => (isOutlined && !isText ? colors[color] : 'transparent')};
   background-color: ${({ isOutlined, isText, color }) => (isOutlined || isText ? 'transparent' : colors[color])};
-  color: ${({ color, isOutlined, isText }) => getTextColor(color, isOutlined, isText)};
+  color: ${({ color, isOutlined, isText }) => (isOutlined || isText ? color : colors.getTextColor(color))};
   &:not(:last-child) {
     margin-right: 0.5rem;
   }

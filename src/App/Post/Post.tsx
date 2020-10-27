@@ -1,7 +1,7 @@
 import React, { FC, useContext, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
@@ -64,6 +64,7 @@ const TextHeader = styled.p`
 `;
 
 const Tags = styled.div`
+  margin-top: 0.5rem;
   display: flex;
   flex-wrap: wrap;
 `;
@@ -102,6 +103,7 @@ const GET_POST = gql`
       frame3S3
       frame4S3
       tags {
+        id
         name
       }
     }
@@ -124,6 +126,21 @@ const CREATE_POST_TAG = gql`
       post {
         id
         tags {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+const REMOVE_POST_TAG = gql`
+  mutation RemovePostTag($postId: ID!, $tagId: ID!) {
+    removePostTag(postId: $postId, tagId: $tagId) {
+      post {
+        id
+        tags {
+          id
           name
         }
       }
@@ -135,6 +152,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
+  const [isRemovingTag, setIsRemovingTag] = useState<boolean>(false);
 
   const { addFilter } = useContext(FilterContext);
 
@@ -143,6 +161,8 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   const [removePost] = useMutation(REMOVE_POST);
 
   const [createPostTag] = useMutation(CREATE_POST_TAG);
+
+  const [removePostTag] = useMutation(REMOVE_POST_TAG);
 
   const handleDeletePost = async (postId: string) => {
     await removePost({ variables: { postId } });
@@ -155,11 +175,6 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     if (data.post.city && data.post.countryCode)
       return `${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`;
     return 'UNKNOWN';
-  };
-
-  const addTagToFilter = (name: string) => {
-    addFilter({ name: name, type: 'TAG' });
-    history.push({ pathname: `/posts`, search: window.location.search });
   };
 
   const handleAddTag = async (tagName: string) => {
@@ -177,14 +192,21 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   const renderAddTag = () => {
     if (!isAddingTag) {
       return (
-        <Tag onClick={() => setIsAddingTag(true)}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="1rem" viewBox="0 0 24 24">
-            <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
-          </svg>
+        <Tag onClick={() => setIsAddingTag(true)} color="white">
+          <FontAwesomeIcon icon={faPlus} size="sm" />
         </Tag>
       );
     }
     return <InputTag onSubmit={handleAddTag} />;
+  };
+
+  const handleTagClick = async (tag: TagType) => {
+    if (isRemovingTag) {
+      await removePostTag({ variables: { postId: data.post.id, tagId: tag.id } });
+    } else {
+      addFilter({ name: tag.name, type: 'TAG' });
+      history.push({ pathname: `/posts`, search: window.location.search });
+    }
   };
 
   return (
@@ -192,7 +214,11 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
       <PostContainer>
         <SideBar>
           <SideBarHeader>
-            <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
+            <BackArrow
+              icon={faArrowLeft}
+              size="lg"
+              onClick={() => history.push({ pathname: '/posts', search: window.location.search })}
+            />
             <Modu src={sidebar} />
           </SideBarHeader>
           <SideBarContent>
@@ -217,11 +243,14 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
               <h3>
                 <Tags>
                   {data.post.tags.map((tag: TagType) => (
-                    <Tag key={tag.id} onClick={() => addTagToFilter(tag.name)}>
+                    <Tag key={tag.id} onClick={() => handleTagClick(tag)} color={isRemovingTag ? 'red' : 'white'}>
                       {tag.name.toUpperCase()}
                     </Tag>
                   ))}
-                  {renderAddTag()}
+                  {!isRemovingTag && renderAddTag()}
+                  <Tag onClick={() => setIsRemovingTag(!isRemovingTag)} color="white">
+                    {isRemovingTag ? 'CANCEL' : <FontAwesomeIcon icon={faMinus} size="sm" />}
+                  </Tag>
                 </Tags>
               </h3>
             </TextSection>
