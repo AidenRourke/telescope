@@ -54,8 +54,10 @@ const TextArea = styled.textarea`
   font-family: inherit;
 `;
 
-const TitleTextArea = styled(TextArea)`
-  box-sizing: border-box;
+const TitleTextInput = styled.input`
+  background: none;
+  color: ${colors.green};
+  font-family: inherit;
   font-size: 2em;
   margin-bottom: 1rem;
 `;
@@ -241,8 +243,8 @@ const World: FC<RouteComponentProps> = ({ history }) => {
     awaitRefetchQueries: true,
   });
 
-  const handleRemoveWorld = async (worldId: string) => {
-    await removeWorld({ variables: { worldId } });
+  const handleRemoveWorld = async () => {
+    await removeWorld({ variables: { worldId: worldData.world.id } });
     history.push('/worlds');
   };
 
@@ -277,11 +279,11 @@ const World: FC<RouteComponentProps> = ({ history }) => {
     }
   };
 
-  const changeTitle = async (title: string, worldId: string, shouldUpdate: boolean) => {
-    if (shouldUpdate) {
+  const changeTitle = async (title: string) => {
+    if (title !== worldData.world.title) {
       await updateWorldTitle({
         variables: {
-          worldId,
+          worldId: worldData.world.id,
           title,
         },
       });
@@ -289,11 +291,11 @@ const World: FC<RouteComponentProps> = ({ history }) => {
     setTitleEditMode(false);
   };
 
-  const changeDescription = async (description: string, worldId: string, shouldUpdate: boolean) => {
-    if (shouldUpdate) {
+  const changeDescription = async (description: string) => {
+    if (description !== worldData.world.description) {
       await updateWorldDescription({
         variables: {
-          worldId,
+          worldId: worldData.world.id,
           description,
         },
       });
@@ -301,23 +303,17 @@ const World: FC<RouteComponentProps> = ({ history }) => {
     setDescriptionEditMode(false);
   };
 
-  if (loading) return null;
-
-  const { world } = worldData;
-
   const renderTitle = () => {
     if (titleEditMode) {
       return (
-        <TitleTextArea
+        <TitleTextInput
           autoFocus
-          onBlur={({ target: { value } }: any) => changeTitle(value, world.id, value !== world.title)}
+          onBlur={({ target: { value } }: any) => changeTitle(value)}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.title;
           }}
-        >
-          {world.title}
-        </TitleTextArea>
+        />
       );
     }
     return <Title onClick={() => setTitleEditMode(true)}>{world.title || 'CLICK TO ADD TITLE'}</Title>;
@@ -328,7 +324,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
       return (
         <DescriptionTextArea
           autoFocus
-          onBlur={({ target: { value } }: any) => changeDescription(value, world.id, value !== world.description)}
+          onBlur={({ target: { value } }: any) => changeDescription(value)}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.description;
@@ -344,6 +340,18 @@ const World: FC<RouteComponentProps> = ({ history }) => {
       </Description>
     );
   };
+
+  const numCurators = () => {
+    return worldData.world.publishers.reduce((a: number, c: PublisherType) => {
+      if (c.accounts) {
+        return a + c.accounts.length;
+      }
+    }, 0);
+  };
+
+  if (loading) return null;
+
+  const { world } = worldData;
 
   return (
     <WorldContainer>
@@ -361,13 +369,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         <WorldInfo>
           <div>
             <h4>CURATORS</h4>
-            <h3>
-              {world.publishers.reduce((a: number, c: PublisherType) => {
-                if (c.accounts) {
-                  return a + c.accounts.length;
-                }
-              }, 0)}
-            </h3>
+            <h3>{numCurators()}</h3>
           </div>
           <div>
             <h4>RELEASE DATE</h4>
@@ -410,7 +412,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
           <Button color="green" size="small">
             PUBLISH
           </Button>
-          <Button color="red" size="small" onClick={() => handleRemoveWorld(world.id)}>
+          <Button color="red" size="small" onClick={handleRemoveWorld}>
             <FontAwesomeIcon icon={faTrashAlt} size="lg" />
           </Button>
         </Buttons>

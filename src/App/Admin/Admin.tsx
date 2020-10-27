@@ -107,14 +107,15 @@ const Admin: FC<RouteComponentProps> = props => {
         { name: 'isAdmin', type: 'checkbox', display: 'ADMIN?' },
       ],
     },
-    {
-      name: 'PUBLISHERS',
-      description: 'VIEW AND CREATE PUBLISHERS',
-      fields: [
-        { name: 'name', type: 'text', display: 'PUBLISHER NAME' },
-        { name: 'organizationFlag', type: 'checkbox', display: 'ORGANIZATION?' },
-      ],
-    },
+    // HIDDEN FOR V1
+    // {
+    //   name: 'PUBLISHERS',
+    //   description: 'VIEW AND CREATE PUBLISHERS',
+    //   fields: [
+    //     { name: 'name', type: 'text', display: 'PUBLISHER NAME' },
+    //     { name: 'organizationFlag', type: 'checkbox', display: 'ORGANIZATION?' },
+    //   ],
+    // },
     {
       name: 'ACCOUNTS',
       description: 'VIEW AND CREATE ACCOUNTS',
@@ -142,7 +143,7 @@ const Admin: FC<RouteComponentProps> = props => {
       <AdminContainer>
         <h1>SETTINGS AND OPTIONS</h1>
         <AdminOptions>
-          {renderHelpers()}
+          {/*{renderHelpers()}*/}
           {ADMIN_OPTIONS.map((option, i) => (
             <AdminOption
               key={option.name}
