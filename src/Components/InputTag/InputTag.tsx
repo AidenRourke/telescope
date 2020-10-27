@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, InputHTMLAttributes, useState } from 'react';
 import styled from 'styled-components';
 
 import * as colors from 'styles/colors';
@@ -14,28 +14,18 @@ const Input = styled.input`
   margin: 0.1rem;
 `;
 
-interface Props {
-  onSubmit: (tag: string) => void;
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  handleSubmit: () => void;
 }
 
-const InputTag: FC<Props> = ({ onSubmit }) => {
-  const [tagInputValue, setTagInputValue] = useState<string>('');
-
+const InputTag: FC<Props> = ({ handleSubmit, ...rest }) => {
   const onKeyUp = (e: any) => {
     if (e.key === 'Enter') {
-      onSubmit(tagInputValue);
+      handleSubmit();
     }
   };
 
-  return (
-    <Input
-      autoFocus
-      onBlur={() => onSubmit(tagInputValue)}
-      value={tagInputValue}
-      onChange={(e: any) => setTagInputValue(e.target.value)}
-      onKeyUp={onKeyUp}
-    />
-  );
+  return <Input {...rest} autoFocus onKeyUp={onKeyUp} />;
 };
 
 export { InputTag };

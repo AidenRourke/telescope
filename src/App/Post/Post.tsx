@@ -160,6 +160,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
   const [isRemovingTag, setIsRemovingTag] = useState<boolean>(false);
+  const [tagInputValue, setTagInputValue] = useState<string>('');
 
   const { addFilter } = useContext(FilterContext);
 
@@ -184,16 +185,16 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     return 'UNKNOWN';
   };
 
-  const handleAddTag = async (tagName: string) => {
-    if (tagName.length > 0) {
+  const handleAddTag = async () => {
+    if (tagInputValue.length > 0) {
       await createPostTag({
         variables: {
           postId: data.post.id,
-          tagName,
+          tagName: tagInputValue,
         },
       });
+      setTagInputValue('');
     }
-    setIsAddingTag(false);
   };
 
   const renderAddTag = () => {
@@ -204,7 +205,36 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
         </Tag>
       );
     }
-    return <InputTag onSubmit={handleAddTag} />;
+    return (
+      <>
+        <InputTag
+          value={tagInputValue}
+          onChange={(e: any) => setTagInputValue(e.target.value)}
+          handleSubmit={handleAddTag}
+          onBlur={() => setIsAddingTag(false)}
+        />
+        <Tag onClick={() => setIsAddingTag(false)} color="white">
+          CANCEL
+        </Tag>
+      </>
+    );
+  };
+
+  const renderRemoveTag = () => {
+    if (data.post.tags.length === 0) return;
+
+    if (!isRemovingTag) {
+      return (
+        <Tag onClick={() => setIsRemovingTag(true)} color="white">
+          <FontAwesomeIcon icon={faMinus} size="sm" />
+        </Tag>
+      );
+    }
+    return (
+      <Tag onClick={() => setIsRemovingTag(false)} color="white">
+        CANCEL
+      </Tag>
+    );
   };
 
   const handleAddFilter = (filter: FilterType) => {
@@ -214,7 +244,15 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   const handleTagClick = async (tag: TagType) => {
     if (isRemovingTag) {
-      await removePostTag({ variables: { postId: data.post.id, tagId: tag.id } });
+      const ret = await removePostTag({ variables: { postId: data.post.id, tagId: tag.id } });
+      const {
+        data: {
+          removePostTag: {
+            post: { tags },
+          },
+        },
+      } = ret;
+      if (tags.length === 0) setIsRemovingTag(false);
     } else {
       handleAddFilter({ name: tag.name, type: 'TAG' });
     }
@@ -265,9 +303,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
                     </Tag>
                   ))}
                   {!isRemovingTag && renderAddTag()}
-                  <Tag onClick={() => setIsRemovingTag(!isRemovingTag)} color="white">
-                    {isRemovingTag ? 'CANCEL' : <FontAwesomeIcon icon={faMinus} size="sm" />}
-                  </Tag>
+                  {!isAddingTag && renderRemoveTag()}
                 </Tags>
               </h3>
             </TextSection>
