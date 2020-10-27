@@ -8,7 +8,7 @@ import Router from './Router';
 import { UserContext } from 'Contexts/UserContext';
 import { FilterContext } from 'Contexts/FilterContext';
 import qs from 'query-string';
-import { FilterType } from '../Types/types';
+import { FilterType } from 'Types/types';
 
 const AppContainer = styled.div`
   height: 100vh;

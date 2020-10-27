@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import styled from 'styled-components';
 import { Loading, Button, Input } from 'Components';
-import { PublisherType, UserType } from '../../../Types/types';
+import { PublisherType } from 'Types/types';
 import { PublisherRow } from './PublisherRow';
 
 const Table = styled.table`
@@ -41,9 +41,9 @@ const PublishersModalContent: FC = () => {
   const [organizationFlag, setOrganizationFlag] = useState<boolean>(false);
   const [publisherName, setPublisherName] = useState<string>('');
 
-  const { data } = useQuery(GET_PUBLISHERS);
+  const { data, loading } = useQuery(GET_PUBLISHERS);
 
-  const [createPublisher, { loading }] = useMutation(CREATE_PUBLISHER, {
+  const [createPublisher, { loading: creatingPublisher }] = useMutation(CREATE_PUBLISHER, {
     errorPolicy: 'all',
     refetchQueries: ['GetPublishers'],
     awaitRefetchQueries: true,
@@ -61,8 +61,10 @@ const PublishersModalContent: FC = () => {
   };
 
   const renderPublishers = () => {
-    if (data) {
-      return data.publishers.map((publisher: PublisherType) => <PublisherRow key={publisher.id} publisher={publisher} />);
+    if (!loading) {
+      return data.publishers.map((publisher: PublisherType) => (
+        <PublisherRow key={publisher.id} publisher={publisher} />
+      ));
     }
   };
 
@@ -93,7 +95,7 @@ const PublishersModalContent: FC = () => {
             />
           </td>
           <td>
-            {loading ? (
+            {creatingPublisher ? (
               <Loading>ADDING</Loading>
             ) : (
               <Button color="blue" isOutlined={true} size="small" onClick={handleCreatePublisher}>

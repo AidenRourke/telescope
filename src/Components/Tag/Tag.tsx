@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import * as colors from 'styles/colors';
-import { ColorTypes } from '../../Types/types';
+import { ColorTypes } from 'Types/types';
 
 const TagButton = styled.button<{ color: ColorTypes }>`
   font: inherit;

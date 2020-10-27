@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dropzone, Button, Loading } from 'Components';
 import { WorldPostsList } from './WorldPostsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
+import { AddPublisher } from './AddPublisher';
 
 const WorldContainer = styled.div`
   display: flex;
@@ -376,8 +377,9 @@ const World: FC<RouteComponentProps> = ({ history }) => {
             <h3>COMING SOON</h3>
           </div>
           <div>
-            <h4>AUTHOR</h4>
+            <h4>PUBLISHERS</h4>
             <h3>{world.publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</h3>
+            <AddPublisher />
           </div>
         </WorldInfo>
         <DropZones>

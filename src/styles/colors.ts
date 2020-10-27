@@ -1,4 +1,4 @@
-import { ColorTypes } from 'types/types';
+import { ColorTypes } from 'Types/types';
 
 // Modu World Color Scheme
 

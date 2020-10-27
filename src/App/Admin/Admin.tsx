@@ -87,7 +87,7 @@ const Admin: FC<RouteComponentProps> = props => {
                 description: 'Where did she come from, where did she go?',
                 submittedBy: '9e1c56f6-b9f1-4401-91e5-37ecb7778464',
                 title: 'Mystery Image',
-                tags: ["Test1", "Test2"],
+                tags: ["Test1", "Test2", ""],
               },
             },
           })
@@ -107,15 +107,14 @@ const Admin: FC<RouteComponentProps> = props => {
         { name: 'isAdmin', type: 'checkbox', display: 'ADMIN?' },
       ],
     },
-    // HIDDEN FOR V1
-    // {
-    //   name: 'PUBLISHERS',
-    //   description: 'VIEW AND CREATE PUBLISHERS',
-    //   fields: [
-    //     { name: 'name', type: 'text', display: 'PUBLISHER NAME' },
-    //     { name: 'organizationFlag', type: 'checkbox', display: 'ORGANIZATION?' },
-    //   ],
-    // },
+    {
+      name: 'PUBLISHERS',
+      description: 'VIEW AND CREATE PUBLISHERS',
+      fields: [
+        { name: 'name', type: 'text', display: 'PUBLISHER NAME' },
+        { name: 'organizationFlag', type: 'checkbox', display: 'ORGANIZATION?' },
+      ],
+    },
     {
       name: 'ACCOUNTS',
       description: 'VIEW AND CREATE ACCOUNTS',

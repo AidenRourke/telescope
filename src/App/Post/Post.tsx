@@ -1,20 +1,21 @@
 import React, { FC, useContext, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import { faArrowLeft, faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import { Button, Modal, Tag, InputTag } from 'Components';
+import { Button, Modal } from 'Components';
 import { Film3d } from './Film3d';
 import { AddToWorld } from './AddToWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { FilterType, TagType } from 'Types/types';
+import { FilterType } from 'Types/types';
 import { FilterContext } from '../../Contexts/FilterContext';
 import * as colors from 'styles/colors';
+import { PostTags } from './PostTags';
 
 const PostContainer = styled.div`
   display: flex;
@@ -70,12 +71,6 @@ const TextInfoButton = styled(Button)`
   }
 `;
 
-const Tags = styled.div`
-  margin-top: 0.5rem;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
 const SideBarFooter = styled.div`
   display: flex;
 `;
@@ -127,40 +122,9 @@ const REMOVE_POST = gql`
   }
 `;
 
-const CREATE_POST_TAG = gql`
-  mutation CreatePostTag($postId: ID!, $tagName: String!) {
-    createPostTag(postId: $postId, tagName: $tagName) {
-      post {
-        id
-        tags {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-
-const REMOVE_POST_TAG = gql`
-  mutation RemovePostTag($postId: ID!, $tagId: ID!) {
-    removePostTag(postId: $postId, tagId: $tagId) {
-      post {
-        id
-        tags {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-
 const Post: FC<RouteComponentProps> = ({ history }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
-  const [isRemovingTag, setIsRemovingTag] = useState<boolean>(false);
-  const [tagInputValue, setTagInputValue] = useState<string>('');
 
   const { addFilter } = useContext(FilterContext);
 
@@ -168,9 +132,10 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
 
   const [removePost] = useMutation(REMOVE_POST);
 
-  const [createPostTag] = useMutation(CREATE_POST_TAG);
-
-  const [removePostTag] = useMutation(REMOVE_POST_TAG);
+  const handleAddFilter = (filter: FilterType) => {
+    addFilter(filter);
+    history.push({ pathname: `/posts`, search: window.location.search });
+  };
 
   const handleDeletePost = async (postId: string) => {
     await removePost({ variables: { postId } });
@@ -183,79 +148,6 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     if (data.post.city && data.post.countryCode)
       return `${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`;
     return 'UNKNOWN';
-  };
-
-  const handleAddTag = async () => {
-    if (tagInputValue.length > 0) {
-      await createPostTag({
-        variables: {
-          postId: data.post.id,
-          tagName: tagInputValue,
-        },
-      });
-      setTagInputValue('');
-    }
-  };
-
-  const renderAddTag = () => {
-    if (!isAddingTag) {
-      return (
-        <Tag onClick={() => setIsAddingTag(true)} color="white">
-          <FontAwesomeIcon icon={faPlus} size="sm" />
-        </Tag>
-      );
-    }
-    return (
-      <>
-        <InputTag
-          value={tagInputValue}
-          onChange={(e: any) => setTagInputValue(e.target.value)}
-          handleSubmit={handleAddTag}
-          onBlur={() => setIsAddingTag(false)}
-        />
-        <Tag onClick={() => setIsAddingTag(false)} color="white">
-          CANCEL
-        </Tag>
-      </>
-    );
-  };
-
-  const renderRemoveTag = () => {
-    if (data.post.tags.length === 0) return;
-
-    if (!isRemovingTag) {
-      return (
-        <Tag onClick={() => setIsRemovingTag(true)} color="white">
-          <FontAwesomeIcon icon={faMinus} size="sm" />
-        </Tag>
-      );
-    }
-    return (
-      <Tag onClick={() => setIsRemovingTag(false)} color="white">
-        CANCEL
-      </Tag>
-    );
-  };
-
-  const handleAddFilter = (filter: FilterType) => {
-    addFilter(filter);
-    history.push({ pathname: `/posts`, search: window.location.search });
-  };
-
-  const handleTagClick = async (tag: TagType) => {
-    if (isRemovingTag) {
-      const ret = await removePostTag({ variables: { postId: data.post.id, tagId: tag.id } });
-      const {
-        data: {
-          removePostTag: {
-            post: { tags },
-          },
-        },
-      } = ret;
-      if (tags.length === 0) setIsRemovingTag(false);
-    } else {
-      handleAddFilter({ name: tag.name, type: 'TAG' });
-    }
   };
 
   return (
@@ -295,17 +187,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
             </TextSection>
             <TextSection>
               <TextHeader>TAGS:</TextHeader>
-              <h3>
-                <Tags>
-                  {data.post.tags.map((tag: TagType) => (
-                    <Tag key={tag.id} onClick={() => handleTagClick(tag)} color={isRemovingTag ? 'red' : 'white'}>
-                      {tag.name.toUpperCase()}
-                    </Tag>
-                  ))}
-                  {!isRemovingTag && renderAddTag()}
-                  {!isAddingTag && renderRemoveTag()}
-                </Tags>
-              </h3>
+              <PostTags tags={data.post.tags} handleAddFilter={handleAddFilter} postId={data.post.id} />
             </TextSection>
           </SideBarContent>
           <SideBarFooter>
