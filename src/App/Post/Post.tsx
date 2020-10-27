@@ -12,8 +12,9 @@ import { Film3d } from './Film3d';
 import { AddToWorld } from './AddToWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { TagType } from 'Types/types';
+import { FilterType, TagType } from 'Types/types';
 import { FilterContext } from '../../Contexts/FilterContext';
+import * as colors from 'styles/colors';
 
 const PostContainer = styled.div`
   display: flex;
@@ -61,6 +62,12 @@ const TextSection = styled.section`
 
 const TextHeader = styled.p`
   opacity: 0.7;
+`;
+
+const TextInfoButton = styled(Button)`
+  &:hover {
+    color: ${colors.black};
+  }
 `;
 
 const Tags = styled.div`
@@ -200,12 +207,16 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
     return <InputTag onSubmit={handleAddTag} />;
   };
 
+  const handleAddFilter = (filter: FilterType) => {
+    addFilter(filter);
+    history.push({ pathname: `/posts`, search: window.location.search });
+  };
+
   const handleTagClick = async (tag: TagType) => {
     if (isRemovingTag) {
       await removePostTag({ variables: { postId: data.post.id, tagId: tag.id } });
     } else {
-      addFilter({ name: tag.name, type: 'TAG' });
-      history.push({ pathname: `/posts`, search: window.location.search });
+      handleAddFilter({ name: tag.name, type: 'TAG' });
     }
   };
 
@@ -224,7 +235,13 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
           <SideBarContent>
             <TextSection>
               <TextHeader>CREATED BY:</TextHeader>
-              <h3>{data.post.preferredUsername.toUpperCase()}</h3>
+              <TextInfoButton
+                isText={true}
+                color="white"
+                onClick={() => handleAddFilter({ name: data.post.preferredUsername, type: 'USER' })}
+              >
+                <h3>{data.post.preferredUsername.toUpperCase()}</h3>
+              </TextInfoButton>
             </TextSection>
             <TextSection>
               <TextHeader>LOCATION:</TextHeader>
