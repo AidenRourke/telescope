@@ -7,3 +7,4 @@ export { Dropzone } from './Dropzone';
 export { Loading } from './Loading';
 export { Tag } from './Tag';
 export { InputTag } from './InputTag';
+export { ConfirmationModal } from './ConfirmationModal';

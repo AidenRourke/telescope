@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
-import { Button, Modal } from 'Components';
+import { Button, ConfirmationModal, Modal } from 'Components';
 import { Film3d } from './Film3d';
 import { AddToWorld } from './AddToWorld';
 
@@ -16,6 +16,7 @@ import { FilterType } from 'Types/types';
 import * as colors from 'styles/colors';
 import { PostTags } from './PostTags';
 import { addToQuery } from '../App';
+import { UserContext } from '../../Contexts/UserContext';
 
 const PostContainer = styled.div`
   display: flex;
@@ -123,8 +124,11 @@ const REMOVE_POST = gql`
 `;
 
 const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
-  const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
+
+  const { id } = useParams();
+  const { user } = useContext(UserContext);
 
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
 
@@ -153,11 +157,7 @@ const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
       <PostContainer>
         <SideBar>
           <SideBarHeader>
-            <BackArrow
-              icon={faArrowLeft}
-              size="lg"
-              onClick={() => history.push({ pathname: '/posts', search })}
-            />
+            <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/posts', search })} />
             <Modu src={sidebar} />
           </SideBarHeader>
           <SideBarContent>
@@ -192,9 +192,11 @@ const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
             <Button color="white" size="small" onClick={() => setIsOpen(true)}>
               ADD TO WORLD
             </Button>
-            <Button color="red" size="small" onClick={() => handleDeletePost(data.post.id)}>
-              <FontAwesomeIcon icon={faTrashAlt} size="lg" />
-            </Button>
+            {user.isAdmin && (
+              <Button color="red" size="small" onClick={() => setIsConfirming(true)}>
+                <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+              </Button>
+            )}
           </SideBarFooter>
         </SideBar>
         <ImageContainer>
@@ -208,6 +210,11 @@ const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
       <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title="ADD TO WORLD">
         <AddToWorld postId={data.post.id} />
       </Modal>
+      <ConfirmationModal
+        isOpen={isConfirming}
+        closeModal={() => setIsConfirming(false)}
+        onConfirm={() => handleDeletePost(data.post.id)}
+      />
     </>
   );
 };

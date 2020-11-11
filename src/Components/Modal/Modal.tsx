@@ -4,6 +4,7 @@ import * as colors from 'styles/colors';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ModalProps } from 'Types/types';
 
 const ModalContainer = styled.div`
   display: flex;
@@ -23,17 +24,12 @@ const CloseModalButton = styled.button`
   color: ${colors.white};
 `;
 
-interface Props {
-  isOpen: boolean;
-  closeModal: () => void;
-  title?: string;
-}
-
 // ReactModal.setAppElement('#app')
 
-const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
+const Modal: FC<ModalProps> = ({ isOpen, closeModal, title, children }) => {
   return (
     <ReactModal
+      ariaHideApp={false}
       isOpen={isOpen}
       onRequestClose={closeModal}
       style={{
@@ -48,7 +44,8 @@ const Modal: FC<Props> = ({ isOpen, closeModal, title, children }) => {
           borderRadius: 0,
           border: `5px solid ${colors.green}`,
           position: 'relative',
-          width: '50%',
+          maxWidth: '50%',
+          minWidth: '30rem',
           top: 0,
           bottom: 0,
           left: 0,

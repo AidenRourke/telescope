@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { WorldType } from 'Types/types';
-import { AddWorldImage } from './AddWorldImage';
+import { WorldButton } from './WorldButton';
 import * as colors from 'styles/colors';
 
 const WorldsContainer = styled.div`
@@ -37,7 +37,7 @@ const AddToWorld: FC<Props> = props => {
 
   const renderWorlds = () => {
     if (loading) return null;
-    return data.worlds.map((world: WorldType) => <AddWorldImage world={world} {...props} />);
+    return data.worlds.map((world: WorldType) => <WorldButton world={world} {...props} />);
   };
 
   return <WorldsContainer>{renderWorlds()}</WorldsContainer>;

@@ -132,7 +132,7 @@ const Worlds: FC<RouteComponentProps> = props => {
       <WorldMetaData>
         <h4>TITLE</h4>
         <small>{data.worlds[selection]?.title}</small>
-        <h4>PUBLISHER</h4>
+        <h4>PUBLISHERS</h4>
         <small>{data.worlds[selection]?.publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</small>
         <h4>POSTS</h4>
         <small>{data.worlds[selection]?.posts.length}</small>

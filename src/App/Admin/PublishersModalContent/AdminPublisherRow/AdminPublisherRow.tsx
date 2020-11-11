@@ -18,7 +18,7 @@ const REMOVE_PUBLISHER = gql`
   }
 `;
 
-const PublisherRow: FC<Props> = ({ publisher }) => {
+const AdminPublisherRow: FC<Props> = ({ publisher }) => {
   const [removePublisher, { loading }] = useMutation(REMOVE_PUBLISHER, {
     refetchQueries: ['GetPublishers'],
     awaitRefetchQueries: true,
@@ -49,4 +49,4 @@ const PublisherRow: FC<Props> = ({ publisher }) => {
   );
 };
 
-export { PublisherRow };
+export { AdminPublisherRow };

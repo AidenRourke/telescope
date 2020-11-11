@@ -37,6 +37,7 @@ export interface PublisherType {
   name: string;
   accounts?: AccountType[];
   organizationFlag?: boolean;
+  worlds?: WorldType[];
 }
 
 export interface WorldType {
@@ -61,3 +62,9 @@ export interface DragItem {
 }
 
 export type ColorTypes = 'white' | 'red' | 'green' | 'blue' | 'black';
+
+export interface ModalProps {
+  isOpen: boolean;
+  closeModal: () => void;
+  title?: string;
+}

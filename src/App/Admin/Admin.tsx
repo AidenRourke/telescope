@@ -87,7 +87,7 @@ const Admin: FC<RouteComponentProps> = props => {
                 description: 'Where did she come from, where did she go?',
                 submittedBy: '9e1c56f6-b9f1-4401-91e5-37ecb7778464',
                 title: 'Mystery Image',
-                tags: ["Test1", "Test2", ""],
+                tags: ['Test1', 'Test2', ''],
               },
             },
           })
@@ -155,10 +155,10 @@ const Admin: FC<RouteComponentProps> = props => {
           ))}
         </AdminOptions>
         <OptionDetails>{ADMIN_OPTIONS[selectedOption].description}</OptionDetails>
-        <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={ADMIN_OPTIONS[selectedOption].name}>
-          <AdminModalContentContainer>{renderModalContent()}</AdminModalContentContainer>
-        </Modal>
       </AdminContainer>
+      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={ADMIN_OPTIONS[selectedOption].name}>
+        <AdminModalContentContainer>{renderModalContent()}</AdminModalContentContainer>
+      </Modal>
     </>
   );
 };

@@ -9,10 +9,10 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, Loading } from 'Components';
+import { Dropzone, Button, Loading, ConfirmationModal } from 'Components';
 import { WorldPostsList } from './WorldPostsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
-import { AddPublisher } from './AddPublisher';
+import { AddPublisherModal } from './AddPublisherModal';
 
 const WorldContainer = styled.div`
   display: flex;
@@ -129,6 +129,19 @@ const Buttons = styled.div`
   display: flex;
 `;
 
+const DivButton = styled.button`
+  font: inherit;
+  background: none;
+  color: inherit;
+  border: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 0.5rem;
+  &:hover {
+    border: 3px solid ${colors.blue};
+  }
+`;
+
 const GET_WORLD = gql`
   query GetWorld($id: ID!) {
     world(id: $id) {
@@ -220,6 +233,8 @@ const UPDATE_WORLD_DESCRIPTION = gql`
 `;
 
 const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
+  const [isAddingPublisher, setIsAddingPublisher] = useState<boolean>(false);
   const [titleEditMode, setTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [isUpdatingWorldImage, setIsUpdatingWorldImage] = useState(false);
@@ -227,7 +242,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
 
   const { id } = useParams();
 
-  const { loading, data: worldData } = useQuery(GET_WORLD, { variables: { id } });
+  const { loading, data } = useQuery(GET_WORLD, { variables: { id } });
 
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
 
@@ -245,7 +260,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   });
 
   const handleRemoveWorld = async () => {
-    await removeWorld({ variables: { worldId: worldData.world.id } });
+    await removeWorld({ variables: { worldId: world.id } });
     history.push({ pathname: '/worlds', search });
   };
 
@@ -272,19 +287,19 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
     await uploadToS3(acceptedFiles[0], signedRequest);
 
     if (isImage) {
-      await updateWorldImage({ variables: { worldId: worldData.world.id, imageUrl: url } });
+      await updateWorldImage({ variables: { worldId: world.id, imageUrl: url } });
       setIsUpdatingWorldImage(false);
     } else {
-      await updateWorldVideo({ variables: { worldId: worldData.world.id, videoUrl: url } });
+      await updateWorldVideo({ variables: { worldId: world.id, videoUrl: url } });
       setIsUpdatingWorldVideo(false);
     }
   };
 
   const changeTitle = async (title: string) => {
-    if (title !== worldData.world.title) {
+    if (title !== world.title) {
       await updateWorldTitle({
         variables: {
-          worldId: worldData.world.id,
+          worldId: world.id,
           title,
         },
       });
@@ -293,10 +308,10 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   };
 
   const changeDescription = async (description: string) => {
-    if (description !== worldData.world.description) {
+    if (description !== world.description) {
       await updateWorldDescription({
         variables: {
-          worldId: worldData.world.id,
+          worldId: world.id,
           description,
         },
       });
@@ -343,85 +358,94 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   };
 
   const numCurators = () => {
-    return worldData.world.publishers.reduce((a: number, c: PublisherType) => {
+    return world.publishers.reduce((a: number, c: PublisherType) => {
       if (c.accounts) {
         return a + c.accounts.length;
       }
     }, 0);
   };
 
+  const numPublishers = () => {
+    return world.publishers.length;
+  };
+
   if (loading) return null;
 
-  const { world } = worldData;
+  const { world } = data;
+
+  console.log(world)
 
   return (
-    <WorldContainer>
-      <WorldData>
-        <BackArrow
-          icon={faArrowLeft}
-          size="lg"
-          onClick={() => history.push({ pathname: '/worlds', search})}
-        />
-        <Status>
-          WORLD <span>({world.status.toUpperCase()})</span>
-        </Status>
-        {renderTitle()}
-        {renderDescription()}
-        <WorldInfo>
-          <div>
-            <h4>CURATORS</h4>
-            <h3>{numCurators()}</h3>
-          </div>
-          <div>
-            <h4>RELEASE DATE</h4>
-            <h3>COMING SOON</h3>
-          </div>
-          <div>
-            <h4>PUBLISHERS</h4>
-            <h3>{world.publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</h3>
-            <AddPublisher />
-          </div>
-        </WorldInfo>
-        <DropZones>
-          <Dropzone onDrop={(files: File[]) => onDrop(files, false)} accept="video/mp4">
-            <DropZoneVideo autoPlay loop key={world.prerollS3}>
-              <source src={world.prerollS3} type="video/mp4" />
-            </DropZoneVideo>
-            {isUpdatingWorldVideo ? (
-              <DropZoneLoading>
-                <Loading>
-                  <small>UPDATING</small>
-                </Loading>
-              </DropZoneLoading>
-            ) : (
-              <DropZoneText>EDIT PRE-ROLL VIDEO</DropZoneText>
-            )}
-          </Dropzone>
-          <Dropzone onDrop={(files: File[]) => onDrop(files, true)} accept="image/png">
-            <DropZoneImage url={world.coverS3} />
-            {isUpdatingWorldImage ? (
-              <DropZoneLoading>
-                <Loading>
-                  <small>UPDATING</small>
-                </Loading>
-              </DropZoneLoading>
-            ) : (
-              <DropZoneText>EDIT COVER IMAGE</DropZoneText>
-            )}
-          </Dropzone>
-        </DropZones>
-        <Buttons>
-          <Button color="green" size="small">
-            PUBLISH
-          </Button>
-          <Button color="red" size="small" onClick={handleRemoveWorld}>
-            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
-          </Button>
-        </Buttons>
-      </WorldData>
-      <CoverImage src={world.coverS3} />
-      <WorldPostsList posts={world.posts} worldId={world.id} />
-    </WorldContainer>
+    <>
+      <WorldContainer>
+        <WorldData>
+          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/worlds', search })} />
+          <Status>
+            WORLD <span>({world.status.toUpperCase()})</span>
+          </Status>
+          {renderTitle()}
+          {renderDescription()}
+          <WorldInfo>
+            <DivButton>
+              <h4>CURATORS</h4>
+              <h3>{numCurators()}</h3>
+            </DivButton>
+            <DivButton>
+              <h4>RELEASE DATE</h4>
+              <h3>COMING SOON</h3>
+            </DivButton>
+            <DivButton onClick={() => setIsAddingPublisher(true)}>
+              <h4>PUBLISHERS</h4>
+              <h3>{numPublishers()}</h3>
+            </DivButton>
+          </WorldInfo>
+          <DropZones>
+            <Dropzone onDrop={(files: File[]) => onDrop(files, false)} accept="video/mp4">
+              <DropZoneVideo autoPlay loop key={world.prerollS3}>
+                <source src={world.prerollS3} type="video/mp4" />
+              </DropZoneVideo>
+              {isUpdatingWorldVideo ? (
+                <DropZoneLoading>
+                  <Loading>
+                    <small>UPDATING</small>
+                  </Loading>
+                </DropZoneLoading>
+              ) : (
+                <DropZoneText>EDIT PRE-ROLL VIDEO</DropZoneText>
+              )}
+            </Dropzone>
+            <Dropzone onDrop={(files: File[]) => onDrop(files, true)} accept="image/png">
+              <DropZoneImage url={world.coverS3} />
+              {isUpdatingWorldImage ? (
+                <DropZoneLoading>
+                  <Loading>
+                    <small>UPDATING</small>
+                  </Loading>
+                </DropZoneLoading>
+              ) : (
+                <DropZoneText>EDIT COVER IMAGE</DropZoneText>
+              )}
+            </Dropzone>
+          </DropZones>
+          <Buttons>
+            <Button color="green" size="small">
+              PUBLISH
+            </Button>
+            <Button color="red" size="small" onClick={() => setIsConfirming(true)}>
+              <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+            </Button>
+          </Buttons>
+        </WorldData>
+        <CoverImage src={world.coverS3} />
+        <WorldPostsList posts={world.posts} worldId={world.id} />
+      </WorldContainer>
+      <ConfirmationModal
+        isOpen={isConfirming}
+        closeModal={() => setIsConfirming(false)}
+        onConfirm={handleRemoveWorld}
+      />
+      <AddPublisherModal worldId={world.id} isOpen={isAddingPublisher} closeModal={() => setIsAddingPublisher(false)} />
+    </>
   );
 };
 

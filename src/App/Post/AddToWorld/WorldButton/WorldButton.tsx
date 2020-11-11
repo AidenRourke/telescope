@@ -63,14 +63,14 @@ interface Props {
   world: WorldType;
 }
 
-const AddWorldImage: FC<Props> = ({ world, postId }) => {
+const WorldButton: FC<Props> = ({ world, postId }) => {
   const [createWorldPost, { loading: isCreatingWorldPost }] = useMutation(CREATE_WORLD_POST);
 
   const handleAddToWorld = async (worldId: string) => {
     await createWorldPost({ variables: { postId, worldId } });
   };
 
-  if (isCreatingWorldPost || world?.posts?.some(post => post.id === postId)) {
+  if (isCreatingWorldPost || world.posts?.some(post => post.id === postId)) {
     return (
       <WorldDisabled key={world.id}>
         <WorldThumbnail src={world.coverS3} />
@@ -87,4 +87,4 @@ const AddWorldImage: FC<Props> = ({ world, postId }) => {
   );
 };
 
-export { AddWorldImage };
+export { WorldButton };

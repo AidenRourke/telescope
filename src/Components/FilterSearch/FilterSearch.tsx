@@ -119,17 +119,17 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, options }) => {
 
   const submitForm = (e: any) => {
     e.preventDefault();
-    const search = addToQuery({ name: tagInputValue, type: selection }, search);
+    const newSearch = addToQuery({ name: tagInputValue, type: selection }, search);
     history.push({
-      search,
+      search: newSearch,
     });
     setTagInputValue('');
   };
 
   const removeFilter = (filter: FilterType) => {
-    const search = removeFromQuery(filter, search);
+    const newSearch = removeFromQuery(filter, search);
     history.push({
-      search,
+      search: newSearch,
     });
   };
 

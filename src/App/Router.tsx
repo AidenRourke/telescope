@@ -37,7 +37,7 @@ const Router: FC = () => {
         />
         <Route
           exact={true}
-          path="/worlds/:id"
+          path={'/worlds/:id'}
           render={props => (!!user ? <World {...props} /> : <Redirect to="/login" />)}
         />
         <Route

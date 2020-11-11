@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost';
 import styled from 'styled-components';
 import { Loading, Button, Input } from 'Components';
 import { PublisherType } from 'Types/types';
-import { PublisherRow } from './PublisherRow';
+import { AdminPublisherRow } from './AdminPublisherRow';
 
 const Table = styled.table`
   width: 100%;
@@ -63,7 +63,7 @@ const PublishersModalContent: FC = () => {
   const renderPublishers = () => {
     if (!loading) {
       return data.publishers.map((publisher: PublisherType) => (
-        <PublisherRow key={publisher.id} publisher={publisher} />
+        <AdminPublisherRow key={publisher.id} publisher={publisher} />
       ));
     }
   };

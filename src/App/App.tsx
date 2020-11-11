@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useReducer } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Auth } from 'aws-amplify';
 import { DndProvider } from 'react-dnd';
