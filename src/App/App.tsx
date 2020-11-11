@@ -6,7 +6,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Router from './Router';
 import { UserContext } from 'Contexts/UserContext';
-import { FilterContext } from 'Contexts/FilterContext';
 import qs from 'query-string';
 import { FilterType } from 'Types/types';
 
@@ -15,41 +14,21 @@ const AppContainer = styled.div`
   display: flex;
 `;
 
-const filtersToQueries = (filters: any) => {
+export const filtersToQueries = (filters: any) => {
   return qs.stringify(filters, { arrayFormat: 'comma' });
 };
 
-const queriesToFilters = () => {
-  return qs.parse(window.location.search, { arrayFormat: 'comma' });
+export const queryToObject = (query: string) => {
+  return qs.parse(query, { arrayFormat: 'comma' });
 };
 
-const App: FC = () => {
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [user, setUser] = useState();
+export const addToQuery = ({ name, type }: FilterType, query: string) => {
+  const queryObject = queryToObject(query);
+  const oldFilters = queryObject[type];
+  const newFilter = name.toLowerCase();
 
-  const [filters, setFilters] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    queriesToFilters(),
-  );
-
-  useEffect(() => {
-    onLoad();
-  }, []);
-
-  const setQueryStringWithoutPageReload = (qsValue: string) => {
-    const newurl = window.location.protocol + '//' + window.location.host + window.location.pathname + qsValue;
-    window.history.pushState({ path: newurl }, '', newurl);
-  };
-
-  useEffect(() => {
-    setQueryStringWithoutPageReload(`?${filtersToQueries(filters)}`);
-  }, [filters]);
-
-  const addFilter = ({ name, type }: FilterType) => {
-    const oldFilters = filters[type];
-    const newFilter = name.toLowerCase();
-    if (oldFilters === newFilter || oldFilters?.includes(newFilter)) return;
-    let newFilters;
+  if (oldFilters !== newFilter && !oldFilters?.includes(newFilter)) {
+    let newFilters: any[];
     if (Array.isArray(oldFilters)) {
       newFilters = [...oldFilters, newFilter];
     } else if (oldFilters) {
@@ -57,16 +36,34 @@ const App: FC = () => {
     } else {
       newFilters = [newFilter];
     }
-    setFilters({
-      [type]: newFilters,
-    });
-  };
+    queryObject[type] = newFilters;
+    return filtersToQueries(queryObject);
+  }
+};
 
-  const removeFilter = ({ type, name }: FilterType) => {
-    setFilters({
-      [type]: Array.isArray(filters[type]) ? filters[type].filter((filter: any) => filter !== name) : [],
-    });
-  };
+export const removeFromQuery = ({ type, name }: FilterType, query: string) => {
+  const queryObject = queryToObject(query);
+  const oldFilters = queryObject[type];
+
+  if (oldFilters) {
+    let newFilters: any[];
+    if (Array.isArray(oldFilters)) {
+      newFilters = oldFilters.filter((filter: string) => filter !== name);
+    } else {
+      newFilters = [];
+    }
+    queryObject[type] = newFilters;
+    return filtersToQueries(queryObject);
+  }
+};
+
+const App: FC = () => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    onLoad();
+  }, []);
 
   const onLoad = async () => {
     try {
@@ -99,9 +96,7 @@ const App: FC = () => {
       {isLoaded && (
         <DndProvider backend={HTML5Backend}>
           <UserContext.Provider value={{ user, login, logout }}>
-            <FilterContext.Provider value={{ filters, addFilter, removeFilter }}>
-              <Router />
-            </FilterContext.Provider>
+            <Router />
           </UserContext.Provider>
         </DndProvider>
       )}

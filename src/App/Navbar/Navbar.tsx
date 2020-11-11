@@ -50,14 +50,14 @@ const WidgetContainer = styled.div`
 `;
 
 const adminLinks = [
-  { to: '/worlds', name: 'WORLDS' },
-  { to: '/posts', name: 'USER POSTS' },
-  { to: '/admin', name: 'ADMIN' },
+  { pathname: '/worlds', name: 'WORLDS' },
+  { pathname: '/posts', name: 'USER POSTS' },
+  { pathname: '/admin', name: 'ADMIN' },
 ];
 
 const links = [
-  { to: '/worlds', name: 'WORLDS' },
-  { to: '/posts', name: 'USER POSTS' },
+  { pathname: '/worlds', name: 'WORLDS' },
+  { pathname: '/posts', name: 'USER POSTS' },
 ];
 
 const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
@@ -78,8 +78,12 @@ const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
       <Modu src={sidebar} />
       <WidgetContainer>{children}</WidgetContainer>
       <Links>
-        {validLinks.map(({ to, name }) => (
-          <StyledLink key={name} to={to} isActive={location.pathname.includes(to)}>
+        {validLinks.map(({ pathname, name }) => (
+          <StyledLink
+            key={name}
+            to={{ pathname, search: location.search }}
+            isActive={location.pathname.includes(pathname)}
+          >
             <h3>{name}</h3>
           </StyledLink>
         ))}

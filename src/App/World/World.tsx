@@ -219,7 +219,7 @@ const UPDATE_WORLD_DESCRIPTION = gql`
   }
 `;
 
-const World: FC<RouteComponentProps> = ({ history }) => {
+const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   const [titleEditMode, setTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [isUpdatingWorldImage, setIsUpdatingWorldImage] = useState(false);
@@ -246,7 +246,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
 
   const handleRemoveWorld = async () => {
     await removeWorld({ variables: { worldId: worldData.world.id } });
-    history.push('/worlds');
+    history.push({ pathname: '/worlds', search });
   };
 
   const uploadToS3 = async (file: File, signedRequest: string) => {
@@ -360,7 +360,7 @@ const World: FC<RouteComponentProps> = ({ history }) => {
         <BackArrow
           icon={faArrowLeft}
           size="lg"
-          onClick={() => history.push({ pathname: '/worlds', search: window.location.search })}
+          onClick={() => history.push({ pathname: '/worlds', search})}
         />
         <Status>
           WORLD <span>({world.status.toUpperCase()})</span>

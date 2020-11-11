@@ -2,13 +2,13 @@ import React, { FC, useContext, useState } from 'react';
 import styled from 'styled-components';
 import { gql } from 'apollo-boost';
 import Gallery, { RenderImageProps } from 'react-photo-gallery';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { FilterSearch } from 'Components/index';
 
 import { useQuery } from '@apollo/react-hooks';
 import { PostType } from 'Types/types';
-import { FilterContext } from 'Contexts/FilterContext';
+import { queryToObject } from '../../App';
 
 const ListViewContainer = styled.div`
   overflow: scroll;
@@ -48,9 +48,11 @@ export const GET_POSTS = gql`
 
 const ListView: FC<Props> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { filters } = useContext(FilterContext);
 
   const history = useHistory();
+  const { search } = useLocation();
+
+  const filters = queryToObject(search);
 
   const { loading, data } = useQuery(GET_POSTS, {
     variables: {
@@ -60,7 +62,7 @@ const ListView: FC<Props> = () => {
         tags: filters['TAG'] || [],
       },
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: 'network-only',
   });
 
   const imageRenderer = ({ index, left, top, photo }: RenderImageProps) => {
@@ -72,12 +74,7 @@ const ListView: FC<Props> = () => {
 
     return (
       <ImageContainer key={key} top={top} left={left} height={height} width={width}>
-        <Image
-          {...photoProps}
-          onClick={() => history.push({ pathname: `/posts/${key}`, search: window.location.search })}
-          sx={sx}
-          sy={sy}
-        />
+        <Image {...photoProps} onClick={() => history.push({ pathname: `/posts/${key}`, search })} sx={sx} sy={sy} />
       </ImageContainer>
     );
   };

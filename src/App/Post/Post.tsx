@@ -13,9 +13,9 @@ import { AddToWorld } from './AddToWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { FilterType } from 'Types/types';
-import { FilterContext } from '../../Contexts/FilterContext';
 import * as colors from 'styles/colors';
 import { PostTags } from './PostTags';
+import { addToQuery } from '../App';
 
 const PostContainer = styled.div`
   display: flex;
@@ -122,24 +122,22 @@ const REMOVE_POST = gql`
   }
 `;
 
-const Post: FC<RouteComponentProps> = ({ history }) => {
+const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const { addFilter } = useContext(FilterContext);
 
   const { loading, data } = useQuery(GET_POST, { variables: { id } });
 
   const [removePost] = useMutation(REMOVE_POST);
 
   const handleAddFilter = (filter: FilterType) => {
-    addFilter(filter);
-    history.push({ pathname: `/posts`, search: window.location.search });
+    const newSearch = addToQuery(filter, search);
+    history.push({ pathname: `/posts`, search: newSearch });
   };
 
   const handleDeletePost = async (postId: string) => {
     await removePost({ variables: { postId } });
-    history.push({ pathname: `/posts`, search: window.location.search });
+    history.push({ pathname: `/posts`, search });
   };
 
   if (loading) return null;
@@ -158,7 +156,7 @@ const Post: FC<RouteComponentProps> = ({ history }) => {
             <BackArrow
               icon={faArrowLeft}
               size="lg"
-              onClick={() => history.push({ pathname: '/posts', search: window.location.search })}
+              onClick={() => history.push({ pathname: '/posts', search })}
             />
             <Modu src={sidebar} />
           </SideBarHeader>

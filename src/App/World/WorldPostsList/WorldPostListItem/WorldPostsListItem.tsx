@@ -10,7 +10,7 @@ import * as colors from 'styles/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Loading } from 'Components';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 
 const WorldPostsListItemContainer = styled.div<{ isDragging: boolean }>`
   margin-bottom: 0.5rem;
@@ -73,6 +73,7 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
   const ref = useRef<HTMLDivElement>(null);
 
   const history = useHistory();
+  const { search } = useLocation();
 
   const [removeWorldPost, { loading: isRemoving }] = useMutation(REMOVE_WORLD_POST);
 
@@ -148,7 +149,11 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
   };
 
   return (
-    <WorldPostsListItemContainer ref={ref} isDragging={isDragging} onClick={() => history.push(`/posts/${post.id}`)}>
+    <WorldPostsListItemContainer
+      ref={ref}
+      isDragging={isDragging}
+      onClick={() => history.push({ pathname: `/posts/${post.id}`, search })}
+    >
       <WorldPostImage src={post.frame1S3} />
       {isRemoving ? (
         <PostInformation>

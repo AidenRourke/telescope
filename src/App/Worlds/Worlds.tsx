@@ -115,7 +115,7 @@ const Worlds: FC<RouteComponentProps> = props => {
         createWorld: { world },
       },
     } = res;
-    history.push(`/worlds/${world.id}`);
+    history.push({ pathname: `/worlds/${world.id}`, search: props.location.search });
   };
 
   const getCurators = () => {
@@ -162,7 +162,7 @@ const Worlds: FC<RouteComponentProps> = props => {
         src={world.coverS3}
         onMouseOver={() => setSelection(i)}
         selected={selection === i}
-        onClick={() => history.push(`/worlds/${world.id}`)}
+        onClick={() => history.push({pathname: `/worlds/${world.id}`, search: props.location.search})}
       />
     ));
   };
