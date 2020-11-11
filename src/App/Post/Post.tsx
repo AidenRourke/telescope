@@ -96,7 +96,6 @@ const GET_POST = gql`
       id
       title
       latitude
-      preferredUsername
       createdAt
       city
       countryCode
@@ -108,6 +107,10 @@ const GET_POST = gql`
       tags {
         id
         name
+      }
+      user {
+        id
+        preferredUsername
       }
     }
   }
@@ -166,9 +169,9 @@ const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
               <TextInfoButton
                 isText={true}
                 color="white"
-                onClick={() => handleAddFilter({ name: data.post.preferredUsername, type: 'USER' })}
+                onClick={() => handleAddFilter({ name: data.post.user?.preferredUsername, type: 'USER' })}
               >
-                <h3>{data.post.preferredUsername.toUpperCase()}</h3>
+                <h3>{data.post.user?.preferredUsername.toUpperCase()}</h3>
               </TextInfoButton>
             </TextSection>
             <TextSection>

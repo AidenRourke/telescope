@@ -164,7 +164,7 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
       ) : (
         <PostInformation>
           <Title>{post.title}</Title>
-          <Author>{post.preferredUsername}</Author>
+          <Author>{post.user?.preferredUsername}</Author>
         </PostInformation>
       )}
       <RemovePostButton onClick={handleDelete}>

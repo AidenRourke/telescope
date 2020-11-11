@@ -155,9 +155,12 @@ const GET_WORLD = gql`
       posts {
         id
         title
-        preferredUsername
         frame1S3
         position
+        user {
+          id
+          preferredUsername
+        }
       }
       publishers {
         id

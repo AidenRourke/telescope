@@ -14,9 +14,9 @@ export interface PostType {
   frame2S3?: string;
   frame3S3?: string;
   frame4S3?: string;
-  preferredUsername?: string;
   tags?: TagType[];
   title?: string;
+  user?: UserType;
 }
 
 export interface UserType {
