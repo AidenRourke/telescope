@@ -7,7 +7,7 @@ import * as colors from 'styles/colors';
 import styled from 'styled-components';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { PublisherType, WorldType } from 'Types/types';
-import { UserContext } from '../../Contexts/UserContext';
+import { UserContext } from 'Contexts/UserContext';
 
 const WorldsContainer = styled.div`
   display: flex;

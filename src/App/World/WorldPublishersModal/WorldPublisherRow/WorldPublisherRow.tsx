@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
 interface Props {
-  worldId: string;
+  worldId?: string;
   publisher: PublisherType;
 }
 
@@ -19,6 +19,10 @@ const CREATE_PUBLISHER_WORLD = gql`
           name
           accounts {
             id
+            user {
+              id
+              preferredUsername
+            }
           }
         }
       }
@@ -43,6 +47,10 @@ const REMOVE_PUBLISHER_WORLD = gql`
           name
           accounts {
             id
+            user {
+              id
+              preferredUsername
+            }
           }
         }
       }
@@ -68,29 +76,31 @@ const WorldPublisherRow: FC<Props> = ({ publisher, worldId }) => {
   return (
     <tr>
       <td>{publisher.name}</td>
-      <td>
-        {publisher.worlds?.some(world => world.id === worldId) ? (
-          <Button
-            color="red"
-            isOutlined={true}
-            size="small"
-            isLoading={isRemovingPublisherWorld}
-            onClick={() => removePublisherWorld()}
-          >
-            REMOVE
-          </Button>
-        ) : (
-          <Button
-            color="blue"
-            isOutlined={true}
-            size="small"
-            isLoading={isCreatingPublisherWorld}
-            onClick={() => createPublisherWorld()}
-          >
-            ADD
-          </Button>
-        )}
-      </td>
+      {worldId && (
+        <td>
+          {publisher.worlds?.some(world => world.id === worldId) ? (
+            <Button
+              color="red"
+              isOutlined={true}
+              size="small"
+              isLoading={isRemovingPublisherWorld}
+              onClick={() => removePublisherWorld()}
+            >
+              REMOVE
+            </Button>
+          ) : (
+            <Button
+              color="blue"
+              isOutlined={true}
+              size="small"
+              isLoading={isCreatingPublisherWorld}
+              onClick={() => createPublisherWorld()}
+            >
+              ADD
+            </Button>
+          )}
+        </td>
+      )}
     </tr>
   );
 };

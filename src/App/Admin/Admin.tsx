@@ -51,11 +51,6 @@ const AdminOption = styled.button<{ selected: boolean }>`
   background-color: ${({ selected }) => (selected ? colors.green : 'transparent')};
 `;
 
-const AdminModalContentContainer = styled.div`
-  max-height: 20rem;
-  overflow: scroll;
-`;
-
 const OptionDetails = styled.div`
   text-align: center;
   width: 100%;
@@ -157,7 +152,7 @@ const Admin: FC<RouteComponentProps> = props => {
         <OptionDetails>{ADMIN_OPTIONS[selectedOption].description}</OptionDetails>
       </AdminContainer>
       <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={ADMIN_OPTIONS[selectedOption].name}>
-        <AdminModalContentContainer>{renderModalContent()}</AdminModalContentContainer>
+        {renderModalContent()}
       </Modal>
     </>
   );

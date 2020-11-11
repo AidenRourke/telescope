@@ -24,6 +24,11 @@ const CloseModalButton = styled.button`
   color: ${colors.white};
 `;
 
+const ContentContainer = styled.div`
+  max-height: 20rem;
+  overflow: scroll;
+`;
+
 // ReactModal.setAppElement('#app')
 
 const Modal: FC<ModalProps> = ({ isOpen, closeModal, title, children }) => {
@@ -60,7 +65,7 @@ const Modal: FC<ModalProps> = ({ isOpen, closeModal, title, children }) => {
           </CloseModalButton>
         </Header>
         {title && <h1>{title}</h1>}
-        {children}
+        <ContentContainer>{children}</ContentContainer>
       </ModalContainer>
     </ReactModal>
   );

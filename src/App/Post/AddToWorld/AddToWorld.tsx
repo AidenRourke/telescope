@@ -8,10 +8,8 @@ import * as colors from 'styles/colors';
 
 const WorldsContainer = styled.div`
   margin: 2rem 0;
-  overflow: scroll;
   display: flex;
   flex-wrap: wrap;
-  max-height: 20rem;
   color: ${colors.blue};
 `;
 

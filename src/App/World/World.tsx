@@ -3,7 +3,7 @@ import { RouteComponentProps, useParams } from 'react-router';
 import styled from 'styled-components';
 import { gql } from 'apollo-boost';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { PublisherType } from 'Types/types';
+import { AccountType, PublisherType } from 'Types/types';
 import axios from 'axios';
 
 import * as colors from 'styles/colors';
@@ -12,7 +12,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dropzone, Button, Loading, ConfirmationModal } from 'Components';
 import { WorldPostsList } from './WorldPostsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
-import { AddPublisherModal } from './AddPublisherModal';
+import { WorldPublishersModal } from './WorldPublishersModal';
+import { WorldCuratorsModal } from './WorldCuratorsModal';
 
 const WorldContainer = styled.div`
   display: flex;
@@ -163,6 +164,10 @@ const GET_WORLD = gql`
         name
         accounts {
           id
+          user {
+            id
+            preferredUsername
+          }
         }
       }
     }
@@ -235,6 +240,7 @@ const UPDATE_WORLD_DESCRIPTION = gql`
 const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [isAddingPublisher, setIsAddingPublisher] = useState<boolean>(false);
+  const [isViewingCurators, setIsViewingCurators] = useState<boolean>(false);
   const [titleEditMode, setTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [isUpdatingWorldImage, setIsUpdatingWorldImage] = useState(false);
@@ -357,12 +363,14 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
     );
   };
 
-  const numCurators = () => {
-    return world.publishers.reduce((a: number, c: PublisherType) => {
-      if (c.accounts) {
-        return a + c.accounts.length;
+  const getCurators = () => {
+    let curators: AccountType[] = [];
+    world.publishers.map((publisher: PublisherType) => {
+      if (publisher.accounts) {
+        curators = [...curators, ...publisher.accounts];
       }
-    }, 0);
+    });
+    return curators;
   };
 
   const numPublishers = () => {
@@ -372,8 +380,6 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   if (loading) return null;
 
   const { world } = data;
-
-  console.log(world)
 
   return (
     <>
@@ -386,9 +392,9 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
           {renderTitle()}
           {renderDescription()}
           <WorldInfo>
-            <DivButton>
+            <DivButton onClick={() => setIsViewingCurators(true)}>
               <h4>CURATORS</h4>
-              <h3>{numCurators()}</h3>
+              <h3>{getCurators().length}</h3>
             </DivButton>
             <DivButton>
               <h4>RELEASE DATE</h4>
@@ -444,7 +450,12 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
         closeModal={() => setIsConfirming(false)}
         onConfirm={handleRemoveWorld}
       />
-      <AddPublisherModal worldId={world.id} isOpen={isAddingPublisher} closeModal={() => setIsAddingPublisher(false)} />
+      <WorldPublishersModal world={world} isOpen={isAddingPublisher} closeModal={() => setIsAddingPublisher(false)} />
+      <WorldCuratorsModal
+        curators={getCurators()}
+        isOpen={isViewingCurators}
+        closeModal={() => setIsViewingCurators(false)}
+      />
     </>
   );
 };
