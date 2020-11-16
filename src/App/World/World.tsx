@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, Loading, ConfirmationModal } from 'Components';
+import { Dropzone, Button, Loading, ConfirmationModal, DatePicker } from 'Components';
 import { WorldPostsList } from './WorldPostsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
@@ -92,18 +92,19 @@ const DropZones = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
+  height: 8rem;
 `;
 
 const DropZoneImage = styled.div<{ url: string }>`
   width: 100%;
-  height: 8rem;
+  height: 100%;
   background-image: url(${({ url }) => url});
   background-position: center;
 `;
 
 const DropZoneVideo = styled.video`
   width: 100%;
-  height: 8rem;
+  height: 100%;
 `;
 
 const DropZoneText = styled.small`
@@ -241,6 +242,7 @@ const UPDATE_WORLD_DESCRIPTION = gql`
 `;
 
 const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
+  const [releaseDate, setReleaseDate] = useState(new Date());
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [isAddingPublisher, setIsAddingPublisher] = useState<boolean>(false);
   const [isViewingCurators, setIsViewingCurators] = useState<boolean>(false);
@@ -399,10 +401,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
               <h4>CURATORS</h4>
               <h3>{getCurators().length}</h3>
             </DivButton>
-            <DivButton>
-              <h4>RELEASE DATE</h4>
-              <h3>COMING SOON</h3>
-            </DivButton>
+            <DatePicker selected={releaseDate} onChange={date => setReleaseDate(date)} />
             <DivButton onClick={() => setIsAddingPublisher(true)}>
               <h4>PUBLISHERS</h4>
               <h3>{numPublishers()}</h3>
