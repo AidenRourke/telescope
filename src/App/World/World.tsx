@@ -153,6 +153,7 @@ const GET_WORLD = gql`
       status
       coverS3
       prerollS3
+      releaseDate
       posts {
         id
         title
@@ -241,8 +242,18 @@ const UPDATE_WORLD_DESCRIPTION = gql`
   }
 `;
 
+const UPDATE_WORLD_RELEASE_DATE = gql`
+  mutation UpdateWorldReleaseDate($worldId: ID!, $releaseDate: String!) {
+    updateWorldReleaseDate(worldId: $worldId, releaseDate: $releaseDate) {
+      world {
+        id
+        releaseDate
+      }
+    }
+  }
+`;
+
 const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
-  const [releaseDate, setReleaseDate] = useState(new Date());
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [isAddingPublisher, setIsAddingPublisher] = useState<boolean>(false);
   const [isViewingCurators, setIsViewingCurators] = useState<boolean>(false);
@@ -256,19 +267,15 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   const { loading, data } = useQuery(GET_WORLD, { variables: { id } });
 
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
-
   const [updateWorldTitle] = useMutation(UPDATE_WORLD_TITLE);
-
   const [updateWorldDescription] = useMutation(UPDATE_WORLD_DESCRIPTION);
-
   const [updateWorldImage] = useMutation(UPDATE_WORLD_IMAGE);
-
   const [updateWorldVideo] = useMutation(UPDATE_WORLD_VIDEO);
-
   const [removeWorld] = useMutation(REMOVE_WORLD, {
     refetchQueries: [{ query: GET_WORLDS }],
     awaitRefetchQueries: true,
   });
+  const [updateWorldReleaseDate] = useMutation(UPDATE_WORLD_RELEASE_DATE);
 
   const handleRemoveWorld = async () => {
     await removeWorld({ variables: { worldId: world.id } });
@@ -356,9 +363,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
             e.target.value = '';
             e.target.value = world.description;
           }}
-        >
-          {world.description}
-        </DescriptionTextArea>
+        />
       );
     }
     return (
@@ -401,7 +406,10 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
               <h4>CURATORS</h4>
               <h3>{getCurators().length}</h3>
             </DivButton>
-            <DatePicker selected={releaseDate} onChange={date => setReleaseDate(date)} />
+            <DatePicker
+              selected={world.releaseDate}
+              onChange={date => updateWorldReleaseDate({ variables: { worldId: world.id, releaseDate: date } })}
+            />
             <DivButton onClick={() => setIsAddingPublisher(true)}>
               <h4>PUBLISHERS</h4>
               <h3>{numPublishers()}</h3>

@@ -87,7 +87,7 @@ const DatePicker: FC<Props> = ({ selected, onChange }) => {
     <DatePickerContainer>
       <ReactDatePicker
         calendarClassName="modu-calendar"
-        selected={selected}
+        selected={selected && new Date(selected)}
         onChange={onChange}
         minDate={new Date()}
         showPopperArrow={false}

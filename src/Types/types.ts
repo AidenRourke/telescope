@@ -46,6 +46,7 @@ export interface WorldType {
   prerollS3?: string;
   title?: string;
   description?: string;
+  releaseDate?: string;
   posts?: PostType[];
   publishers?: PublisherType[];
 }

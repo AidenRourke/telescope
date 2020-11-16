@@ -27,7 +27,7 @@ const WorldCuratorsModal: FC<Props> = ({ curators, ...rest }) => {
             <th>CURATOR NAME</th>
           </tr>
           {curators?.map((curator: AccountType) => (
-            <tr>
+            <tr key={curator.id}>
               <td>{curator?.user?.preferredUsername}</td>
             </tr>
           ))}
