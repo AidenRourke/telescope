@@ -44,7 +44,7 @@ const UsersModalContent: FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
 
-  const [createUser, { loading }] = useMutation(CREATE_USER, {
+  const [createUser, { loading, error }] = useMutation(CREATE_USER, {
     errorPolicy: 'all',
     refetchQueries: ['GetUsers'],
     awaitRefetchQueries: true,
@@ -53,12 +53,14 @@ const UsersModalContent: FC = () => {
   const { data } = useQuery(GET_USERS);
 
   const handleCreateUser = async () => {
-    await createUser({
-      variables: {
-        preferredUsername: username,
-        admin: isAdmin,
-      },
-    });
+    try {
+      await createUser({
+        variables: {
+          preferredUsername: username,
+          admin: isAdmin,
+        },
+      });
+    } catch (e) {}
     setIsAdmin(false);
     setUsername('');
   };

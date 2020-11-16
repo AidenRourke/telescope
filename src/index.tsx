@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'fonts/DrukWide-Bold.ttf';
 import './index.css';
 import App from 'App/App';
-import 'fonts/DrukWide-Bold.ttf';
 import * as serviceWorker from './serviceWorker';
 import Amplify from 'aws-amplify';
 import config from './amplify_config';
@@ -26,8 +26,8 @@ Amplify.configure({
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const httpLink = createHttpLink({
-  uri: 'https://orion-env.eba-mebv5f7k.us-east-1.elasticbeanstalk.com/graphql',
-  // uri: 'http://localhost:3001/graphql',
+  // uri: 'https://orion-env.eba-mebv5f7k.us-east-1.elasticbeanstalk.com/graphql',
+  uri: 'http://localhost:3001/graphql',
 });
 
 const authLink = setContext(async (_, something) => {

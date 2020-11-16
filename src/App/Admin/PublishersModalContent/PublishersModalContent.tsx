@@ -50,12 +50,14 @@ const PublishersModalContent: FC = () => {
   });
 
   const handleCreatePublisher = async () => {
-    await createPublisher({
-      variables: {
-        publisherName,
-        organizationFlag,
-      },
-    });
+    try {
+      await createPublisher({
+        variables: {
+          publisherName,
+          organizationFlag,
+        },
+      });
+    } catch (e) {}
     setOrganizationFlag(false);
     setPublisherName('');
   };

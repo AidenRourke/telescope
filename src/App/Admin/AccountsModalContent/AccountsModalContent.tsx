@@ -56,12 +56,14 @@ const AccountsModalContent: FC = () => {
   });
 
   const handleCreateAccount = async () => {
-    await createAccount({
-      variables: {
-        publisherName,
-        preferredUsername,
-      },
-    });
+    try {
+      await createAccount({
+        variables: {
+          publisherName,
+          preferredUsername,
+        },
+      });
+    } catch (e) {}
     setPublisherName('');
     setPreferredUsername('');
   };
