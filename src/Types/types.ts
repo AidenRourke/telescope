@@ -1,6 +1,6 @@
 // Types bitch
 
-export type Sizes = 'small' | 'regular';
+export type Sizes = 'xsmall' | 'small' | 'regular';
 
 export interface TagType {
   id: string;

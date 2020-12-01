@@ -5,16 +5,21 @@ import styled from 'styled-components';
 import { Loading, Button, Input } from 'Components';
 import { UserType } from 'Types/types';
 import { UserRow } from './UserRow';
+import { red } from 'styles/colors';
 
 const Table = styled.table`
   width: 100%;
-  th {
-    text-align: left;
-    padding: 0.5rem;
-  }
+  th,
   td {
-    padding: 0.5rem;
+    text-align: left;
+    padding: 0.25rem 1rem;
   }
+`;
+
+const Error = styled.p<{ error: boolean }>`
+  margin-top: 0.25rem;
+  color: ${red};
+  height: ${({ error }) => (error ? 'auto' : 0)};
 `;
 
 const GET_USERS = gql`
@@ -72,33 +77,46 @@ const UsersModalContent: FC = () => {
   };
 
   return (
-    <Table>
-      <tbody>
-        <tr>
-          <th>USER NAME</th>
-          <th>ADMIN?</th>
-          <th>OPTION</th>
-        </tr>
-        {renderUsers()}
-        <tr>
-          <td>
-            <Input color="blue" inputSize="small" value={username} onChange={(e: any) => setUsername(e.target.value)} />
-          </td>
-          <td>
-            <input color="blue" type="checkbox" checked={isAdmin} onChange={(e: any) => setIsAdmin(e.target.checked)} />
-          </td>
-          <td>
-            {loading ? (
-              <Loading>ADDING</Loading>
-            ) : (
-              <Button color="blue" isOutlined={true} size="small" onClick={handleCreateUser}>
-                ADD
-              </Button>
-            )}
-          </td>
-        </tr>
-      </tbody>
-    </Table>
+    <>
+      <Table>
+        <tbody>
+          <tr>
+            <th>USER NAME</th>
+            <th>ADMIN?</th>
+            <th>OPTION</th>
+          </tr>
+          {renderUsers()}
+          <tr>
+            <td>
+              <Input
+                color="blue"
+                inputSize="small"
+                value={username}
+                onChange={(e: any) => setUsername(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                color="blue"
+                type="checkbox"
+                checked={isAdmin}
+                onChange={(e: any) => setIsAdmin(e.target.checked)}
+              />
+            </td>
+            <td>
+              {loading ? (
+                <Loading>ADDING</Loading>
+              ) : (
+                <Button color="blue" isOutlined={true} size="small" onClick={handleCreateUser}>
+                  ADD
+                </Button>
+              )}
+            </td>
+          </tr>
+        </tbody>
+      </Table>
+      <Error error={!!error}>ERROR: USER NOT FOUND</Error>
+    </>
   );
 };
 

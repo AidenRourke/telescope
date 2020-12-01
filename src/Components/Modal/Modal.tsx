@@ -9,6 +9,9 @@ import { ModalProps } from 'Types/types';
 const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
+  h1 {
+    color: ${colors.blue};
+  }
 `;
 
 const Header = styled.div`
@@ -47,7 +50,7 @@ const Modal: FC<ModalProps> = ({ isOpen, closeModal, title, children }) => {
         content: {
           background: 'rgb(0,0,0)',
           borderRadius: 0,
-          border: `5px solid ${colors.green}`,
+          border: `5px solid ${colors.blue}`,
           position: 'relative',
           maxWidth: '50%',
           minWidth: '30rem',

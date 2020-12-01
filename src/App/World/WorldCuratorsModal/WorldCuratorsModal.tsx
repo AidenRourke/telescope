@@ -5,11 +5,8 @@ import styled from 'styled-components';
 
 const Table = styled.table`
   width: 100%;
-  th {
-    text-align: left;
-    padding: 0.5rem;
-  }
   td {
+    text-align: left;
     padding: 0.5rem;
   }
 `;
@@ -23,9 +20,6 @@ const WorldCuratorsModal: FC<Props> = ({ curators, ...rest }) => {
     <Modal title="CURATORS" {...rest}>
       <Table>
         <tbody>
-          <tr>
-            <th>CURATOR NAME</th>
-          </tr>
           {curators?.map((curator: AccountType) => (
             <tr key={curator.id}>
               <td>{curator?.user?.preferredUsername}</td>

@@ -313,7 +313,11 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
     }
   };
 
-  const changeTitle = async (title: string) => {
+  const changeTitle = async (e: any) => {
+    const {
+      target: { value: title },
+    } = e;
+
     if (title !== world.title) {
       await updateWorldTitle({
         variables: {
@@ -325,7 +329,11 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
     setTitleEditMode(false);
   };
 
-  const changeDescription = async (description: string) => {
+  const changeDescription = async (e: any) => {
+    const {
+      target: { value: description },
+    } = e;
+
     if (description !== world.description) {
       await updateWorldDescription({
         variables: {
@@ -342,7 +350,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
       return (
         <TitleTextInput
           autoFocus
-          onBlur={({ target: { value } }: any) => changeTitle(value)}
+          onBlur={(e: any) => changeTitle(e)}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.title;
@@ -358,7 +366,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
       return (
         <DescriptionTextArea
           autoFocus
-          onBlur={({ target: { value } }: any) => changeDescription(value)}
+          onBlur={(e: any) => changeDescription(e)}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.description;

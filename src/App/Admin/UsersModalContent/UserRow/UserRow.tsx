@@ -36,16 +36,20 @@ const UserRow: FC<Props> = ({ user }) => {
   };
 
   const renderRemoveOption = () => {
-    if (user.cognitoId !== currentUser.id) {
-      if (loading) {
-        return <Loading>REMOVING</Loading>;
-      }
-      return (
-        <Button color="red" isOutlined={true} size="small" onClick={handleRemoveUser}>
-          REMOVE
-        </Button>
-      );
+    if (loading) {
+      return <Loading>REMOVING</Loading>;
     }
+    return (
+      <Button
+        disabled={user.cognitoId === currentUser.id}
+        color="red"
+        isOutlined={true}
+        size="small"
+        onClick={handleRemoveUser}
+      >
+        REMOVE
+      </Button>
+    );
   };
 
   return (

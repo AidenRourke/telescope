@@ -16,6 +16,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const getPadding = (isText: boolean | undefined, size: Sizes | undefined) => {
   if (isText) return '0';
   switch (size) {
+    case 'xsmall':
+      return '0.5rem 1.5rem';
     case 'small':
       return '0.75rem 1.75rem';
     default:
@@ -25,6 +27,8 @@ const getPadding = (isText: boolean | undefined, size: Sizes | undefined) => {
 
 const getFontSize = (size: Sizes | undefined) => {
   switch (size) {
+    case 'xsmall':
+      return 0.5;
     case 'small':
       return 0.75;
     default:
@@ -37,15 +41,40 @@ const StyledButton = styled.button<ButtonProps>`
   font-size: ${({ size }) => getFontSize(size)}rem;
   font-family: inherit;
   cursor: pointer;
-  border: 3px solid ${({ isOutlined, color, isText }) => (isOutlined && !isText ? colors[color] : 'transparent')};
-  background-color: ${({ isOutlined, isText, color }) => (isOutlined || isText ? 'transparent' : colors[color])};
-  color: ${({ color, isOutlined, isText }) => (isOutlined || isText ? colors[color] : colors.getTextColor(color))};
+  border: 3px solid transparent;
+  background-color: ${({ color }) => colors[color]};
+  color: ${({ color }) => colors.getTextColor(color)};
   &:not(:last-child) {
     margin-right: 0.5rem;
   }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
-const Button: FC<ButtonProps> = ({ isLoading, children, ...rest }) => {
+const OutlinedButton = styled(StyledButton)<ButtonProps>`
+  border: 3px solid ${({ color }) => colors[color]};
+  background-color: transparent;
+  color: ${({ color }) => colors[color]};
+`;
+
+const TextButton = styled(StyledButton)<ButtonProps>`
+  background-color: transparent;
+  color: ${({ color }) => colors[color]};
+`;
+
+const Button: FC<ButtonProps> = ({ isLoading, isOutlined, isText, children, ...rest }) => {
+  const RenderButton = (props: any) => {
+    if (isOutlined) {
+      return <OutlinedButton {...props} />;
+    }
+    if (isText) {
+      return <TextButton {...props} />;
+    }
+    return <StyledButton {...props} />;
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return <Loading>LOADING</Loading>;
@@ -53,7 +82,7 @@ const Button: FC<ButtonProps> = ({ isLoading, children, ...rest }) => {
     return children;
   };
 
-  return <StyledButton {...rest}>{renderContent()}</StyledButton>;
+  return <RenderButton {...rest}>{renderContent()}</RenderButton>;
 };
 
 export { Button };
