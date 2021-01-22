@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, Loading, ConfirmationModal, DatePicker } from 'Components';
+import { Dropzone, Button, ConfirmationModal, DatePicker, EditableTitle } from 'Components';
 import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
@@ -43,25 +43,12 @@ const Status = styled.h4`
   }
 `;
 
-const Title = styled.h1`
-  cursor: pointer;
-  color: ${colors.green};
-`;
-
 const TextArea = styled.textarea`
   color: ${colors.green};
   resize: none;
   border: none;
   background: none;
   font-family: inherit;
-`;
-
-const TitleTextInput = styled.input`
-  background: none;
-  color: ${colors.green};
-  font-family: inherit;
-  font-size: 2em;
-  margin-bottom: 1rem;
 `;
 
 const Description = styled.p`
@@ -105,20 +92,6 @@ const DropZoneImage = styled.div<{ url: string }>`
 const DropZoneVideo = styled.video`
   width: 100%;
   height: 100%;
-`;
-
-const DropZoneText = styled.small`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const DropZoneLoading = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;
 
 const CoverImage = styled.img`
@@ -252,7 +225,6 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [isAddingPublisher, setIsAddingPublisher] = useState<boolean>(false);
   const [isViewingCurators, setIsViewingCurators] = useState<boolean>(false);
-  const [titleEditMode, setTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [isUpdatingWorldImage, setIsUpdatingWorldImage] = useState(false);
   const [isUpdatingWorldVideo, setIsUpdatingWorldVideo] = useState(false);
@@ -308,11 +280,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
     }
   };
 
-  const changeTitle = async (e: any) => {
-    const {
-      target: { value: title },
-    } = e;
-
+  const changeTitle = async (title: string) => {
     if (title !== world.title) {
       await updateWorldTitle({
         variables: {
@@ -321,7 +289,6 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
         },
       });
     }
-    setTitleEditMode(false);
   };
 
   const changeDescription = async (e: any) => {
@@ -338,22 +305,6 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
       });
     }
     setDescriptionEditMode(false);
-  };
-
-  const renderTitle = () => {
-    if (titleEditMode) {
-      return (
-        <TitleTextInput
-          autoFocus
-          onBlur={(e: any) => changeTitle(e)}
-          onFocus={(e: any) => {
-            e.target.value = '';
-            e.target.value = world.title;
-          }}
-        />
-      );
-    }
-    return <Title onClick={() => setTitleEditMode(true)}>{world.title || 'CLICK TO ADD TITLE'}</Title>;
   };
 
   const renderDescription = () => {
@@ -402,7 +353,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
           <Status>
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
-          {renderTitle()}
+          <EditableTitle text={world.title} onChange={changeTitle} />
           {renderDescription()}
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>
@@ -419,36 +370,26 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
             </DivButton>
           </WorldInfo>
           <DropZones>
-            <Dropzone onDrop={(files: File[]) => onDrop(files, false)} accept="video/mp4">
+            <Dropzone
+              onDrop={(files: File[]) => onDrop(files, false)}
+              accept="video/mp4"
+              isLoading={isUpdatingWorldVideo}
+            >
               <DropZoneVideo autoPlay loop key={world.prerollS3}>
                 <source src={world.prerollS3} type="video/mp4" />
               </DropZoneVideo>
-              {isUpdatingWorldVideo ? (
-                <DropZoneLoading>
-                  <Loading>
-                    <small>UPDATING</small>
-                  </Loading>
-                </DropZoneLoading>
-              ) : (
-                <DropZoneText>EDIT PRE-ROLL VIDEO</DropZoneText>
-              )}
             </Dropzone>
-            <Dropzone onDrop={(files: File[]) => onDrop(files, true)} accept="image/png">
+            <Dropzone
+              onDrop={(files: File[]) => onDrop(files, true)}
+              accept="image/png"
+              isLoading={isUpdatingWorldImage}
+            >
               <DropZoneImage url={world.coverS3} />
-              {isUpdatingWorldImage ? (
-                <DropZoneLoading>
-                  <Loading>
-                    <small>UPDATING</small>
-                  </Loading>
-                </DropZoneLoading>
-              ) : (
-                <DropZoneText>EDIT COVER IMAGE</DropZoneText>
-              )}
             </Dropzone>
           </DropZones>
           <Buttons>
             <Button color="green" size="small">
-              PUBLISH
+              ACTIVATE
             </Button>
             <Button color="red" size="small" onClick={() => setIsConfirming(true)}>
               <FontAwesomeIcon icon={faTrashAlt} size="lg" />
