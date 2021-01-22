@@ -18,10 +18,9 @@ import { PostTags } from './PostTags';
 import { addToQuery } from '../App';
 import { UserContext } from '../../Contexts/UserContext';
 import { SelectMoment } from './SelectMoment';
-import {Navbar} from "../Navbar";
+import { Navbar } from '../Navbar';
 
 const PostContainer = styled.div`
-  margin-top: 2rem;
   display: flex;
   flex: 1;
   position: relative;
@@ -61,12 +60,14 @@ const SideBarContent = styled.div`
 `;
 
 const TextSection = styled.section`
-  &:not(:last-child) {
-    margin-bottom: 2rem;
+  h4 {
+    margin: 0;
   }
+  margin: 1rem 0;
 `;
 
 const TextHeader = styled.p`
+  font-size: 1rem;
   opacity: 0.7;
 `;
 
@@ -169,17 +170,17 @@ const Post: FC<RouteComponentProps> = props => {
 
   return (
     <>
-      <Navbar {...props} />
       <PostContainer>
         <SideBar>
-          {/*<SideBarHeader>*/}
-            {/*<BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/posts', search })} />*/}
-            {/*<Modu src={sidebar} />*/}
-          {/*</SideBarHeader>*/}
+          <SideBarHeader>
+            <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
+            <Modu src={sidebar} />
+          </SideBarHeader>
           <SideBarContent>
             <TextSection>
               <TextHeader>CREATED BY:</TextHeader>
               <TextInfoButton
+                size="small"
                 isText={true}
                 color="white"
                 onClick={() => handleAddFilter({ name: data.post.user?.preferredUsername, type: 'USER' })}
@@ -189,15 +190,15 @@ const Post: FC<RouteComponentProps> = props => {
             </TextSection>
             <TextSection>
               <TextHeader>LOCATION:</TextHeader>
-              <h3>{renderLocation()}</h3>
+              <h4>{renderLocation()}</h4>
             </TextSection>
             <TextSection>
               <TextHeader>FILTER:</TextHeader>
-              <h3>90210</h3>
+              <h4>90210</h4>
             </TextSection>
             <TextSection>
               <TextHeader>SUBMISSION DATE:</TextHeader>
-              <h3>{data.post.createdAt.split('T')[0]}</h3>
+              <h4>{data.post.createdAt.split('T')[0]}</h4>
             </TextSection>
             <TextSection>
               <TextHeader>TAGS:</TextHeader>

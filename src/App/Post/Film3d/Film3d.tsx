@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Film3dImage = styled.img`
   object-fit: cover;
   height: 80%;
-  width: 20rem;
+  width: 30rem;
 `;
 
 interface Props {

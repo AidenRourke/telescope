@@ -23,6 +23,8 @@ export interface MomentType {
   id: string;
   coverS3: string;
   title: string;
+  isActive?: boolean;
+  world: WorldType;
   posts: PostType[];
 }
 
@@ -49,6 +51,7 @@ export interface PublisherType {
 
 export interface WorldType {
   id: string;
+  status?: string;
   coverS3?: string;
   prerollS3?: string;
   title?: string;

@@ -21,7 +21,7 @@ const AddWorldButton = styled.div`
   box-sizing: border-box;
   opacity: 0.7;
   margin-right: 2rem;
-  height: 80%;
+  height: 70%;
   min-width: 20rem;
   max-width: 20rem;
   cursor: pointer;
@@ -44,7 +44,7 @@ const WorldButton = styled.img<{ selected: boolean }>`
   object-fit: cover;
   min-width: 20rem;
   max-width: 20rem;
-  height: 80%;
+  height: 70%;
   opacity: ${({ selected }) => (selected ? 0.8 : 0.2)};
   // border: 3px solid ${({ selected }) => (selected ? colors.blue : 'transparent')};
   cursor: pointer;
@@ -89,7 +89,7 @@ const CREATE_WORLD = gql`
 const Worlds: FC<RouteComponentProps> = props => {
   const { user } = useContext(UserContext);
 
-  const [selection, setSelection] = useState<number>(0);
+  const [selection, setSelection] = useState<number>(-1);
 
   const history = useHistory();
 

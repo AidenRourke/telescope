@@ -12,10 +12,10 @@ const WorldPostListContainer = styled.div`
   overflow: auto;
 `;
 
-const UPDATE_WORLD_POSTS_ORDER = gql`
-  mutation UpdateWorldPostsOrder($worldId: ID!, $postId: ID!, $position: Int!) {
-    updateWorldPostsOrder(worldId: $worldId, postId: $postId, position: $position) {
-      world {
+const UPDATE_MOMENT_POSTS_ORDER = gql`
+  mutation UpdateMomentPostsOrder($momentId: ID!, $postId: ID!, $position: Int!) {
+    updateMomentPostsOrder(momentId: $momentId, postId: $postId, position: $position) {
+      moment {
         id
         posts {
           id
@@ -27,17 +27,17 @@ const UPDATE_WORLD_POSTS_ORDER = gql`
 
 interface Props {
   posts: PostType[];
-  worldId: string;
+  momentId: string;
 }
 
-const MomentPostsList: FC<Props> = ({ posts, worldId }) => {
+const MomentPostsList: FC<Props> = ({ posts, momentId }) => {
   const [postsArray, setPostsArray] = useState<PostType[]>(posts);
 
   useEffect(() => {
     setPostsArray(posts);
   }, [posts]);
 
-  const [updateWorldPostsOrder] = useMutation(UPDATE_WORLD_POSTS_ORDER);
+  const [updateMomentPostsOrder] = useMutation(UPDATE_MOMENT_POSTS_ORDER);
 
   const movePost = (dragIndex: number, hoverIndex: number) => {
     const dragCard = postsArray[dragIndex];
@@ -53,9 +53,9 @@ const MomentPostsList: FC<Props> = ({ posts, worldId }) => {
 
   const updatePost = (dragIndex: number, dropIndex: number) => {
     const dragCard = postsArray[dragIndex];
-    updateWorldPostsOrder({
+    updateMomentPostsOrder({
       variables: {
-        worldId,
+        momentId,
         postId: dragCard.id,
         position: dropIndex + 1,
       },
@@ -70,7 +70,7 @@ const MomentPostsList: FC<Props> = ({ posts, worldId }) => {
         index={index}
         updatePost={updatePost}
         movePost={movePost}
-        worldId={worldId}
+        momentId={momentId}
       />
     );
   };

@@ -12,7 +12,6 @@ import { FilterType } from 'Types/types';
 const AppContainer = styled.div`
   height: 100vh;
   display: flex;
-  flex-direction: column;
 `;
 
 export const filtersToQueries = (filters: any) => {

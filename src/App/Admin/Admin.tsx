@@ -25,7 +25,7 @@ const ATTACH_USER = gql`
 `;
 
 const AdminContainer = styled.div`
-  padding: 2rem 2rem 2rem 3rem;
+  padding: 2rem;
   min-width: 0;
   overflow: hidden;
   display: flex;
@@ -135,7 +135,7 @@ const Admin: FC<RouteComponentProps> = props => {
     <>
       <Navbar {...props}/>
       <AdminContainer>
-        {/*<h1>SETTINGS AND OPTIONS</h1>*/}
+        <h1>SETTINGS AND OPTIONS</h1>
         <AdminOptions>
           {/*{renderHelpers()}*/}
           {ADMIN_OPTIONS.map((option, i) => (

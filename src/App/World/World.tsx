@@ -71,7 +71,7 @@ const WorldInfo = styled.div`
   justify-content: space-between;
   margin-top: 1rem;
   margin-bottom: 2rem;
-  h4 {
+  small {
     margin: 0;
     opacity: 0.7;
   }
@@ -97,7 +97,7 @@ const DropZoneVideo = styled.video`
 `;
 
 const CoverImage = styled.img`
-  margin: 0 2rem;
+  margin: 2rem;
   width: 22rem;
   object-fit: cover;
 `;
@@ -133,6 +133,7 @@ const GET_WORLD = gql`
         id
         title
         coverS3
+        isActive
       }
       publishers {
         id
@@ -223,6 +224,17 @@ const UPDATE_WORLD_RELEASE_DATE = gql`
   }
 `;
 
+const UPDATE_WORLD_STATUS = gql`
+  mutation UpdateWorldStatus($worldId: ID!, $status: String!) {
+    updateWorldStatus(worldId: $worldId, status: $status) {
+      world {
+        id
+        status
+      }
+    }
+  }
+`;
+
 const World: FC<RouteComponentProps> = props => {
   const {
     history,
@@ -245,6 +257,7 @@ const World: FC<RouteComponentProps> = props => {
   const [updateWorldDescription] = useMutation(UPDATE_WORLD_DESCRIPTION);
   const [updateWorldImage] = useMutation(UPDATE_WORLD_IMAGE);
   const [updateWorldVideo] = useMutation(UPDATE_WORLD_VIDEO);
+  const [updateWorldStatus] = useMutation(UPDATE_WORLD_STATUS);
   const [removeWorld] = useMutation(REMOVE_WORLD, {
     refetchQueries: [{ query: GET_WORLDS }],
     awaitRefetchQueries: true,
@@ -334,6 +347,41 @@ const World: FC<RouteComponentProps> = props => {
     );
   };
 
+  const renderAction = () => {
+    console.log(world.status);
+    if (world.status === 'DRAFT') {
+      return (
+        <Button
+          color="green"
+          size="small"
+          onClick={() => updateWorldStatus({ variables: { worldId: world.id, status: 'PUBLISHED' } })}
+        >
+          PUBLISH
+        </Button>
+      );
+    } else if (world.status === 'PUBLISHED') {
+      return (
+        <Button
+          color="red"
+          size="small"
+          onClick={() => updateWorldStatus({ variables: { worldId: world.id, status: 'ARCHIVED' } })}
+        >
+          ARCHIVE
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          color="blue"
+          size="small"
+          onClick={() => updateWorldStatus({ variables: { worldId: world.id, status: 'DRAFT' } })}
+        >
+          EDIT
+        </Button>
+      );
+    }
+  };
+
   const getCurators = () => {
     let curators: AccountType[] = [];
     world.publishers.map((publisher: PublisherType) => {
@@ -354,10 +402,9 @@ const World: FC<RouteComponentProps> = props => {
 
   return (
     <>
-      <Navbar {...props} />
       <WorldContainer>
         <WorldData>
-          {/*<BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/worlds', search })} />*/}
+          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
           <Status>
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
@@ -365,16 +412,16 @@ const World: FC<RouteComponentProps> = props => {
           {renderDescription()}
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>
-              <h4>CURATORS</h4>
-              <h3>{getCurators().length}</h3>
+              <small>CURATORS</small>
+              <p>{getCurators().length}</p>
             </DivButton>
             <DatePicker
               selected={world.releaseDate}
               onChange={date => updateWorldReleaseDate({ variables: { worldId: world.id, releaseDate: date } })}
             />
             <DivButton onClick={() => setIsAddingPublisher(true)}>
-              <h4>PUBLISHERS</h4>
-              <h3>{numPublishers()}</h3>
+              <small>PUBLISHERS</small>
+              <p>{numPublishers()}</p>
             </DivButton>
           </WorldInfo>
           <DropZones>
@@ -396,9 +443,7 @@ const World: FC<RouteComponentProps> = props => {
             </Dropzone>
           </DropZones>
           <Buttons>
-            <Button color="green" size="small">
-              ACTIVATE
-            </Button>
+            {renderAction()}
             <Button color="red" size="small" onClick={() => setIsConfirming(true)}>
               <FontAwesomeIcon icon={faTrashAlt} size="lg" />
             </Button>

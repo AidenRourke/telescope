@@ -8,9 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory, useLocation } from 'react-router';
 import { useMutation } from '@apollo/react-hooks';
-import { GET_WORLDS } from '../../Worlds/Worlds';
 
 const WorldMomentsListContainer = styled.div`
+  margin: 2rem 0rem;
   width: 18rem;
   overflow: auto;
 `;
@@ -24,6 +24,8 @@ const WorldMomentContainer = styled.div`
 
 const MomentInformation = styled.div`
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const WorldMomentImage = styled.img`
@@ -41,17 +43,18 @@ const AddMomentImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid transparent;
   svg {
     fill: ${colors.blue};
   }
 `;
 
-const Title = styled.p`
-  color: ${colors.green};
+const Title = styled.small`
+  color: ${colors.blue};
 `;
 
-const Author = styled.p`
-  color: ${colors.blue};
+const Status = styled.small`
+  color: ${colors.green};
 `;
 
 const RemoveMomentButton = styled.button`
@@ -103,7 +106,7 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
         createMoment: { moment },
       },
     } = res;
-    history.push({ pathname: `/moments/${moment.id}`, search });
+    history.push({ pathname: `/worlds/${worldId}/${moment.id}`, search });
   };
 
   const [removeWorldMoment, { loading: isRemoving }] = useMutation(REMOVE_MOMENT);
@@ -117,9 +120,10 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
     });
   };
 
+  // TODO:  REMOVING STATE
   const renderMoment = (moment: MomentType) => {
     return (
-      <WorldMomentContainer onClick={() => history.push({ pathname: `/moments/${moment.id}`, search })}>
+      <WorldMomentContainer onClick={() => history.push({ pathname: `/worlds/${worldId}/${moment.id}`, search })}>
         <WorldMomentImage src={moment.coverS3} />
         {isRemoving ? (
           <MomentInformation>
@@ -130,7 +134,7 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
         ) : (
           <MomentInformation>
             <Title>{moment.title}</Title>
-            {/*<Author>{post.user?.preferredUsername}</Author>*/}
+            {moment.isActive && <Status>ACTIVE</Status>}
           </MomentInformation>
         )}
         <RemoveMomentButton onClick={(e: any) => handleDelete(e, moment.id)}>

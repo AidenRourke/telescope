@@ -9,7 +9,7 @@ import { FilterSearch, Filters } from 'Components/';
 // import { GlobeView } from './GlobeView';
 
 const UserPostsContainer = styled.div`
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
   min-width: 0px;
   overflow: hidden;
   display: flex;
@@ -22,14 +22,13 @@ const UserPosts: FC<RouteComponentProps> = props => {
 
   return (
     <>
-      <Navbar {...props}>
+      <Navbar {...props}/>
+      <UserPostsContainer>
         <FilterSearch
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           options={['USER', 'LOCATION', 'TAG']}
         />
-      </Navbar>
-      <UserPostsContainer>
         <Filters/>
         <ListView label="LIST VIEW" />
       </UserPostsContainer>

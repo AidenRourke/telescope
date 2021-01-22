@@ -7,33 +7,31 @@ import { Button } from 'Components/Button';
 import { green, white } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
 import { UserContext } from '../../Contexts/UserContext';
-import { Input } from '../../Components/Input';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-
-const Search = styled.form`
-  display: flex;
-`;
 
 const NavContainer = styled.div`
   display: flex;
-  padding: 2rem 2rem 0 2rem;
+  padding: 2rem;
+  flex-direction: column;
 `;
 
 const Modu = styled.img`
-  width: 12rem;
+  width: 10rem;
 `;
 
 const Links = styled.div`
-  margin: 0 2rem;
+  justify-content: flex-end;
+  flex: 1;
+  margin: 2rem 0;
   display: flex;
   width: 100%;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
 `;
 
 const StyledLink = styled(Link)<{ isActive: boolean }>`
+  font-size: 0.75rem;
   display: block;
-  margin-left: 1rem;
+  margin: 0.5rem 0;
   color: ${({ isActive }) => (isActive ? green : white)};
   opacity: ${({ isActive }) => (isActive ? 1 : 0.3)};
   text-decoration: none;

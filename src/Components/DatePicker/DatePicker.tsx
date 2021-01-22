@@ -77,8 +77,8 @@ const DatePicker: FC<Props> = ({ selected, onChange }) => {
   const Input = (props: any) => {
     return (
       <DateInputButton onClick={() => props.onClick()}>
-        <h4>RELEASE DATE</h4>
-        <h3>{props.value || 'COMING SOON'}</h3>
+        <small>RELEASE DATE</small>
+        <p>{props.value || 'COMING SOON'}</p>
       </DateInputButton>
     );
   };

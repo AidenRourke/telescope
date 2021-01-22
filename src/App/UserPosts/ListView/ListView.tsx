@@ -80,8 +80,8 @@ const ListView: FC<Props> = () => {
   const getPhotos = () => {
     return data.posts.map((post: PostType) => ({
       src: post.frame1S3,
-      width: 3,
-      height: 4,
+      width: 2,
+      height: 3,
       key: post.id,
     }));
   };

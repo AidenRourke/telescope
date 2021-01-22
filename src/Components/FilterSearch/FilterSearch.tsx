@@ -28,9 +28,9 @@ const DropdownHeader = styled.button`
   border: 3px solid ${blue};
   border-right: none;
   color: ${white};
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-family: inherit;
-  padding: 1rem;
+  padding: 0.75rem 1.75rem;
   cursor: pointer;
   align-items: center;
 `;
@@ -47,11 +47,12 @@ const DropdownMenu = styled.ul`
 
 const DropdownItem = styled.button`
   cursor: pointer;
+  font-size: 0.75rem;
   padding: 0.5rem;
   display: block;
   width: 100%;
   background: none;
-  font: inherit;
+  font-family: inherit;
   color: ${white};
   border: none;
   text-align: left;
@@ -130,8 +131,8 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, options }) => {
         )}
       </Dropdown>
       <FilterForm onSubmit={submitForm}>
-        <Input color="blue" value={tagInputValue} onChange={(e: any) => setTagInputValue(e.target.value)} type="text" />
-        <SearchButton color="blue">
+        <Input inputSize="small" color="blue" value={tagInputValue} onChange={(e: any) => setTagInputValue(e.target.value)} type="text" />
+        <SearchButton color="blue" size="small">
           <FontAwesomeIcon icon={faSearch} size="lg" type="submit" />
         </SearchButton>
       </FilterForm>

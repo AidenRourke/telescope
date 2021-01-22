@@ -48,10 +48,10 @@ const RemovePostButton = styled.button`
   border: none;
 `;
 
-const REMOVE_WORLD_POST = gql`
-  mutation RemoveWorldPost($worldId: ID!, $postId: ID!) {
-    removeWorldPost(worldId: $worldId, postId: $postId) {
-      world {
+const REMOVE_MOMENT_POST = gql`
+  mutation RemoveMomentPost($momentId: ID!, $postId: ID!) {
+    removeMomentPost(momentId: $momentId, postId: $postId) {
+      moment {
         id
         posts {
           id
@@ -63,19 +63,19 @@ const REMOVE_WORLD_POST = gql`
 
 interface Props {
   post: PostType;
-  worldId: string;
+  momentId: string;
   index: number;
   updatePost: (dragIndex: number, dropIndex: number) => void;
   movePost: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worldId }) => {
+const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, momentId }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const history = useHistory();
   const { search } = useLocation();
 
-  const [removeWorldPost, { loading: isRemoving }] = useMutation(REMOVE_WORLD_POST);
+  const [removeMomentPost, { loading: isRemoving }] = useMutation(REMOVE_MOMENT_POST);
 
   const dropFunction = (
     item: DragItem,
@@ -140,10 +140,10 @@ const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, wor
 
   const handleDelete = (e: any) => {
     e.stopPropagation();
-    removeWorldPost({
+    removeMomentPost({
       variables: {
         postId: post.id,
-        worldId,
+        momentId,
       },
     });
   };
