@@ -29,7 +29,7 @@ interface Props {
   worldId: string;
 }
 
-const WorldPostsList: FC<Props> = ({ posts, worldId }) => {
+const MomentPostsList: FC<Props> = ({ posts, worldId }) => {
   const [postsArray, setPostsArray] = useState<PostType[]>(posts);
 
   useEffect(() => {
@@ -77,4 +77,4 @@ const WorldPostsList: FC<Props> = ({ posts, worldId }) => {
   return <WorldPostListContainer>{postsArray.map((post, i) => renderPost(post, i))}</WorldPostListContainer>;
 };
 
-export { WorldPostsList };
+export { MomentPostsList };

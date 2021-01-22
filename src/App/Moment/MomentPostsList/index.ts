@@ -1,0 +1,1 @@
+export { MomentPostsList } from './MomentPostsList';

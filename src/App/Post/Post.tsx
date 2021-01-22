@@ -9,7 +9,7 @@ import { green, white, blue } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
 import { Button, ConfirmationModal, Modal } from 'Components';
 import { Film3d } from './Film3d';
-import { AddToWorld } from './AddToWorld';
+import { SelectWorld } from './SelectWorld';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { FilterType } from 'Types/types';
@@ -17,6 +17,7 @@ import * as colors from 'styles/colors';
 import { PostTags } from './PostTags';
 import { addToQuery } from '../App';
 import { UserContext } from '../../Contexts/UserContext';
+import { SelectMoment } from './SelectMoment';
 
 const PostContainer = styled.div`
   display: flex;
@@ -67,6 +68,8 @@ const TextHeader = styled.p`
 `;
 
 const TextInfoButton = styled(Button)`
+  padding: 0;
+  border: none;
   &:hover {
     color: ${colors.black};
   }
@@ -127,6 +130,7 @@ const REMOVE_POST = gql`
 `;
 
 const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
+  const [selected, setSelected] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
@@ -210,8 +214,12 @@ const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
           </Description>
         </ImageContainer>
       </PostContainer>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title="ADD TO WORLD">
-        <AddToWorld postId={data.post.id} />
+      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={!!selected ? 'ADD TO MOMENT' : 'SELECT WORLD'}>
+        {!!selected ? (
+          <SelectMoment postId={data.post.id} worldId={selected} />
+        ) : (
+          <SelectWorld setSelected={setSelected} />
+        )}
       </Modal>
       <ConfirmationModal
         isOpen={isConfirming}

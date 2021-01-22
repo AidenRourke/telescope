@@ -7,6 +7,7 @@ import { Post } from 'App/Post';
 import { Admin } from 'App/Admin';
 import { Worlds } from 'App/Worlds';
 import { World } from 'App/World';
+import { Moment } from 'App/Moment';
 import { UserContext } from 'Contexts/UserContext';
 
 const Router: FC = () => {
@@ -39,6 +40,11 @@ const Router: FC = () => {
           exact={true}
           path={'/worlds/:id'}
           render={props => (!!user ? <World {...props} /> : <Redirect to="/login" />)}
+        />
+        <Route
+          exact={true}
+          path={'/moments/:id'}
+          render={props => (!!user ? <Moment {...props} /> : <Redirect to="/login" />)}
         />
         <Route
           exact={true}

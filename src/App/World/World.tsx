@@ -10,7 +10,7 @@ import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dropzone, Button, Loading, ConfirmationModal, DatePicker } from 'Components';
-import { WorldPostsList } from './WorldPostsList';
+import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
 import { WorldCuratorsModal } from './WorldCuratorsModal';
@@ -154,15 +154,10 @@ const GET_WORLD = gql`
       coverS3
       prerollS3
       releaseDate
-      posts {
+      moments {
         id
         title
-        frame1S3
-        position
-        user {
-          id
-          preferredUsername
-        }
+        coverS3
       }
       publishers {
         id
@@ -461,7 +456,7 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
           </Buttons>
         </WorldData>
         <CoverImage src={world.coverS3} />
-        <WorldPostsList posts={world.posts} worldId={world.id} />
+        <WorldMomentsList moments={world.moments} worldId={world.id} />
       </WorldContainer>
       <ConfirmationModal
         isOpen={isConfirming}

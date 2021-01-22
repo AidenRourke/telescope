@@ -35,6 +35,7 @@ const AddWorldButton = styled.div`
   }
   svg {
     fill: ${colors.blue};
+    height: 30%;
   }
 `;
 
@@ -70,20 +71,6 @@ export const GET_WORLDS = gql`
       id
       title
       coverS3
-      posts {
-        id
-      }
-      publishers {
-        id
-        name
-        accounts {
-          id
-          user {
-            id
-            preferredUsername
-          }
-        }
-      }
     }
   }
 `;
@@ -130,14 +117,14 @@ const Worlds: FC<RouteComponentProps> = props => {
     if (loading || selection < 0) return null;
     return (
       <WorldMetaData>
-        <h4>TITLE</h4>
-        <small>{data.worlds[selection]?.title}</small>
-        <h4>PUBLISHERS</h4>
-        <small>{data.worlds[selection]?.publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</small>
-        <h4>POSTS</h4>
-        <small>{data.worlds[selection]?.posts.length}</small>
-        <h4>CURATORS</h4>
-        <small>{getCurators()}</small>
+        {/*<h4>TITLE</h4>*/}
+        {/*<small>{data.worlds[selection]?.title}</small>*/}
+        {/*<h4>PUBLISHERS</h4>*/}
+        {/*<small>{data.worlds[selection]?.publishers.map((publisher: PublisherType) => publisher.name).join(', ')}</small>*/}
+        {/*<h4>MOMENTS</h4>*/}
+        {/*<small>{data.worlds[selection]?.moments.length}</small>*/}
+        {/*<h4>CURATORS</h4>*/}
+        {/*<small>{getCurators()}</small>*/}
       </WorldMetaData>
     );
   };
@@ -145,7 +132,7 @@ const Worlds: FC<RouteComponentProps> = props => {
   const renderAddWorld = () => {
     return (
       <AddWorldButton onMouseOver={() => setSelection(-1)} onClick={() => handleCreateWorld()}>
-        <svg xmlns="http://www.w3.org/2000/svg" height="30%" viewBox="0 0 24 24">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
         </svg>
       </AddWorldButton>
@@ -162,7 +149,7 @@ const Worlds: FC<RouteComponentProps> = props => {
         src={world.coverS3}
         onMouseOver={() => setSelection(i)}
         selected={selection === i}
-        onClick={() => history.push({pathname: `/worlds/${world.id}`, search: props.location.search})}
+        onClick={() => history.push({ pathname: `/worlds/${world.id}`, search: props.location.search })}
       />
     ));
   };

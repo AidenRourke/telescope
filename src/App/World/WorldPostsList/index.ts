@@ -1,1 +1,0 @@
-export { WorldPostsList } from './WorldPostsList';

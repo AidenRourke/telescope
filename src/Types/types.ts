@@ -19,6 +19,13 @@ export interface PostType {
   user?: UserType;
 }
 
+export interface MomentType {
+  id: string;
+  coverS3?: string;
+  title?: string;
+  posts?: PostType[];
+}
+
 export interface UserType {
   id: string;
   preferredUsername?: string;
@@ -47,7 +54,7 @@ export interface WorldType {
   title?: string;
   description?: string;
   releaseDate?: string;
-  posts?: PostType[];
+  moments?: MomentType[];
   publishers?: PublisherType[];
 }
 
