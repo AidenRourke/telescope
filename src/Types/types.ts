@@ -21,9 +21,9 @@ export interface PostType {
 
 export interface MomentType {
   id: string;
-  coverS3?: string;
-  title?: string;
-  posts?: PostType[];
+  coverS3: string;
+  title: string;
+  posts: PostType[];
 }
 
 export interface UserType {

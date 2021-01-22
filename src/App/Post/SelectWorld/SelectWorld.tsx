@@ -4,31 +4,13 @@ import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { WorldType } from 'Types/types';
 import * as colors from 'styles/colors';
+import {Card} from "../Card";
 
 const WorldsContainer = styled.div`
   margin: 2rem 0;
   display: flex;
   flex-wrap: wrap;
   color: ${colors.blue};
-`;
-
-const WorldThumbnail = styled.img`
-  height: 10rem;
-  object-fit: cover;
-  border: 3px solid ${colors.blue};
-  width: 100%;
-  box-sizing: border-box;
-`;
-
-const World = styled.div`
-  margin: 0.5rem;
-  width: 8rem;
-  opacity: 0.7;
-  cursor: pointer;
-  transition: opacity linear 0.15s;
-  &:hover {
-    opacity: 1;
-  }
 `;
 
 const GET_WORLDS = gql`
@@ -51,10 +33,12 @@ const SelectWorld: FC<Props> = ({ setSelected }) => {
   const renderWorlds = () => {
     if (loading) return null;
     return data.worlds.map((world: WorldType) => (
-      <World key={world.id} onClick={() => setSelected(world.id)}>
-        <WorldThumbnail src={world.coverS3} />
-        <p title={world.title}>{world.title}</p>
-      </World>
+      <Card
+        onClick={setSelected}
+        title={world.title}
+        imageSrc={world.coverS3}
+        id={world.id}
+      />
     ));
   };
 
