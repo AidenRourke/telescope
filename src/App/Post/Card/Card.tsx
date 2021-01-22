@@ -20,6 +20,12 @@ const CardEnabled = styled.div`
   &:hover {
     opacity: 1;
   }
+  p {
+    white-space: nowrap;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const CardDisabled = styled.div`

@@ -168,6 +168,11 @@ const Post: FC<RouteComponentProps> = props => {
     return 'UNKNOWN';
   };
 
+  const closeModal = () => {
+    setIsOpen(false);
+    setSelected(null);
+  };
+
   return (
     <>
       <PostContainer>
@@ -224,7 +229,7 @@ const Post: FC<RouteComponentProps> = props => {
           </Description>
         </ImageContainer>
       </PostContainer>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(false)} title={!!selected ? 'ADD TO MOMENT' : 'SELECT WORLD'}>
+      <Modal isOpen={isOpen} closeModal={closeModal} title={!!selected ? 'SELECT MOMENT' : 'SELECT WORLD'}>
         {!!selected ? (
           <SelectMoment postId={data.post.id} worldId={selected} />
         ) : (

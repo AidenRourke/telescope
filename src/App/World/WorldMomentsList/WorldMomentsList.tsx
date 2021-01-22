@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory, useLocation } from 'react-router';
 import { useMutation } from '@apollo/react-hooks';
+import {GET_WORLD} from "../World";
 
 const WorldMomentsListContainer = styled.div`
   margin: 2rem 0rem;
@@ -97,7 +98,9 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
   const history = useHistory();
   const { search } = useLocation();
 
-  const [createMoment] = useMutation(CREATE_MOMENT);
+  const [createMoment] = useMutation(CREATE_MOMENT, {
+    refetchQueries: [{ query: GET_WORLD, variables: { id: worldId } }],
+  });
 
   const handleCreateMoment = async () => {
     const res = await createMoment({ variables: { worldId } });

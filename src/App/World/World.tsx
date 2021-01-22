@@ -119,7 +119,7 @@ const DivButton = styled.button`
   }
 `;
 
-const GET_WORLD = gql`
+export const GET_WORLD = gql`
   query GetWorld($id: ID!) {
     world(id: $id) {
       id
