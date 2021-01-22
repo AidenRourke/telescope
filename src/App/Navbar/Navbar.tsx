@@ -7,13 +7,17 @@ import { Button } from 'Components/Button';
 import { green, white } from 'styles/colors';
 import sidebar from 'assets/SIDEBAR.png';
 import { UserContext } from '../../Contexts/UserContext';
+import { Input } from '../../Components/Input';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
+const Search = styled.form`
+  display: flex;
+`;
 
 const NavContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 12rem;
-  padding: 2rem;
+  padding: 2rem 2rem 0 2rem;
 `;
 
 const Modu = styled.img`
@@ -21,18 +25,18 @@ const Modu = styled.img`
 `;
 
 const Links = styled.div`
-  margin-bottom: 2rem;
+  margin: 0 2rem;
+  display: flex;
+  width: 100%;
+  align-items: center;
 `;
 
 const StyledLink = styled(Link)<{ isActive: boolean }>`
   display: block;
-  margin-bottom: 1rem;
+  margin-left: 1rem;
   color: ${({ isActive }) => (isActive ? green : white)};
   opacity: ${({ isActive }) => (isActive ? 1 : 0.3)};
   text-decoration: none;
-  &:last-of-type {
-    margin-bottom: 0;
-  }
   &:hover {
     opacity: 1;
     color: ${green};
@@ -50,14 +54,14 @@ const WidgetContainer = styled.div`
 `;
 
 const adminLinks = [
+  { pathname: '/posts', name: 'POSTS' },
   { pathname: '/worlds', name: 'WORLDS' },
-  { pathname: '/posts', name: 'USER POSTS' },
   { pathname: '/admin', name: 'ADMIN' },
 ];
 
 const links = [
+  { pathname: '/posts', name: 'POSTS' },
   { pathname: '/worlds', name: 'WORLDS' },
-  { pathname: '/posts', name: 'USER POSTS' },
 ];
 
 const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
@@ -76,7 +80,6 @@ const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
   return (
     <NavContainer>
       <Modu src={sidebar} />
-      <WidgetContainer>{children}</WidgetContainer>
       <Links>
         {validLinks.map(({ pathname, name }) => (
           <StyledLink
@@ -88,6 +91,7 @@ const Navbar: FC<RouteComponentProps> = ({ history, location, children }) => {
           </StyledLink>
         ))}
       </Links>
+      {children}
       <Button isOutlined={true} size="small" color="green" onClick={handleLogout}>
         LOGOUT
       </Button>

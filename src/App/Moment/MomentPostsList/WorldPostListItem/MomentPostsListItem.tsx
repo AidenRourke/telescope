@@ -69,7 +69,7 @@ interface Props {
   movePost: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worldId }) => {
+const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worldId }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const history = useHistory();
@@ -174,4 +174,4 @@ const WorldPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, worl
   );
 };
 
-export { WorldPostsListItem };
+export { MomentPostsListItem };

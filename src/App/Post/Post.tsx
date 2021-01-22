@@ -18,10 +18,13 @@ import { PostTags } from './PostTags';
 import { addToQuery } from '../App';
 import { UserContext } from '../../Contexts/UserContext';
 import { SelectMoment } from './SelectMoment';
+import {Navbar} from "../Navbar";
 
 const PostContainer = styled.div`
+  margin-top: 2rem;
   display: flex;
   flex: 1;
+  position: relative;
 `;
 
 const SideBar = styled.div`
@@ -129,7 +132,12 @@ const REMOVE_POST = gql`
   }
 `;
 
-const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
+const Post: FC<RouteComponentProps> = props => {
+  const {
+    history,
+    location: { search },
+  } = props;
+
   const [selected, setSelected] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
@@ -161,12 +169,13 @@ const Post: FC<RouteComponentProps> = ({ history, location: { search } }) => {
 
   return (
     <>
+      <Navbar {...props} />
       <PostContainer>
         <SideBar>
-          <SideBarHeader>
-            <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/posts', search })} />
-            <Modu src={sidebar} />
-          </SideBarHeader>
+          {/*<SideBarHeader>*/}
+            {/*<BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/posts', search })} />*/}
+            {/*<Modu src={sidebar} />*/}
+          {/*</SideBarHeader>*/}
           <SideBarContent>
             <TextSection>
               <TextHeader>CREATED BY:</TextHeader>

@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useState } from 'react';
 import { PostType } from 'Types/types';
-import { WorldPostsListItem } from './WorldPostListItem';
+import { MomentPostsListItem } from './WorldPostListItem';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import update from 'immutability-helper';
 
 const WorldPostListContainer = styled.div`
-  width: 18rem;
+  margin-left: 1rem;
+  flex: 1;
   overflow: auto;
 `;
 
@@ -63,7 +64,7 @@ const MomentPostsList: FC<Props> = ({ posts, worldId }) => {
 
   const renderPost = (post: PostType, index: number) => {
     return (
-      <WorldPostsListItem
+      <MomentPostsListItem
         key={post.id}
         post={post}
         index={index}

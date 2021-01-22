@@ -62,9 +62,9 @@ const RemoveMomentButton = styled.button`
   border: none;
 `;
 
-const REMOVE_WORLD_MOMENT = gql`
-  mutation RemoveWorldMoment($worldId: ID!, $momentId: ID!) {
-    removeWorldMoment(worldId: $worldId, momentId: $momentId) {
+const REMOVE_MOMENT = gql`
+  mutation RemoveMoment($momentId: ID!) {
+    removeMoment(momentId: $momentId) {
       world {
         id
         moments {
@@ -106,13 +106,12 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
     history.push({ pathname: `/moments/${moment.id}`, search });
   };
 
-  const [removeWorldMoment, { loading: isRemoving }] = useMutation(REMOVE_WORLD_MOMENT);
+  const [removeWorldMoment, { loading: isRemoving }] = useMutation(REMOVE_MOMENT);
 
   const handleDelete = (e: any, momentId: string) => {
     e.stopPropagation();
     removeWorldMoment({
       variables: {
-        worldId,
         momentId,
       },
     });

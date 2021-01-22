@@ -1,1 +1,1 @@
-export { WorldPostsListItem } from './WorldPostsListItem';
+export { MomentPostsListItem } from './MomentPostsListItem';

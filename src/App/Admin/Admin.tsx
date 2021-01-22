@@ -133,9 +133,9 @@ const Admin: FC<RouteComponentProps> = props => {
 
   return (
     <>
-      <Navbar {...props}>{<UserPostsData />}</Navbar>
+      <Navbar {...props}/>
       <AdminContainer>
-        <h1>SETTINGS AND OPTIONS</h1>
+        {/*<h1>SETTINGS AND OPTIONS</h1>*/}
         <AdminOptions>
           {/*{renderHelpers()}*/}
           {ADMIN_OPTIONS.map((option, i) => (

@@ -14,11 +14,12 @@ import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
 import { WorldCuratorsModal } from './WorldCuratorsModal';
+import { Navbar } from '../Navbar';
 
 const WorldContainer = styled.div`
   display: flex;
   flex: 1;
-  padding: 3rem 2rem;
+  padding: 2rem;
 `;
 
 const WorldData = styled.div`
@@ -37,6 +38,7 @@ const BackArrow = styled(FontAwesomeIcon)`
   }
 `;
 const Status = styled.h4`
+  margin-top: 0;
   color: ${colors.blue};
   span {
     opacity: 0.7;
@@ -221,7 +223,12 @@ const UPDATE_WORLD_RELEASE_DATE = gql`
   }
 `;
 
-const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
+const World: FC<RouteComponentProps> = props => {
+  const {
+    history,
+    location: { search },
+  } = props;
+
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [isAddingPublisher, setIsAddingPublisher] = useState<boolean>(false);
   const [isViewingCurators, setIsViewingCurators] = useState<boolean>(false);
@@ -347,13 +354,14 @@ const World: FC<RouteComponentProps> = ({ history, location: { search } }) => {
 
   return (
     <>
+      <Navbar {...props} />
       <WorldContainer>
         <WorldData>
-          <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/worlds', search })} />
+          {/*<BackArrow icon={faArrowLeft} size="lg" onClick={() => history.push({ pathname: '/worlds', search })} />*/}
           <Status>
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
-          <EditableTitle text={world.title} onChange={changeTitle} />
+          <EditableTitle title={world.title} onChange={changeTitle} />
           {renderDescription()}
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>

@@ -12,8 +12,9 @@ import { UserContext } from 'Contexts/UserContext';
 const WorldsContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: 2rem 2rem 2rem 3rem;
+  margin: 2rem;
   overflow: scroll;
+  height: 100%;
 `;
 
 const AddWorldButton = styled.div`
@@ -156,7 +157,7 @@ const Worlds: FC<RouteComponentProps> = props => {
 
   return (
     <>
-      <Navbar {...props}>{renderMetaData()}</Navbar>
+      <Navbar {...props} />
       <WorldsContainer>
         {user.isAdmin && renderAddWorld()}
         {renderWorlds()}

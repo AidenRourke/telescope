@@ -1,33 +1,21 @@
-import React, { FC, useState, useEffect, useRef, useContext } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import { Button, Input } from 'Components/index';
 import { blue, black, white } from 'styles/colors';
-import { FilterTag } from './FilterTag';
-import { FilterType } from 'Types/types';
 import { useHistory, useLocation } from 'react-router';
-import { addToQuery, queryToObject, removeFromQuery } from '../../App/App';
+import { addToQuery } from '../../App/App';
 
 const FilterForm = styled.form`
   flex: 1;
   display: flex;
 `;
 
-const Filters = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const FilterSearchContainer = styled.div`
-  margin-bottom: 1rem;
-`;
-
 const TagFilter = styled.div`
-  width: 100%;
   display: flex;
-  margin-bottom: 0.5rem;
+  margin-right: 1rem;
 `;
 
 const Dropdown = styled.div`
@@ -95,8 +83,6 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, options }) => {
   const history = useHistory();
   const { search } = useLocation();
 
-  const filters = queryToObject(search);
-
   const menu = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (e: any) => {
@@ -126,64 +112,30 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, options }) => {
     setTagInputValue('');
   };
 
-  const removeFilter = (filter: FilterType) => {
-    const newSearch = removeFromQuery(filter, search);
-    history.push({
-      search: newSearch,
-    });
-  };
-
-  const renderFilters = () => {
-    const tags: any[] = [];
-    if (filters) {
-      Object.keys(filters).map(key => {
-        const filtersOfType = filters[key];
-        if (filtersOfType) {
-          if (Array.isArray(filtersOfType)) {
-            filtersOfType.map((name: string) => {
-              tags.push(<FilterTag filter={{ type: key, name }} onClick={removeFilter} />);
-            });
-          } else {
-            tags.push(<FilterTag filter={{ type: key, name: filtersOfType }} onClick={removeFilter} />);
-          }
-        }
-      });
-    }
-    return tags;
-  };
-
   return (
-    <FilterSearchContainer>
-      <TagFilter>
-        <Dropdown ref={menu}>
-          <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
-            {selection}
-            <Icon isOpen={isOpen} icon={faChevronRight} />
-          </DropdownHeader>
-          {isOpen && (
-            <DropdownMenu>
-              {options.map(option => (
-                <DropdownItem key={option} onClick={() => handleSelection(option)}>
-                  {option}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          )}
-        </Dropdown>
-        <FilterForm onSubmit={submitForm}>
-          <Input
-            color="blue"
-            value={tagInputValue}
-            onChange={(e: any) => setTagInputValue(e.target.value)}
-            type="text"
-          />
-          <SearchButton color="blue">
-            <FontAwesomeIcon icon={faSearch} size="lg" type="submit" />
-          </SearchButton>
-        </FilterForm>
-      </TagFilter>
-      <Filters>{renderFilters()}</Filters>
-    </FilterSearchContainer>
+    <TagFilter>
+      <Dropdown ref={menu}>
+        <DropdownHeader onClick={() => setIsOpen(!isOpen)}>
+          {selection}
+          <Icon isOpen={isOpen} icon={faChevronRight} />
+        </DropdownHeader>
+        {isOpen && (
+          <DropdownMenu>
+            {options.map(option => (
+              <DropdownItem key={option} onClick={() => handleSelection(option)}>
+                {option}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        )}
+      </Dropdown>
+      <FilterForm onSubmit={submitForm}>
+        <Input color="blue" value={tagInputValue} onChange={(e: any) => setTagInputValue(e.target.value)} type="text" />
+        <SearchButton color="blue">
+          <FontAwesomeIcon icon={faSearch} size="lg" type="submit" />
+        </SearchButton>
+      </FilterForm>
+    </TagFilter>
   );
 };
 

@@ -47,8 +47,6 @@ export const GET_POSTS = gql`
 `;
 
 const ListView: FC<Props> = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const history = useHistory();
   const { search } = useLocation();
 
@@ -89,14 +87,11 @@ const ListView: FC<Props> = () => {
   };
 
   return (
-    <>
-      <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen} options={['USER', 'LOCATION', 'TAG']} />
-      <ListViewContainer>
-        {!loading && data.posts.length > 0 && (
-          <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />
-        )}
-      </ListViewContainer>
-    </>
+    <ListViewContainer>
+      {!loading && data.posts.length > 0 && (
+        <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />
+      )}
+    </ListViewContainer>
   );
 };
 

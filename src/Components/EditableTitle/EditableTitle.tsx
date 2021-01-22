@@ -16,11 +16,11 @@ const TitleTextInput = styled.input`
 `;
 
 interface Props {
-  text: string;
+  title?: string;
   onChange: (text: string) => void;
 }
 
-const EditableTitle: FC<Props> = ({ text, onChange }) => {
+const EditableTitle: FC<Props> = ({ title, onChange }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const onBlur = async (e: any) => {
@@ -35,12 +35,12 @@ const EditableTitle: FC<Props> = ({ text, onChange }) => {
         onBlur={onBlur}
         onFocus={(e: any) => {
           e.target.value = '';
-          e.target.value = text;
+          e.target.value = title;
         }}
       />
     );
   }
-  return <Title onClick={() => setEditMode(true)}>{text || 'CLICK TO ADD TITLE'}</Title>;
+  return <Title onClick={() => setEditMode(true)}>{title || 'CLICK TO ADD TITLE'}</Title>;
 };
 
 export { EditableTitle };
