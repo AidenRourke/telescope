@@ -7,20 +7,35 @@ const Title = styled.h1`
   color: ${colors.green};
 `;
 
+const Text = styled.p`
+  cursor: pointer;
+  color: ${colors.green};
+`;
+
 const TitleTextInput = styled.input`
   background: none;
   color: ${colors.green};
   font-family: inherit;
   font-size: 2em;
   margin-bottom: 1rem;
+  width: 100%;
+`;
+
+const TextInput = styled.input`
+  background: none;
+  color: ${colors.green};
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
 `;
 
 interface Props {
   title?: string;
   onChange: (text: string) => void;
+  type?: string;
 }
 
-const EditableTitle: FC<Props> = ({ title, onChange }) => {
+const EditableInput: FC<Props> = ({ title, onChange, type }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const onBlur = async (e: any) => {
@@ -29,8 +44,9 @@ const EditableTitle: FC<Props> = ({ title, onChange }) => {
   };
 
   if (editMode) {
+    const InputComponent = type === 'h1' ? TitleTextInput : TextInput;
     return (
-      <TitleTextInput
+      <InputComponent
         autoFocus
         onBlur={onBlur}
         onFocus={(e: any) => {
@@ -40,7 +56,10 @@ const EditableTitle: FC<Props> = ({ title, onChange }) => {
       />
     );
   }
-  return <Title onClick={() => setEditMode(true)}>{title || 'CLICK TO ADD TITLE'}</Title>;
+
+  const TextComponent = type === 'h1' ? Title : Text;
+
+  return <TextComponent onClick={() => setEditMode(true)}>{title || 'CLICK TO ADD TEXT'}</TextComponent>;
 };
 
-export { EditableTitle };
+export { EditableInput };

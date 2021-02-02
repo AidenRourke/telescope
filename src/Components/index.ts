@@ -10,4 +10,4 @@ export { Tag } from './Tag';
 export { InputTag } from './InputTag';
 export { ConfirmationModal } from './ConfirmationModal';
 export { DatePicker } from './DatePicker';
-export { EditableTitle } from './EditableTitle';
+export { EditableInput } from './EditableInput';

@@ -65,6 +65,7 @@ export interface WorldType {
   title?: string;
   description?: string;
   releaseDate?: string;
+  spotifyUrl?: string;
   moments?: MomentType[];
   publishers?: PublisherType[];
 }

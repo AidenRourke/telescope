@@ -3,7 +3,7 @@ import { RouteComponentProps, useHistory, useParams } from 'react-router';
 import { gql } from 'apollo-boost';
 import { MomentPostsList } from './MomentPostsList';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { EditableTitle, Dropzone, Button } from 'Components';
+import { EditableInput, Dropzone, Button } from 'Components';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -195,7 +195,7 @@ const Moment: FC<RouteComponentProps> = props => {
         <div>
           <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
         </div>
-        <EditableTitle title={data.moment.title} onChange={changeTitle} />
+        <EditableInput type="h1" title={data.moment.title} onChange={changeTitle} />
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <MomentDetails>
             <DropZones>

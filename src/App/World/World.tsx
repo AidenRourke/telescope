@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, ConfirmationModal, DatePicker, EditableTitle, Input } from 'Components';
+import { Dropzone, Button, ConfirmationModal, DatePicker, EditableInput, Input } from 'Components';
 import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
@@ -68,8 +68,7 @@ const WorldInfo = styled.div`
   color: ${colors.blue};
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  margin: 1rem 0;
   small {
     margin: 0;
     opacity: 0.7;
@@ -119,6 +118,17 @@ const DivButton = styled.button`
   }
 `;
 
+const Spotify = styled.div`
+  margin-bottom: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  label {
+    color: ${colors.green};
+    margin-right: 0.5rem;
+  }
+`;
+
 export const GET_WORLD = gql`
   query GetWorld($id: ID!) {
     world(id: $id) {
@@ -129,6 +139,7 @@ export const GET_WORLD = gql`
       coverS3
       prerollS3
       releaseDate
+      spotifyUrl
       moments {
         id
         title
@@ -235,6 +246,17 @@ const UPDATE_WORLD_STATUS = gql`
   }
 `;
 
+const UPDATE_WORLD_SPOTIFY = gql`
+  mutation UpdateWorldSpotify($worldId: ID!, $spotifyUrl: String!) {
+    updateWorldSpotify(worldId: $worldId, spotifyUrl: $spotifyUrl) {
+      world {
+        id
+        spotifyUrl
+      }
+    }
+  }
+`;
+
 const World: FC<RouteComponentProps> = props => {
   const {
     history,
@@ -254,6 +276,7 @@ const World: FC<RouteComponentProps> = props => {
 
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
   const [updateWorldTitle] = useMutation(UPDATE_WORLD_TITLE);
+  const [updateWorldSpotify] = useMutation(UPDATE_WORLD_SPOTIFY);
   const [updateWorldDescription] = useMutation(UPDATE_WORLD_DESCRIPTION);
   const [updateWorldImage] = useMutation(UPDATE_WORLD_IMAGE);
   const [updateWorldVideo] = useMutation(UPDATE_WORLD_VIDEO);
@@ -306,6 +329,17 @@ const World: FC<RouteComponentProps> = props => {
         variables: {
           worldId: world.id,
           title,
+        },
+      });
+    }
+  };
+
+  const changeSpotify = async (spotifyUrl: string) => {
+    if (spotifyUrl !== world.spotifyUrl) {
+      await updateWorldSpotify({
+        variables: {
+          worldId: world.id,
+          spotifyUrl,
         },
       });
     }
@@ -407,7 +441,7 @@ const World: FC<RouteComponentProps> = props => {
           <Status>
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
-          <EditableTitle title={world.title} onChange={changeTitle} />
+          <EditableInput type="h1" title={world.title} onChange={changeTitle} />
           {renderDescription()}
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>
@@ -423,6 +457,10 @@ const World: FC<RouteComponentProps> = props => {
               <p>{numPublishers()}</p>
             </DivButton>
           </WorldInfo>
+          <Spotify>
+            <label>SPOTIFY:</label>
+            <EditableInput type="p" title={world.spotifyUrl} onChange={changeSpotify} />
+          </Spotify>
           <DropZones>
             <Dropzone
               title="CHANGE VIDEO"
