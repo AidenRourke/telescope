@@ -251,6 +251,7 @@ const World: FC<RouteComponentProps> = props => {
   const { id } = useParams();
 
   const { loading, data } = useQuery(GET_WORLD, { variables: { id } });
+  const { world } = data;
 
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
   const [updateWorldTitle] = useMutation(UPDATE_WORLD_TITLE);
@@ -396,8 +397,6 @@ const World: FC<RouteComponentProps> = props => {
   };
 
   if (loading) return null;
-
-  const { world } = data;
 
   return (
     <>

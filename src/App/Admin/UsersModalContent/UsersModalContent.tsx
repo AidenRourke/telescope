@@ -20,6 +20,7 @@ const Error = styled.p<{ error: boolean }>`
   margin-top: 0.25rem;
   color: ${red};
   height: ${({ error }) => (error ? 'auto' : 0)};
+  overflow: hidden;
 `;
 
 const GET_USERS = gql`

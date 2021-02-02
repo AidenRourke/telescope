@@ -164,6 +164,29 @@ const Moment: FC<RouteComponentProps> = props => {
     setIsUpdatingMomentImage(false);
   };
 
+  const renderAction = () => {
+    if (!data.moment.isActive) {
+      return (
+        <Button
+          color="green"
+          size="small"
+          onClick={() => updateWorldActive({ variables: { isActive: true, momentId } })}
+        >
+          ACTIVATE
+        </Button>
+      );
+    } else
+      return (
+        <Button
+          color="red"
+          size="small"
+          onClick={() => updateWorldActive({ variables: { isActive: false, momentId } })}
+        >
+          DEACTIVATE
+        </Button>
+      );
+  };
+
   if (loading) return null;
 
   return (
@@ -189,15 +212,7 @@ const Moment: FC<RouteComponentProps> = props => {
           <MomentPostsList momentPosts={data.moment.momentPosts} momentId={data.moment.id} />
         </div>
         <Buttons>
-          {!data.moment.isActive && (
-            <Button
-              color="green"
-              size="small"
-              onClick={() => updateWorldActive({ variables: { isActive: true, momentId } })}
-            >
-              ACTIVATE
-            </Button>
-          )}
+          {renderAction()}
           <Button color="red" size="small" onClick={() => console.log('blah')}>
             <FontAwesomeIcon icon={faTrashAlt} size="lg" />
           </Button>
