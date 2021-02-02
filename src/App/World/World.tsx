@@ -124,7 +124,7 @@ const Spotify = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  label {
+  small {
     color: ${colors.green};
     margin-right: 0.5rem;
   }
@@ -367,7 +367,7 @@ const World: FC<RouteComponentProps> = props => {
       return (
         <DescriptionTextArea
           autoFocus
-          onBlur={(e: any) => changeDescription(e)}
+          onBlur={changeDescription}
           onFocus={(e: any) => {
             e.target.value = '';
             e.target.value = world.description;
@@ -442,7 +442,7 @@ const World: FC<RouteComponentProps> = props => {
           <Status>
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
-          <EditableInput type="h1" title={world.title} onChange={changeTitle} />
+          <EditableInput type="h1" title={world.title || 'CLICK TO ADD TITLE'} onChange={changeTitle} />
           {renderDescription()}
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>
@@ -459,8 +459,8 @@ const World: FC<RouteComponentProps> = props => {
             </DivButton>
           </WorldInfo>
           <Spotify>
-            <label>SPOTIFY:</label>
-            <EditableInput type="p" title={world.spotifyUrl} onChange={changeSpotify} />
+            <small>SPOTIFY:</small>
+            <EditableInput type="p" title={world.spotifyUrl || 'CLICK TO ADD PLAYLIST'} onChange={changeSpotify} />
           </Spotify>
           <DropZones>
             <Dropzone

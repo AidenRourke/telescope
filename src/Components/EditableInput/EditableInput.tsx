@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import * as colors from 'styles/colors';
 
@@ -9,7 +9,7 @@ const Title = styled.h1`
   border: 2px solid transparent;
 `;
 
-const Text = styled.p`
+const Text = styled.small`
   cursor: pointer;
   color: ${colors.green};
   padding: 1px 2px;
@@ -29,41 +29,47 @@ const TextInput = styled.input`
   background: none;
   color: ${colors.green};
   font-family: inherit;
-  font-size: 1rem;
+  font-size: smaller;
   width: 100%;
 `;
 
 interface Props {
-  title?: string;
+  title: string;
   onChange: (text: string) => void;
   type?: string;
 }
 
 const EditableInput: FC<Props> = ({ title, onChange, type }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [value, setValue] = useState<string>(title);
 
-  const onBlur = async (e: any) => {
-    await onChange(e.target.value);
+  const handleSubmit = async () => {
+    await onChange(value);
     setEditMode(false);
   };
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (e.keyCode === 13) {
+        handleSubmit();
+      }
+    };
+
+    document.addEventListener('keyup', handler);
+
+    return () => document.removeEventListener('keyup', handler);
+  }, []);
 
   if (editMode) {
     const InputComponent = type === 'h1' ? TitleTextInput : TextInput;
     return (
-      <InputComponent
-        autoFocus
-        onBlur={onBlur}
-        onFocus={(e: any) => {
-          e.target.value = '';
-          e.target.value = title;
-        }}
-      />
+      <InputComponent autoFocus onBlur={handleSubmit} value={value} onChange={(e: any) => setValue(e.target.value)} />
     );
   }
 
   const TextComponent = type === 'h1' ? Title : Text;
 
-  return <TextComponent onClick={() => setEditMode(true)}>{title || 'CLICK TO ADD TEXT'}</TextComponent>;
+  return <TextComponent onClick={() => setEditMode(true)}>{title}</TextComponent>;
 };
 
 export { EditableInput };
