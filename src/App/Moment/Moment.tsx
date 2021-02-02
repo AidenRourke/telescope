@@ -195,7 +195,7 @@ const Moment: FC<RouteComponentProps> = props => {
         <div>
           <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
         </div>
-        <EditableInput type="h1" title={data.moment.title} onChange={changeTitle} />
+        <EditableInput type="h1" title={data.moment.title} placeholder="CLICK TO ADD TITLE" onChange={changeTitle} />
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <MomentDetails>
             <DropZones>

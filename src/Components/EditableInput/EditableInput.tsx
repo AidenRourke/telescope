@@ -35,13 +35,14 @@ const TextInput = styled.input`
 
 interface Props {
   title: string;
+  placeholder: string;
   onChange: (text: string) => void;
   type?: string;
 }
 
-const EditableInput: FC<Props> = ({ title, onChange, type }) => {
+const EditableInput: FC<Props> = ({ title, onChange, type, placeholder }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [value, setValue] = useState<string>(title);
+  const [value, setValue] = useState<string>(title || '');
 
   const handleSubmit = async () => {
     await onChange(value);
@@ -69,7 +70,7 @@ const EditableInput: FC<Props> = ({ title, onChange, type }) => {
 
   const TextComponent = type === 'h1' ? Title : Text;
 
-  return <TextComponent onClick={() => setEditMode(true)}>{title}</TextComponent>;
+  return <TextComponent onClick={() => setEditMode(true)}>{title || placeholder}</TextComponent>;
 };
 
 export { EditableInput };

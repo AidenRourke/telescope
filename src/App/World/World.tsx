@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, ConfirmationModal, DatePicker, EditableInput, Input } from 'Components';
+import { Dropzone, Button, ConfirmationModal, DatePicker, EditableInput } from 'Components';
 import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
@@ -442,7 +442,7 @@ const World: FC<RouteComponentProps> = props => {
           <Status>
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
-          <EditableInput type="h1" title={world.title || 'CLICK TO ADD TITLE'} onChange={changeTitle} />
+          <EditableInput type="h1" title={world.title} placeholder="CLICK TO ADD TITLE" onChange={changeTitle} />
           {renderDescription()}
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>
@@ -460,7 +460,12 @@ const World: FC<RouteComponentProps> = props => {
           </WorldInfo>
           <Spotify>
             <small>SPOTIFY:</small>
-            <EditableInput type="p" title={world.spotifyUrl || 'CLICK TO ADD PLAYLIST'} onChange={changeSpotify} />
+            <EditableInput
+              type="p"
+              title={world.spotifyUrl}
+              placeholder="CLICK TO ADD PLAYLIST"
+              onChange={changeSpotify}
+            />
           </Spotify>
           <DropZones>
             <Dropzone
