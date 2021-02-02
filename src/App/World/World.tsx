@@ -57,6 +57,7 @@ const Description = styled.p`
   overflow: auto;
   color: ${colors.green};
   flex: 1;
+  border: 2px solid transparent;
 `;
 
 const DescriptionTextArea = styled(TextArea)`

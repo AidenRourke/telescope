@@ -5,11 +5,15 @@ import * as colors from 'styles/colors';
 const Title = styled.h1`
   cursor: pointer;
   color: ${colors.green};
+  padding: 1px 2px;
+  border: 2px solid transparent;
 `;
 
 const Text = styled.p`
   cursor: pointer;
   color: ${colors.green};
+  padding: 1px 2px;
+  border: 2px solid transparent;
 `;
 
 const TitleTextInput = styled.input`
