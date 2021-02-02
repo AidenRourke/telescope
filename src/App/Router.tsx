@@ -43,7 +43,7 @@ const Router: FC = () => {
         />
         <Route
           exact={true}
-          path={'/worlds/:worldId/:momentId'}
+          path={'/worlds/:worldId/moments/:momentId'}
           render={props => (!!user ? <Moment {...props} /> : <Redirect to="/login" />)}
         />
         <Route

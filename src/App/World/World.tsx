@@ -14,7 +14,6 @@ import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
 import { WorldCuratorsModal } from './WorldCuratorsModal';
-import { Navbar } from '../Navbar';
 
 const WorldContainer = styled.div`
   display: flex;
@@ -98,7 +97,7 @@ const DropZoneVideo = styled.video`
 
 const CoverImage = styled.img`
   margin: 2rem;
-  width: 22rem;
+  width: 25%;
   object-fit: cover;
 `;
 
@@ -107,6 +106,7 @@ const Buttons = styled.div`
 `;
 
 const DivButton = styled.button`
+  flex: 1;
   font: inherit;
   background: none;
   color: inherit;
@@ -348,7 +348,6 @@ const World: FC<RouteComponentProps> = props => {
   };
 
   const renderAction = () => {
-    console.log(world.status);
     if (world.status === 'DRAFT') {
       return (
         <Button
@@ -426,6 +425,7 @@ const World: FC<RouteComponentProps> = props => {
           </WorldInfo>
           <DropZones>
             <Dropzone
+              title="CHANGE VIDEO"
               onDrop={(files: File[]) => onDrop(files, false)}
               accept="video/mp4"
               isLoading={isUpdatingWorldVideo}
@@ -435,6 +435,7 @@ const World: FC<RouteComponentProps> = props => {
               </DropZoneVideo>
             </Dropzone>
             <Dropzone
+              title="CHANGE IMAGE"
               onDrop={(files: File[]) => onDrop(files, true)}
               accept="image/png"
               isLoading={isUpdatingWorldImage}

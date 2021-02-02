@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory, useLocation } from 'react-router';
 import { useMutation } from '@apollo/react-hooks';
-import {GET_WORLD} from "../World";
+import { GET_WORLD } from '../World';
 
 const WorldMomentsListContainer = styled.div`
   margin: 2rem 0rem;
@@ -109,7 +109,7 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
         createMoment: { moment },
       },
     } = res;
-    history.push({ pathname: `/worlds/${worldId}/${moment.id}`, search });
+    history.push({ pathname: `/worlds/${worldId}/moments/${moment.id}`, search });
   };
 
   const [removeWorldMoment, { loading: isRemoving }] = useMutation(REMOVE_MOMENT);
@@ -126,7 +126,7 @@ const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
   // TODO:  REMOVING STATE
   const renderMoment = (moment: MomentType) => {
     return (
-      <WorldMomentContainer onClick={() => history.push({ pathname: `/worlds/${worldId}/${moment.id}`, search })}>
+      <WorldMomentContainer onClick={() => history.push({ pathname: `/worlds/${worldId}/moments/${moment.id}`, search })}>
         <WorldMomentImage src={moment.coverS3} />
         {isRemoving ? (
           <MomentInformation>

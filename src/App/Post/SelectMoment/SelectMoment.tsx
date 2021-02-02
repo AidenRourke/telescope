@@ -5,7 +5,7 @@ import * as colors from 'styles/colors';
 
 import { gql } from 'apollo-boost';
 import { MomentType } from 'Types/types';
-import {Card} from "../Card";
+import { Card } from '../Card';
 
 const WorldsContainer = styled.div`
   margin: 2rem 0;
@@ -14,15 +14,17 @@ const WorldsContainer = styled.div`
   color: ${colors.blue};
 `;
 
-
 const GET_MOMENTS = gql`
   query GetMoments($id: ID!) {
     moments(id: $id) {
       id
       title
       coverS3
-      posts {
+      momentPosts {
         id
+        post {
+          id
+        }
       }
     }
   }
@@ -31,14 +33,14 @@ const GET_MOMENTS = gql`
 const CREATE_MOMENT_POST = gql`
   mutation CreateMomentPost($postId: ID!, $momentId: ID!) {
     createMomentPost(postId: $postId, momentId: $momentId) {
-      post {
-        id
-        moments {
+      momentPost {
+        moment {
           id
-          title
-          coverS3
-          posts {
+          momentPosts {
             id
+            post {
+              id
+            }
           }
         }
       }
@@ -72,7 +74,7 @@ const SelectMoment: FC<Props> = ({ worldId, postId }) => {
         title={moment.title}
         imageSrc={moment.coverS3}
         loading={isCreatingMomentPost}
-        disabled={moment.posts?.some(post => post.id === postId)}
+        disabled={moment?.momentPosts?.some(momentPost => momentPost?.post.id === postId)}
         id={moment.id}
       />
     ));

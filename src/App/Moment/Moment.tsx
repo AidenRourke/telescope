@@ -7,7 +7,6 @@ import { EditableTitle, Dropzone, Button } from 'Components';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Navbar } from '../Navbar';
 import axios from 'axios';
 
 const MomentContainer = styled.div`
@@ -15,6 +14,7 @@ const MomentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const MomentDetails = styled.div`
@@ -57,14 +57,16 @@ const GET_MOMENT = gql`
       title
       coverS3
       isActive
-      posts {
+      momentPosts {
         id
-        title
-        frame1S3
-        position
-        user {
+        post {
           id
-          preferredUsername
+          title
+          frame1S3
+          user {
+            id
+            preferredUsername
+          }
         }
       }
     }
@@ -103,14 +105,11 @@ const UPDATE_MOMENT_TITLE = gql`
 `;
 
 const UPDATE_WORLD_ACTIVE = gql`
-  mutation UpdateWorldActive($worldId: ID!, $momentId: ID!) {
-    updateWorldActive(worldId: $worldId, momentId: $momentId) {
-      world {
+  mutation UpdateWorldActive($isActive: Boolean!, $momentId: ID!) {
+    updateWorldActive(isActive: $isActive, momentId: $momentId) {
+      moment {
         id
-        active {
-          id
-          isActive
-        }
+        isActive
       }
     }
   }
@@ -174,30 +173,35 @@ const Moment: FC<RouteComponentProps> = props => {
           <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
         </div>
         <EditableTitle title={data.moment.title} onChange={changeTitle} />
-        <div style={{ display: 'flex', flex: 1 }}>
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <MomentDetails>
             <DropZones>
-              <Dropzone isLoading={isUpdatingMomentImage} onDrop={(files: File[]) => onDrop(files)} accept="image/png">
+              <Dropzone
+                title=""
+                isLoading={isUpdatingMomentImage}
+                onDrop={(files: File[]) => onDrop(files)}
+                accept="image/png"
+              >
                 <DropZoneImage url={data.moment.coverS3} />
               </Dropzone>
             </DropZones>
-            <Buttons>
-              {!data.moment.isActive && (
-                <Button
-                  color="green"
-                  size="small"
-                  onClick={() => updateWorldActive({ variables: { worldId, momentId } })}
-                >
-                  ACTIVATE
-                </Button>
-              )}
-              <Button color="red" size="small" onClick={() => console.log('blah')}>
-                <FontAwesomeIcon icon={faTrashAlt} size="lg" />
-              </Button>
-            </Buttons>
           </MomentDetails>
-          <MomentPostsList posts={data.moment.posts} momentId={data.moment.id} />
+          <MomentPostsList momentPosts={data.moment.momentPosts} momentId={data.moment.id} />
         </div>
+        <Buttons>
+          {!data.moment.isActive && (
+            <Button
+              color="green"
+              size="small"
+              onClick={() => updateWorldActive({ variables: { isActive: true, momentId } })}
+            >
+              ACTIVATE
+            </Button>
+          )}
+          <Button color="red" size="small" onClick={() => console.log('blah')}>
+            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+          </Button>
+        </Buttons>
       </MomentContainer>
     </>
   );

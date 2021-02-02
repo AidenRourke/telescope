@@ -5,6 +5,10 @@ import styled from 'styled-components';
 import * as colors from 'styles/colors';
 
 const DatePickerContainer = styled.div`
+  flex: 1;
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
   .modu-calendar {
     border-radius: 0;
     border: 3px solid ${colors.blue};
@@ -56,13 +60,14 @@ const DatePickerContainer = styled.div`
 `;
 
 const DateInputButton = styled.button`
+  width: 100%;
   font: inherit;
   background: none;
   color: inherit;
-  border: 3px solid transparent;
   cursor: pointer;
   text-align: left;
   padding: 0.5rem;
+  border: 3px solid transparent;
   &:hover {
     border: 3px solid ${colors.blue};
   }
@@ -86,6 +91,7 @@ const DatePicker: FC<Props> = ({ selected, onChange }) => {
   return (
     <DatePickerContainer>
       <ReactDatePicker
+        popperPlacement="top"
         calendarClassName="modu-calendar"
         selected={selected && new Date(selected)}
         onChange={onChange}

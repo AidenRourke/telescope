@@ -19,13 +19,21 @@ export interface PostType {
   user?: UserType;
 }
 
+export interface MomentPostType {
+  id: string;
+  position?: number;
+  category?: string;
+  moment: MomentType;
+  post: PostType;
+}
+
 export interface MomentType {
   id: string;
   coverS3: string;
   title: string;
   isActive?: boolean;
   world: WorldType;
-  posts: PostType[];
+  momentPosts: MomentPostType[];
 }
 
 export interface UserType {

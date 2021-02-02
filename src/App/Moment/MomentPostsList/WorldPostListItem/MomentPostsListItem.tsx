@@ -49,12 +49,14 @@ const RemovePostButton = styled.button`
 `;
 
 const REMOVE_MOMENT_POST = gql`
-  mutation RemoveMomentPost($momentId: ID!, $postId: ID!) {
-    removeMomentPost(momentId: $momentId, postId: $postId) {
-      moment {
-        id
-        posts {
+  mutation RemoveMomentPost($momentPostId: ID!) {
+    removeMomentPost(momentPostId: $momentPostId) {
+      momentPost {
+        moment {
           id
+          momentPosts {
+            id
+          }
         }
       }
     }
@@ -63,13 +65,13 @@ const REMOVE_MOMENT_POST = gql`
 
 interface Props {
   post: PostType;
-  momentId: string;
+  momentPostId: string;
   index: number;
   updatePost: (dragIndex: number, dropIndex: number) => void;
   movePost: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, momentId }) => {
+const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, momentPostId }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const history = useHistory();
@@ -142,8 +144,7 @@ const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, mom
     e.stopPropagation();
     removeMomentPost({
       variables: {
-        postId: post.id,
-        momentId,
+        momentPostId: momentPostId,
       },
     });
   };

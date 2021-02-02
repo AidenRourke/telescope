@@ -1,24 +1,56 @@
 import React, { FC, useEffect, useState } from 'react';
-import { PostType } from 'Types/types';
+import { MomentPostType } from 'Types/types';
 import { MomentPostsListItem } from './WorldPostListItem';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import update from 'immutability-helper';
+import * as colors from '../../../styles/colors';
+import { useHistory, useLocation } from 'react-router';
 
-const WorldPostListContainer = styled.div`
+const MomentPostListContainer = styled.div`
   margin-left: 1rem;
   flex: 1;
   overflow: auto;
+  margin-bottom: 2rem;
+`;
+
+const AddPostContainer = styled.div`
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+`;
+
+const AddPostInformation = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const AddPostImage = styled.div`
+  width: 3rem;
+  height: 5rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  svg {
+    fill: ${colors.blue};
+  }
 `;
 
 const UPDATE_MOMENT_POSTS_ORDER = gql`
   mutation UpdateMomentPostsOrder($momentId: ID!, $postId: ID!, $position: Int!) {
     updateMomentPostsOrder(momentId: $momentId, postId: $postId, position: $position) {
-      moment {
+      momentPost {
         id
-        posts {
+        moment {
           id
+          momentPosts {
+            id
+          }
         }
       }
     }
@@ -26,16 +58,19 @@ const UPDATE_MOMENT_POSTS_ORDER = gql`
 `;
 
 interface Props {
-  posts: PostType[];
+  momentPosts: MomentPostType[];
   momentId: string;
 }
 
-const MomentPostsList: FC<Props> = ({ posts, momentId }) => {
-  const [postsArray, setPostsArray] = useState<PostType[]>(posts);
+const MomentPostsList: FC<Props> = ({ momentPosts, momentId }) => {
+  const [postsArray, setPostsArray] = useState<MomentPostType[]>(momentPosts);
+
+  const history = useHistory();
+  const { search } = useLocation();
 
   useEffect(() => {
-    setPostsArray(posts);
-  }, [posts]);
+    setPostsArray(momentPosts);
+  }, [momentPosts]);
 
   const [updateMomentPostsOrder] = useMutation(UPDATE_MOMENT_POSTS_ORDER);
 
@@ -55,27 +90,40 @@ const MomentPostsList: FC<Props> = ({ posts, momentId }) => {
     const dragCard = postsArray[dragIndex];
     updateMomentPostsOrder({
       variables: {
-        momentId,
-        postId: dragCard.id,
+        momentPostId: dragCard.id,
         position: dropIndex + 1,
       },
     });
   };
 
-  const renderPost = (post: PostType, index: number) => {
+  const renderPost = (momentPost: MomentPostType, index: number) => {
     return (
       <MomentPostsListItem
-        key={post.id}
-        post={post}
+        key={momentPost.id}
+        post={momentPost.post}
         index={index}
         updatePost={updatePost}
         movePost={movePost}
-        momentId={momentId}
+        momentPostId={momentPost.id}
       />
     );
   };
 
-  return <WorldPostListContainer>{postsArray.map((post, i) => renderPost(post, i))}</WorldPostListContainer>;
+  return (
+    <MomentPostListContainer>
+      {postsArray.map((post, i) => renderPost(post, i))}
+      <AddPostContainer onClick={() => history.push({ pathname: `/posts/`, search })}>
+        <AddPostImage>
+          <svg xmlns="http://www.w3.org/2000/svg" height="30%" viewBox="0 0 24 24">
+            <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+          </svg>
+        </AddPostImage>
+        <AddPostInformation>
+          <small>ADD POSTS</small>
+        </AddPostInformation>
+      </AddPostContainer>
+    </MomentPostListContainer>
+  );
 };
 
 export { MomentPostsList };

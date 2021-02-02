@@ -33,9 +33,10 @@ interface Props {
   onDrop: (file: File[]) => void;
   accept: string;
   isLoading: boolean;
+  title: string;
 }
 
-const Dropzone: FC<Props> = ({ onDrop, accept, isLoading, children }) => {
+const Dropzone: FC<Props> = ({ onDrop, accept, isLoading, title, children }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept });
 
   return (
@@ -49,7 +50,7 @@ const Dropzone: FC<Props> = ({ onDrop, accept, isLoading, children }) => {
           </Loading>
         </DropZoneLoading>
       ) : (
-        <DropZoneText>EDIT COVER IMAGE</DropZoneText>
+        <DropZoneText>{title}</DropZoneText>
       )}
     </DropzoneContainer>
   );

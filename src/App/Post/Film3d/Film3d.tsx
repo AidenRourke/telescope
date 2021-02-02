@@ -28,7 +28,7 @@ const Film3d: FC<Props> = ({ images }) => {
     });
 
     const interval = setInterval(() => {
-      // setCurrentImage(incrementImage);
+      setCurrentImage(incrementImage);
     }, 142.5);
 
     return () => {
