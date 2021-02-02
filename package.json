@@ -21,7 +21,7 @@
     "apollo-boost": "^0.4.9",
     "apollo-link-context": "^1.0.20",
     "aws-amplify": "^2.2.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "graphql": "^15.1.0",
     "immutability-helper": "^3.1.1",
     "query-string": "^6.13.2",
