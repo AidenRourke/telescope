@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, ConfirmationModal, DatePicker, EditableTitle } from 'Components';
+import { Dropzone, Button, ConfirmationModal, DatePicker, EditableTitle, Input } from 'Components';
 import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
@@ -251,7 +251,6 @@ const World: FC<RouteComponentProps> = props => {
   const { id } = useParams();
 
   const { loading, data } = useQuery(GET_WORLD, { variables: { id } });
-  const { world } = data;
 
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
   const [updateWorldTitle] = useMutation(UPDATE_WORLD_TITLE);
@@ -397,6 +396,8 @@ const World: FC<RouteComponentProps> = props => {
   };
 
   if (loading) return null;
+
+  const { world } = data;
 
   return (
     <>
