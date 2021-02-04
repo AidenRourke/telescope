@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { GET_WORLD } from '../World/World';
 
 const MomentContainer = styled.div`
   margin: 2rem;
@@ -126,7 +127,9 @@ const Moment: FC<RouteComponentProps> = props => {
   const [getSignedRequest] = useMutation(GET_SIGNED_REQUEST);
   const [updateMomentImage] = useMutation(UPDATE_MOMENT_IMAGE);
   const [updateMomentTitle] = useMutation(UPDATE_MOMENT_TITLE);
-  const [updateWorldActive] = useMutation(UPDATE_WORLD_ACTIVE);
+  const [updateWorldActive] = useMutation(UPDATE_WORLD_ACTIVE, {
+    refetchQueries: [{ query: GET_WORLD, variables: { id: worldId } }],
+  });
 
   const changeTitle = async (title: string) => {
     if (title !== data.moment.title) {

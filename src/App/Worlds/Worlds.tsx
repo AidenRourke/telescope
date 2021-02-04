@@ -70,6 +70,7 @@ export const GET_WORLDS = gql`
   query GetWorlds {
     worlds {
       id
+      status
       title
       coverS3
     }

@@ -281,7 +281,9 @@ const World: FC<RouteComponentProps> = props => {
   const [updateWorldDescription] = useMutation(UPDATE_WORLD_DESCRIPTION);
   const [updateWorldImage] = useMutation(UPDATE_WORLD_IMAGE);
   const [updateWorldVideo] = useMutation(UPDATE_WORLD_VIDEO);
-  const [updateWorldStatus] = useMutation(UPDATE_WORLD_STATUS);
+  const [updateWorldStatus] = useMutation(UPDATE_WORLD_STATUS, {
+    refetchQueries: [{ query: GET_WORLDS }],
+  });
   const [removeWorld] = useMutation(REMOVE_WORLD, {
     refetchQueries: [{ query: GET_WORLDS }],
     awaitRefetchQueries: true,
