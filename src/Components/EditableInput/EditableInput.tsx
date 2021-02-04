@@ -49,17 +49,17 @@ const EditableInput: FC<Props> = ({ title, onChange, type, placeholder }) => {
     setEditMode(false);
   };
 
-  useEffect(() => {
-    const handler = (e: any) => {
-      if (e.keyCode === 13) {
-        handleSubmit();
-      }
-    };
+  const handler = (e: any) => {
+    if (e.keyCode === 13) {
+      handleSubmit();
+    }
+  };
 
+  useEffect(() => {
     document.addEventListener('keyup', handler);
 
     return () => document.removeEventListener('keyup', handler);
-  }, []);
+  });
 
   if (editMode) {
     const InputComponent = type === 'h1' ? TitleTextInput : TextInput;
