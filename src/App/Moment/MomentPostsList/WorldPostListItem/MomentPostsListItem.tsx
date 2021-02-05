@@ -48,6 +48,10 @@ const RemovePostButton = styled.button`
   border: none;
 `;
 
+const EditableInputDiv = styled.div`
+  width: 15rem;
+`;
+
 const REMOVE_MOMENT_POST = gql`
   mutation RemoveMomentPost($momentPostId: ID!) {
     removeMomentPost(momentPostId: $momentPostId) {
@@ -189,12 +193,9 @@ const MomentPostsListItem: FC<Props> = ({ momentPost, index, updatePost, movePos
             <Title>{post.title}</Title>
             <Author>{post.user?.preferredUsername}</Author>
           </PostInformation>
-          <EditableInput
-            type="p"
-            title={momentPost.category}
-            onChange={changeCategory}
-            placeholder="SET CATEGORY"
-          />
+          <EditableInputDiv>
+            <EditableInput type="p" title={momentPost.category} onChange={changeCategory} placeholder="SET CATEGORY" />
+          </EditableInputDiv>
         </>
       )}
       <RemovePostButton onClick={handleDelete}>
