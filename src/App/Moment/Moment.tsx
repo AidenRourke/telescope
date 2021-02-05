@@ -60,6 +60,7 @@ const GET_MOMENT = gql`
       isActive
       momentPosts {
         id
+        category
         post {
           id
           title

@@ -34,7 +34,7 @@ const TextInput = styled.input`
 `;
 
 interface Props {
-  title: string;
+  title?: string;
   placeholder: string;
   onChange: (text: string) => void;
   type?: string;

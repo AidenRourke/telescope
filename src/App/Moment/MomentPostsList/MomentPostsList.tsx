@@ -42,8 +42,8 @@ const AddPostImage = styled.div`
 `;
 
 const UPDATE_MOMENT_POSTS_ORDER = gql`
-  mutation UpdateMomentPostsOrder($momentId: ID!, $postId: ID!, $position: Int!) {
-    updateMomentPostsOrder(momentId: $momentId, postId: $postId, position: $position) {
+  mutation UpdateMomentPostsOrder($momentPostId: ID!, $position: Int!) {
+    updateMomentPostsOrder(momentPostId: $momentPostId, position: $position) {
       momentPost {
         id
         moment {
@@ -100,11 +100,10 @@ const MomentPostsList: FC<Props> = ({ momentPosts, momentId }) => {
     return (
       <MomentPostsListItem
         key={momentPost.id}
-        post={momentPost.post}
+        momentPost={momentPost}
         index={index}
         updatePost={updatePost}
         movePost={movePost}
-        momentPostId={momentPost.id}
       />
     );
   };

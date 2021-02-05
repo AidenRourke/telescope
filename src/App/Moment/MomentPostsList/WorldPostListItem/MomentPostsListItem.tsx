@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react';
-import { PostType } from 'Types/types';
+import { MomentPostType, PostType } from 'Types/types';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styled from 'styled-components';
@@ -9,7 +9,7 @@ import { useMutation } from '@apollo/react-hooks';
 import * as colors from 'styles/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Loading } from 'Components';
+import { EditableInput, Loading } from 'Components';
 import { useHistory, useLocation } from 'react-router';
 
 const WorldPostsListItemContainer = styled.div<{ isDragging: boolean }>`
@@ -63,21 +63,35 @@ const REMOVE_MOMENT_POST = gql`
   }
 `;
 
+const UPDATE_MOMENT_POST_CATEGORY = gql`
+  mutation UpdateMomentPostCategory($momentPostId: ID!, $category: String!) {
+    updateMomentPostCategory(momentPostId: $momentPostId, category: $category) {
+      momentPost {
+        id
+        category
+      }
+    }
+  }
+`;
+
 interface Props {
-  post: PostType;
-  momentPostId: string;
+  momentPost: MomentPostType;
   index: number;
   updatePost: (dragIndex: number, dropIndex: number) => void;
   movePost: (dragIndex: number, hoverIndex: number) => void;
 }
 
-const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, momentPostId }) => {
+const MomentPostsListItem: FC<Props> = ({ momentPost, index, updatePost, movePost }) => {
+  const momentPostId = momentPost.id;
+  const post = momentPost.post;
+
   const ref = useRef<HTMLDivElement>(null);
 
   const history = useHistory();
   const { search } = useLocation();
 
   const [removeMomentPost, { loading: isRemoving }] = useMutation(REMOVE_MOMENT_POST);
+  const [updateMomentPostCategory] = useMutation(UPDATE_MOMENT_POST_CATEGORY);
 
   const dropFunction = (
     item: DragItem,
@@ -144,18 +158,25 @@ const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, mom
     e.stopPropagation();
     removeMomentPost({
       variables: {
-        momentPostId: momentPostId,
+        momentPostId,
       },
     });
   };
 
+  const changeCategory = async (category: string) => {
+    if (category !== momentPost.category) {
+      await updateMomentPostCategory({
+        variables: {
+          momentPostId,
+          category,
+        },
+      });
+    }
+  };
+
   return (
-    <WorldPostsListItemContainer
-      ref={ref}
-      isDragging={isDragging}
-      onClick={() => history.push({ pathname: `/posts/${post.id}`, search })}
-    >
-      <WorldPostImage src={post.frame1S3} />
+    <WorldPostsListItemContainer ref={ref} isDragging={isDragging}>
+      <WorldPostImage src={post.frame1S3} onClick={() => history.push({ pathname: `/posts/${post.id}`, search })} />
       {isRemoving ? (
         <PostInformation>
           <Loading>
@@ -163,10 +184,18 @@ const MomentPostsListItem: FC<Props> = ({ post, index, updatePost, movePost, mom
           </Loading>
         </PostInformation>
       ) : (
-        <PostInformation>
-          <Title>{post.title}</Title>
-          <Author>{post.user?.preferredUsername}</Author>
-        </PostInformation>
+        <>
+          <PostInformation>
+            <Title>{post.title}</Title>
+            <Author>{post.user?.preferredUsername}</Author>
+          </PostInformation>
+          <EditableInput
+            type="p"
+            title={momentPost.category}
+            onChange={changeCategory}
+            placeholder="SET CATEGORY"
+          />
+        </>
       )}
       <RemovePostButton onClick={handleDelete}>
         <FontAwesomeIcon icon={faMinus} size="lg" />
