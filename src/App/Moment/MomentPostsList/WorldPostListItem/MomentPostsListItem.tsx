@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react';
-import { MomentPostType, PostType } from 'Types/types';
+import { MomentPostType } from 'Types/types';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styled from 'styled-components';
@@ -158,8 +158,7 @@ const MomentPostsListItem: FC<Props> = ({ momentPost, index, updatePost, movePos
 
   drag(drop(ref));
 
-  const handleDelete = (e: any) => {
-    e.stopPropagation();
+  const handleDelete = () => {
     removeMomentPost({
       variables: {
         momentPostId,
