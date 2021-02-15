@@ -158,7 +158,8 @@ const MomentPostsListItem: FC<Props> = ({ momentPost, index, updatePost, movePos
 
   drag(drop(ref));
 
-  const handleDelete = () => {
+  const handleDelete = (e: any) => {
+    e.stopPropagation();
     removeMomentPost({
       variables: {
         momentPostId,
