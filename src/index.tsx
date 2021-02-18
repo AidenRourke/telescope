@@ -26,7 +26,7 @@ Amplify.configure({
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const httpLink = createHttpLink({
-  uri: 'https://orion-env.eba-mebv5f7k.us-east-1.elasticbeanstalk.com/graphql',
+  uri: 'https://world.moduresearch.com/graphql',
   // uri: 'http://localhost:3001/graphql',
 });
 
