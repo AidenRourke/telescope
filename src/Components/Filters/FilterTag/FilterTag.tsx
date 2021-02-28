@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, FC } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLocationArrow, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLocationArrow, faTimes, faTag } from '@fortawesome/free-solid-svg-icons';
 
 import * as colors from 'styles/colors';
 import { FilterType } from 'Types/types';
@@ -24,7 +24,7 @@ const Tag = styled.button<ButtonHTMLAttributes<HTMLButtonElement>>`
   border: 1px solid transparent;
   p {
     font-size: 0.75rem;
-    margin-left: 0.25rem;
+    margin-left: 0.3rem;
     margin-right: 2rem;
   }
 `;
@@ -34,6 +34,7 @@ const FilterTag: FC<Props> = ({ filter, onClick }) => {
 
   const getIcon = () => {
     if (type === 'LOCATION') return faLocationArrow;
+    else if (type === 'TAG') return faTag;
     else return faUser;
   };
 
