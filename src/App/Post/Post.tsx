@@ -60,6 +60,9 @@ const SideBarContent = styled.div`
 `;
 
 const TextSection = styled.section`
+  p {
+    margin: 0;
+  }
   margin: 1rem 0;
 `;
 
