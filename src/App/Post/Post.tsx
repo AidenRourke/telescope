@@ -60,9 +60,6 @@ const SideBarContent = styled.div`
 `;
 
 const TextSection = styled.section`
-  h4 {
-    margin: 0;
-  }
   margin: 1rem 0;
 `;
 
@@ -90,11 +87,12 @@ const ImageContainer = styled.div`
   align-items: center;
   left: 23rem;
   color: ${blue};
-  padding-right: 2rem;
+  padding-right: 4rem;
 `;
 
 const Description = styled.div`
   margin-left: 2rem;
+  min-width: 20rem;
 `;
 
 const GET_POST = gql`
@@ -111,6 +109,7 @@ const GET_POST = gql`
       frame2S3
       frame3S3
       frame4S3
+      filterId
       tags {
         id
         name
@@ -185,25 +184,24 @@ const Post: FC<RouteComponentProps> = props => {
             <TextSection>
               <TextHeader>CREATED BY:</TextHeader>
               <TextInfoButton
-                size="small"
                 isText={true}
                 color="white"
                 onClick={() => handleAddFilter({ name: data.post.user?.preferredUsername, type: 'USER' })}
               >
-                <h3>{data.post.user?.preferredUsername.toUpperCase()}</h3>
+                {data.post.user?.preferredUsername.toUpperCase()}
               </TextInfoButton>
             </TextSection>
             <TextSection>
               <TextHeader>LOCATION:</TextHeader>
-              <h4>{renderLocation()}</h4>
+              <p>{renderLocation()}</p>
             </TextSection>
             <TextSection>
               <TextHeader>FILTER:</TextHeader>
-              <h4>90210</h4>
+              <p>{data.post.filterId}</p>
             </TextSection>
             <TextSection>
               <TextHeader>SUBMISSION DATE:</TextHeader>
-              <h4>{data.post.createdAt.split('T')[0]}</h4>
+              <p>{data.post.createdAt.split('T')[0]}</p>
             </TextSection>
             <TextSection>
               <TextHeader>TAGS:</TextHeader>
