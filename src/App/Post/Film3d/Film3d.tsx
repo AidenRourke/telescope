@@ -17,7 +17,7 @@ const Film3d: FC<Props> = ({ images }) => {
 
   const incrementImage = (currentImage: number) => {
     if (currentImage === 3) {
-      return 1;
+      return 0;
     } else {
       return currentImage + 1;
     }
