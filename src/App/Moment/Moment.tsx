@@ -18,6 +18,7 @@ const MomentContainer = styled.div`
 `;
 
 const MomentDetails = styled.div`
+  flex: 1;
   margin-right: 1rem;
   flex-direction: column;
   display: flex;

@@ -7,6 +7,9 @@ const Title = styled.h1`
   color: ${colors.green};
   padding: 1px 2px;
   border: 2px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Text = styled.small`

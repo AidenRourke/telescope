@@ -12,8 +12,8 @@ import { GET_WORLD } from '../World';
 import { ConfirmationModal } from '../../../Components/ConfirmationModal';
 
 const WorldMomentsListContainer = styled.div`
-  margin: 2rem 0rem;
-  width: 18rem;
+  margin: 2rem ;
+  min-width: 12rem;
   overflow: auto;
 `;
 
