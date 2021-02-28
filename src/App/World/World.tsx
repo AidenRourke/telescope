@@ -476,7 +476,7 @@ const World: FC<RouteComponentProps> = props => {
               accept="video/mp4"
               isLoading={isUpdatingWorldVideo}
             >
-              <DropZoneVideo autoPlay loop key={world.prerollS3}>
+              <DropZoneVideo autoPlay loop key={world.prerollS3} muted>
                 <source src={world.prerollS3} type="video/mp4" />
               </DropZoneVideo>
             </Dropzone>

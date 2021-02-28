@@ -15,7 +15,6 @@ const FilterForm = styled.form`
 
 const TagFilter = styled.div`
   display: flex;
-  margin-right: 1rem;
 `;
 
 const Dropdown = styled.div`
