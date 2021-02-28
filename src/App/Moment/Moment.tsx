@@ -15,27 +15,27 @@ const MomentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 `;
 
 const MomentDetails = styled.div`
   margin-right: 1rem;
-  flex: 1;
   flex-direction: column;
   display: flex;
 `;
 
-const DropZoneImage = styled.div<{ url: string }>`
+const DropZoneImage = styled.img`
+  object-fit: cover;
   height: 100%;
-  background-image: url(${({ url }) => url});
-  background-position: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const DropZones = styled.div`
   justify-content: space-between;
-  margin-bottom: 2rem;
   flex: 1;
   display: flex;
+  height: 100%;
 `;
 
 const BackArrow = styled(FontAwesomeIcon)`
@@ -200,7 +200,7 @@ const Moment: FC<RouteComponentProps> = props => {
           <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
         </div>
         <EditableInput type="h1" title={data.moment.title} placeholder="CLICK TO ADD TITLE" onChange={changeTitle} />
-        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden', marginBottom: '2rem' }}>
           <MomentDetails>
             <DropZones>
               <Dropzone
@@ -209,7 +209,7 @@ const Moment: FC<RouteComponentProps> = props => {
                 onDrop={(files: File[]) => onDrop(files)}
                 accept="image/png"
               >
-                <DropZoneImage url={data.moment.coverS3} />
+                <DropZoneImage src={data.moment.coverS3} />
               </Dropzone>
             </DropZones>
           </MomentDetails>

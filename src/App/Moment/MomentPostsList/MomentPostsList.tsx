@@ -13,6 +13,7 @@ const MomentPostListContainer = styled.div`
   flex: 1;
   overflow: auto;
   margin-bottom: 2rem;
+  min-width: 25rem;
 `;
 
 const AddPostContainer = styled.div`
