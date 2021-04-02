@@ -49,8 +49,9 @@ const RemovePostButton = styled.button`
 `;
 
 const EditableInputDiv = styled.div`
-  width: 10rem;
+  min-width: 10rem;
   margin: 0 2rem;
+  flex: 1;
 `;
 
 const REMOVE_MOMENT_POST = gql`

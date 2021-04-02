@@ -15,21 +15,27 @@ const MomentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 `;
 
 const MomentDetails = styled.div`
   flex: 1;
   margin-right: 1rem;
-  flex-direction: column;
+  min-width: 0;
+`;
+
+const MomentContent = styled.div`
   display: flex;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  height: 100%;
 `;
 
 const DropZoneImage = styled.img`
   object-fit: cover;
+  width: 100%;
   height: 100%;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
 `;
 
 const DropZones = styled.div`
@@ -201,7 +207,7 @@ const Moment: FC<RouteComponentProps> = props => {
           <BackArrow icon={faArrowLeft} size="lg" onClick={() => history.goBack()} />
         </div>
         <EditableInput type="h1" title={data.moment.title} placeholder="CLICK TO ADD TITLE" onChange={changeTitle} />
-        <div style={{ display: 'flex', flex: 1, overflow: 'hidden', marginBottom: '2rem' }}>
+        <MomentContent>
           <MomentDetails>
             <DropZones>
               <Dropzone
@@ -215,7 +221,7 @@ const Moment: FC<RouteComponentProps> = props => {
             </DropZones>
           </MomentDetails>
           <MomentPostsList momentPosts={data.moment.momentPosts} momentId={data.moment.id} />
-        </div>
+        </MomentContent>
         <Buttons>
           {renderAction()}
           <Button color="red" size="small" onClick={() => console.log('blah')}>
