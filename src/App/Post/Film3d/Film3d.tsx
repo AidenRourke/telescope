@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Film3dImage = styled.img`
-  object-fit: cover;
   height: 80%;
 `;
 
