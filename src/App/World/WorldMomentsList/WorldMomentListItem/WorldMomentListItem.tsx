@@ -50,10 +50,13 @@ const RemoveMomentButton = styled.button`
 const REMOVE_MOMENT = gql`
   mutation RemoveMoment($momentId: ID!) {
     removeMoment(momentId: $momentId) {
-      world {
+      moment {
         id
-        moments {
+        world {
           id
+          moments {
+            id
+          }
         }
       }
     }
@@ -77,7 +80,7 @@ export const WorldMomentListItem: FC<Props> = ({moment, worldId}) => {
   const handleDelete = () => {
     removeWorldMoment({
       variables: {
-        momentId: isConfirming,
+        momentId: moment.id,
       },
     });
   };

@@ -26,6 +26,7 @@ const WorldData = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 40rem;
+  margin-right: 2rem;
 `;
 
 const BackArrow = styled(FontAwesomeIcon)`
@@ -96,7 +97,6 @@ const DropZoneVideo = styled.video`
 `;
 
 const CoverImage = styled.img`
-  margin: 2rem;
   width: 25%;
   object-fit: cover;
 `;

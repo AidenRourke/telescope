@@ -17,6 +17,9 @@ const CREATE_PUBLISHER_WORLD = gql`
         publishers {
           id
           name
+          worlds {
+            id
+          }
           accounts {
             id
             user {
@@ -24,13 +27,6 @@ const CREATE_PUBLISHER_WORLD = gql`
               preferredUsername
             }
           }
-        }
-      }
-      publisher {
-        id
-        name
-        worlds {
-          id
         }
       }
     }
@@ -45,6 +41,9 @@ const REMOVE_PUBLISHER_WORLD = gql`
         publishers {
           id
           name
+          worlds {
+            id
+          }
           accounts {
             id
             user {
@@ -52,13 +51,6 @@ const REMOVE_PUBLISHER_WORLD = gql`
               preferredUsername
             }
           }
-        }
-      }
-      publisher {
-        id
-        name
-        worlds {
-          id
         }
       }
     }
