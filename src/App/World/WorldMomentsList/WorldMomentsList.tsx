@@ -79,7 +79,7 @@ const WorldMomentsList: FC<Props> = ({moments, worldId}) => {
 
   return (
     <WorldMomentsListContainer>
-      {moments.map(moment => <WorldMomentListItem worldId={worldId} moment={moment}/>)}
+      {moments.map(moment => <WorldMomentListItem key={moment.id} worldId={worldId} moment={moment}/>)}
       <WorldMomentContainer onClick={() => handleCreateMoment()}>
         <AddMomentImage>
           <svg xmlns="http://www.w3.org/2000/svg" height="30%" viewBox="0 0 24 24">

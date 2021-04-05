@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Button } from 'Components/Button';
 import { PublisherType } from 'Types/types';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import { UserContext } from '../../../../Contexts/UserContext';
 
 interface Props {
   worldId?: string;
@@ -17,9 +18,6 @@ const CREATE_PUBLISHER_WORLD = gql`
         publishers {
           id
           name
-          worlds {
-            id
-          }
           accounts {
             id
             user {
@@ -27,6 +25,13 @@ const CREATE_PUBLISHER_WORLD = gql`
               preferredUsername
             }
           }
+        }
+      }
+      publisher {
+        id
+        name
+        worlds {
+          id
         }
       }
     }
@@ -40,10 +45,6 @@ const REMOVE_PUBLISHER_WORLD = gql`
         id
         publishers {
           id
-          name
-          worlds {
-            id
-          }
           accounts {
             id
             user {
@@ -53,11 +54,22 @@ const REMOVE_PUBLISHER_WORLD = gql`
           }
         }
       }
+      publisher {
+        id
+        name
+        worlds {
+          id
+        }
+      }
     }
   }
 `;
 
 const WorldPublisherRow: FC<Props> = ({ publisher, worldId }) => {
+  const {
+    user: { isAdmin },
+  } = useContext(UserContext);
+
   const [createPublisherWorld, { loading: isCreatingPublisherWorld }] = useMutation(CREATE_PUBLISHER_WORLD, {
     variables: { worldId, publisherId: publisher.id },
   });
@@ -68,7 +80,7 @@ const WorldPublisherRow: FC<Props> = ({ publisher, worldId }) => {
   return (
     <tr>
       <td>{publisher.name}</td>
-      {worldId && (
+      {isAdmin && (
         <td>
           {publisher.worlds?.some(world => world.id === worldId) ? (
             <Button

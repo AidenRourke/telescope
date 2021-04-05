@@ -149,7 +149,6 @@ export const GET_WORLD = gql`
       }
       publishers {
         id
-        name
         accounts {
           id
           user {

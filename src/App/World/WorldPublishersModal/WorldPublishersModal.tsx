@@ -39,19 +39,20 @@ const WorldPublishersModal: FC<Props> = ({ world, ...rest }) => {
     user: { isAdmin },
   } = useContext(UserContext);
 
-  const { data, loading } = useQuery(GET_PUBLISHERS, { skip: !isAdmin });
+  const { data, loading } = useQuery(GET_PUBLISHERS);
 
   const renderPublishers = () => {
-    if (isAdmin) {
-      if (!loading) {
+    if (!loading) {
+      console.log(data.publishers);
+      if (isAdmin) {
         return data.publishers.map((publisher: PublisherType) => (
           <WorldPublisherRow key={publisher.id} publisher={publisher} worldId={world.id} />
         ));
       }
+      return data.publishers?.map((publisher: PublisherType) => (
+        <WorldPublisherRow key={publisher.id} publisher={publisher} />
+      ));
     }
-    return world.publishers?.map((publisher: PublisherType) => (
-      <WorldPublisherRow key={publisher.id} publisher={publisher} />
-    ));
   };
 
   return (
