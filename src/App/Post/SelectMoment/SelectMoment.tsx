@@ -15,15 +15,17 @@ const WorldsContainer = styled.div`
 `;
 
 const GET_MOMENTS = gql`
-  query GetMoments($id: ID!) {
-    moments(id: $id) {
-      id
-      title
-      coverS3
-      momentPosts {
+  query GetWorld($id: ID!) {
+    world(id: $id) {
+      moments {
         id
-        post {
+        title
+        coverS3
+        momentPosts {
           id
+          post {
+            id
+          }
         }
       }
     }
@@ -68,8 +70,10 @@ const SelectMoment: FC<Props> = ({ worldId, postId }) => {
 
   const renderMoments = () => {
     if (loading) return null;
-    return data.moments.map((moment: MomentType) => (
+    console.log(data);
+    return data.world.moments.map((moment: MomentType) => (
       <Card
+        key={moment.id}
         onClick={handleAddToMoment}
         title={moment.title}
         imageSrc={moment.coverS3}

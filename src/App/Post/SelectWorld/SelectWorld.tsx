@@ -34,6 +34,7 @@ const SelectWorld: FC<Props> = ({ setSelected }) => {
     if (loading) return null;
     return data.worlds.map((world: WorldType) => (
       <Card
+        key={world.id}
         onClick={setSelected}
         title={world.title}
         imageSrc={world.coverS3}
