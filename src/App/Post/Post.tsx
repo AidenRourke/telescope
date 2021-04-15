@@ -18,7 +18,6 @@ import { PostTags } from './PostTags';
 import { addToQuery } from '../App';
 import { UserContext } from '../../Contexts/UserContext';
 import { SelectMoment } from './SelectMoment';
-import { Navbar } from '../Navbar';
 
 const PostContainer = styled.div`
   display: flex;

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'fonts/DrukWide-Bold.ttf';
 import './index.css';
 import App from 'App/App';
 import * as serviceWorker from './serviceWorker';
@@ -23,7 +22,7 @@ Amplify.configure({
   },
 });
 
-Amplify.Logger.LOG_LEVEL = 'DEBUG';
+// Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const httpLink = createHttpLink({
   uri: 'https://world.moduresearch.com/graphql',
