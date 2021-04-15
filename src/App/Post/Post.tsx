@@ -167,7 +167,6 @@ const Post: FC<RouteComponentProps> = props => {
   const renderLocation = () => {
     if (data.post.city && data.post.countryCode)
       return `${data.post.city.toUpperCase()}, ${data.post.countryCode.toUpperCase()}`;
-    return 'UNKNOWN';
   };
 
   const closeModal = () => {
@@ -196,11 +195,11 @@ const Post: FC<RouteComponentProps> = props => {
             </TextSection>
             <TextSection>
               <TextHeader>LOCATION:</TextHeader>
-              <p>{renderLocation()}</p>
+              <p>{renderLocation() || "UNKNOWN"}</p>
             </TextSection>
             <TextSection>
               <TextHeader>FILTER:</TextHeader>
-              <p>{data.post.filterId}</p>
+              <p>{data.post.filterId || "UNKNOWN"}</p>
             </TextSection>
             <TextSection>
               <TextHeader>SUBMISSION DATE:</TextHeader>

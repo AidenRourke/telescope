@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost';
 import Gallery, { RenderImageProps } from 'react-photo-gallery';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { FilterSearch } from 'Components/index';
+import { Button } from 'Components';
 
 import { useQuery } from '@apollo/react-hooks';
 import { PostType } from 'Types/types';
@@ -12,6 +12,13 @@ import { queryToObject } from '../../App';
 
 const ListViewContainer = styled.div`
   overflow: scroll;
+`;
+
+const LoadMoreButton = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
 `;
 
 const ImageContainer = styled.div<{ top?: number; left?: number; height: number; width: number }>`
@@ -38,30 +45,67 @@ interface Props {
 }
 
 export const GET_POSTS = gql`
-  query GetPosts($filter: FilterInput!) {
-    posts(filter: $filter) {
-      id
-      frame1S3
+  query GetPosts($first: Int, $after: String, $filter: FilterInput!) {
+    posts(first: $first, after: $after, filter: $filter) {
+      pageInfo {
+        endCursor
+        startCursor
+        hasPreviousPage
+        hasNextPage
+      }
+      nodes {
+        id
+        frame1S3
+      }
     }
   }
 `;
+
+const PAGE_SIZE = 3;
 
 const ListView: FC<Props> = () => {
   const history = useHistory();
   const { search } = useLocation();
 
   const filters = queryToObject(search);
+  const filter = {
+    preferredUsernames: filters['USER'] || [],
+    locations: filters['LOCATION'] || [],
+    tags: filters['TAG'] || [],
+  };
 
-  const { loading, data } = useQuery(GET_POSTS, {
+  const { loading, data, fetchMore } = useQuery(GET_POSTS, {
     variables: {
-      filter: {
-        preferredUsernames: filters['USER'] || [],
-        locations: filters['LOCATION'] || [],
-        tags: filters['TAG'] || [],
-      },
+      filter,
     },
     fetchPolicy: 'network-only',
   });
+
+  if (loading) return null;
+
+  const {
+    posts: { nodes, pageInfo },
+  } = data;
+
+  const handleFetchMore = () => {
+    fetchMore({
+      variables: {
+        after: pageInfo.endCursor,
+        first: PAGE_SIZE,
+      },
+      updateQuery(previousResult: any, { fetchMoreResult }: any) {
+        const connection = fetchMoreResult.posts;
+
+        return {
+          posts: {
+            pageInfo: connection.pageInfo,
+            nodes: [...previousResult.posts.nodes, ...connection.nodes],
+            __typename: previousResult.posts.__typename,
+          },
+        };
+      },
+    });
+  };
 
   const imageRenderer = ({ index, left, top, photo }: RenderImageProps) => {
     const { sizes, srcSet, key, ...photoProps } = photo;
@@ -78,7 +122,7 @@ const ListView: FC<Props> = () => {
   };
 
   const getPhotos = () => {
-    return data.posts.map((post: PostType) => ({
+    return nodes.map((post: PostType) => ({
       src: post.frame1S3,
       width: 2,
       height: 3,
@@ -88,8 +132,13 @@ const ListView: FC<Props> = () => {
 
   return (
     <ListViewContainer>
-      {!loading && data.posts.length > 0 && (
-        <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />
+      {data.posts.nodes.length > 0 && <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />}
+      {pageInfo.hasNextPage && (
+        <LoadMoreButton>
+          <Button onClick={handleFetchMore} size="small" color="green" isLoading={loading}>
+            LOAD MORE
+          </Button>
+        </LoadMoreButton>
       )}
     </ListViewContainer>
   );
