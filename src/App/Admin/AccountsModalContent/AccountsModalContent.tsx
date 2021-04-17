@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Loading, Input, Button } from 'Components';
 import { AccountType } from 'Types/types';
 import { AccountRow } from './AccountRow';
+import { red } from 'styles/colors';
 
 const Table = styled.table`
   width: 100%;
@@ -15,6 +16,13 @@ const Table = styled.table`
   td {
     padding: 0.5rem;
   }
+`;
+
+const Error = styled.p<{ error: boolean }>`
+  margin: 0.25rem 1rem;
+  color: ${red};
+  height: ${({ error }) => (error ? 'auto' : 0)};
+  overflow: hidden;
 `;
 
 const GET_ACCOUNTS = gql`
@@ -39,6 +47,7 @@ const CREATE_ACCOUNT = gql`
       account {
         id
       }
+      errors
     }
   }
 `;
@@ -46,26 +55,27 @@ const CREATE_ACCOUNT = gql`
 const AccountsModalContent: FC = () => {
   const [publisherName, setPublisherName] = useState('');
   const [preferredUsername, setPreferredUsername] = useState('');
+  const [error, setError] = useState<string>('');
 
   const { data } = useQuery(GET_ACCOUNTS);
 
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT, {
-    errorPolicy: 'all',
     refetchQueries: ['GetAccounts'],
     awaitRefetchQueries: true,
   });
 
   const handleCreateAccount = async () => {
-    try {
-      await createAccount({
-        variables: {
-          publisherName,
-          preferredUsername,
-        },
-      });
-    } catch (e) {}
+    const result = await createAccount({
+      variables: {
+        publisherName,
+        preferredUsername,
+      },
+    });
     setPublisherName('');
     setPreferredUsername('');
+    if (result.data.createAccount.errors) {
+      setError(result.data.createAccount.errors[0]);
+    } else setError('');
   };
 
   const renderAccounts = () => {
@@ -74,43 +84,46 @@ const AccountsModalContent: FC = () => {
     }
   };
   return (
-    <Table>
-      <tbody>
-        <tr>
-          <th>USER NAME</th>
-          <th>PUBLISHER NAME</th>
-          <th>OPTION</th>
-        </tr>
-        {renderAccounts()}
-        <tr>
-          <td>
-            <Input
-              color="blue"
-              inputSize="small"
-              value={preferredUsername}
-              onChange={(e: any) => setPreferredUsername(e.target.value)}
-            />
-          </td>
-          <td>
-            <Input
-              color="blue"
-              inputSize="small"
-              value={publisherName}
-              onChange={(e: any) => setPublisherName(e.target.value)}
-            />
-          </td>
-          <td>
-            {loading ? (
-              <Loading>ADDING</Loading>
-            ) : (
-              <Button color="blue" isOutlined={true} size="small" onClick={handleCreateAccount}>
-                ADD
-              </Button>
-            )}
-          </td>
-        </tr>
-      </tbody>
-    </Table>
+    <>
+      <Table>
+        <tbody>
+          <tr>
+            <th>USER NAME</th>
+            <th>PUBLISHER NAME</th>
+            <th>OPTION</th>
+          </tr>
+          {renderAccounts()}
+          <tr>
+            <td>
+              <Input
+                color="blue"
+                inputSize="small"
+                value={preferredUsername}
+                onChange={(e: any) => setPreferredUsername(e.target.value)}
+              />
+            </td>
+            <td>
+              <Input
+                color="blue"
+                inputSize="small"
+                value={publisherName}
+                onChange={(e: any) => setPublisherName(e.target.value)}
+              />
+            </td>
+            <td>
+              {loading ? (
+                <Loading>ADDING</Loading>
+              ) : (
+                <Button color="blue" isOutlined={true} size="small" onClick={handleCreateAccount}>
+                  ADD
+                </Button>
+              )}
+            </td>
+          </tr>
+        </tbody>
+      </Table>
+      <Error error={error !== ''}>{error}</Error>
+    </>
   );
 };
 

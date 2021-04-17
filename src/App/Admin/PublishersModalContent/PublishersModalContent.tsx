@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Loading, Button, Input } from 'Components';
 import { PublisherType } from 'Types/types';
 import { AdminPublisherRow } from './AdminPublisherRow';
+import { red } from 'styles/colors';
 
 const Table = styled.table`
   width: 100%;
@@ -15,6 +16,13 @@ const Table = styled.table`
   td {
     padding: 0.5rem;
   }
+`;
+
+const Error = styled.p<{ error: boolean }>`
+  margin: 0.25rem 1rem;
+  color: ${red};
+  height: ${({ error }) => (error ? 'auto' : 0)};
+  overflow: hidden;
 `;
 
 const GET_PUBLISHERS = gql`
@@ -33,6 +41,7 @@ const CREATE_PUBLISHER = gql`
       publisher {
         id
       }
+      errors
     }
   }
 `;
@@ -40,26 +49,27 @@ const CREATE_PUBLISHER = gql`
 const PublishersModalContent: FC = () => {
   const [organizationFlag, setOrganizationFlag] = useState<boolean>(false);
   const [publisherName, setPublisherName] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const { data, loading } = useQuery(GET_PUBLISHERS);
 
   const [createPublisher, { loading: creatingPublisher }] = useMutation(CREATE_PUBLISHER, {
-    errorPolicy: 'all',
     refetchQueries: ['GetPublishers'],
     awaitRefetchQueries: true,
   });
 
   const handleCreatePublisher = async () => {
-    try {
-      await createPublisher({
-        variables: {
-          publisherName,
-          organizationFlag,
-        },
-      });
-    } catch (e) {}
+    const result = await createPublisher({
+      variables: {
+        publisherName,
+        organizationFlag,
+      },
+    });
     setOrganizationFlag(false);
     setPublisherName('');
+    if (result.data.createPublisher.errors) {
+      setError(result.data.createPublisher.errors[0]);
+    } else setError('');
   };
 
   const renderPublishers = () => {
@@ -71,43 +81,46 @@ const PublishersModalContent: FC = () => {
   };
 
   return (
-    <Table>
-      <tbody>
-        <tr>
-          <th>PUBLISHER NAME</th>
-          <th>ORGANIZATION?</th>
-          <th>OPTION</th>
-        </tr>
-        {renderPublishers()}
-        <tr>
-          <td>
-            <Input
-              color="blue"
-              inputSize="small"
-              value={publisherName}
-              onChange={(e: any) => setPublisherName(e.target.value)}
-            />
-          </td>
-          <td>
-            <input
-              color="blue"
-              type="checkbox"
-              checked={organizationFlag}
-              onChange={(e: any) => setOrganizationFlag(e.target.checked)}
-            />
-          </td>
-          <td>
-            {creatingPublisher ? (
-              <Loading>ADDING</Loading>
-            ) : (
-              <Button color="blue" isOutlined={true} size="small" onClick={handleCreatePublisher}>
-                ADD
-              </Button>
-            )}
-          </td>
-        </tr>
-      </tbody>
-    </Table>
+    <>
+      <Table>
+        <tbody>
+          <tr>
+            <th>PUBLISHER NAME</th>
+            <th>ORGANIZATION?</th>
+            <th>OPTION</th>
+          </tr>
+          {renderPublishers()}
+          <tr>
+            <td>
+              <Input
+                color="blue"
+                inputSize="small"
+                value={publisherName}
+                onChange={(e: any) => setPublisherName(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                color="blue"
+                type="checkbox"
+                checked={organizationFlag}
+                onChange={(e: any) => setOrganizationFlag(e.target.checked)}
+              />
+            </td>
+            <td>
+              {creatingPublisher ? (
+                <Loading>ADDING</Loading>
+              ) : (
+                <Button color="blue" isOutlined={true} size="small" onClick={handleCreatePublisher}>
+                  ADD
+                </Button>
+              )}
+            </td>
+          </tr>
+        </tbody>
+      </Table>
+      <Error error={error !== ''}>{error}</Error>
+    </>
   );
 };
 

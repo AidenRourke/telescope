@@ -5,11 +5,11 @@ import App from 'App/App';
 import * as serviceWorker from './serviceWorker';
 import Amplify from 'aws-amplify';
 import config from './amplify_config';
-import ApolloClient from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import ApolloClient from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createHttpLink } from 'apollo-link-http';
 import { ApolloProvider } from '@apollo/react-hooks';
-import {Auth} from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { setContext } from 'apollo-link-context';
 
 Amplify.configure({
@@ -25,8 +25,8 @@ Amplify.configure({
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const httpLink = createHttpLink({
-  uri: 'https://world.moduresearch.com/graphql',
-  // uri: 'http://localhost:3001/graphql',
+  // uri: 'https://world.moduresearch.com/graphql',
+  uri: 'http://localhost:3001/graphql',
 });
 
 const authLink = setContext(async (_, something) => {
@@ -36,18 +36,22 @@ const authLink = setContext(async (_, something) => {
   return {
     headers: {
       ...something.headers,
-      authorization: token ? `Bearer ${token}` : "",
-    }
-  }
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
 });
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
-
-ReactDOM.render(<ApolloProvider client={client}><App /></ApolloProvider>, document.getElementById('root'));
+ReactDOM.render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById('root'),
+);
 
 // If you want your App to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

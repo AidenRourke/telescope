@@ -10,6 +10,7 @@ const ellipsis = keyframes`
 `;
 
 const LoadingDiv = styled.div`
+  font: inherit;
   &::after {
     overflow: hidden;
     display: inline-block;

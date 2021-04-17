@@ -17,7 +17,7 @@ const Table = styled.table`
 `;
 
 const Error = styled.p<{ error: boolean }>`
-  margin-top: 0.25rem;
+  margin: 0.25rem 1rem;
   color: ${red};
   height: ${({ error }) => (error ? 'auto' : 0)};
   overflow: hidden;
@@ -42,16 +42,17 @@ const CREATE_USER = gql`
         isAdmin
         preferredUsername
       }
+      errors
     }
   }
 `;
 
 const UsersModalContent: FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
   const [username, setUsername] = useState<string>('');
 
-  const [createUser, { loading, error }] = useMutation(CREATE_USER, {
-    errorPolicy: 'all',
+  const [createUser, { loading }] = useMutation(CREATE_USER, {
     refetchQueries: ['GetUsers'],
     awaitRefetchQueries: true,
   });
@@ -59,16 +60,22 @@ const UsersModalContent: FC = () => {
   const { data } = useQuery(GET_USERS);
 
   const handleCreateUser = async () => {
-    try {
-      await createUser({
-        variables: {
-          preferredUsername: username,
-          admin: isAdmin,
-        },
-      });
-    } catch (e) {}
+    const result = await createUser({
+      variables: {
+        preferredUsername: username,
+        admin: isAdmin,
+      },
+    });
     setIsAdmin(false);
     setUsername('');
+    if (result.data.createUser.errors) {
+      setError(result.data.createUser.errors[0])
+    } else
+      setError('')
+    if (result.data.createUser.errors) {
+      setError(result.data.createUser.errors[0])
+    } else
+      setError('')
   };
 
   const renderUsers = () => {
@@ -116,7 +123,7 @@ const UsersModalContent: FC = () => {
           </tr>
         </tbody>
       </Table>
-      <Error error={!!error}>ERROR: USER NOT FOUND</Error>
+      <Error error={error !== ''}>{error}</Error>
     </>
   );
 };

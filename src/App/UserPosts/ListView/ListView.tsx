@@ -69,9 +69,9 @@ const ListView: FC<Props> = () => {
 
   const filters = queryToObject(search);
   const filter = {
-    preferredUsernames: filters['USER'] || [],
-    locations: filters['LOCATION'] || [],
-    tags: filters['TAG'] || [],
+    preferredUsernames: filters['USER'],
+    locations: filters['LOCATION'],
+    tags: filters['TAG'],
   };
 
   const { loading, data, fetchMore } = useQuery(GET_POSTS, {
