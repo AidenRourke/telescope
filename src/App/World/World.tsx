@@ -45,27 +45,6 @@ const Status = styled.h4`
   }
 `;
 
-const TextArea = styled.textarea`
-  color: ${colors.green};
-  resize: none;
-  border: none;
-  background: none;
-  font-family: inherit;
-`;
-
-const Description = styled.p`
-  cursor: pointer;
-  overflow: auto;
-  color: ${colors.green};
-  flex: 1;
-  border: 2px solid transparent;
-`;
-
-const DescriptionTextArea = styled(TextArea)`
-  font-size: 1em;
-  flex: 1;
-`;
-
 const WorldInfo = styled.div`
   color: ${colors.blue};
   display: flex;
@@ -347,11 +326,7 @@ const World: FC<RouteComponentProps> = props => {
     }
   };
 
-  const changeDescription = async (e: any) => {
-    const {
-      target: { value: description },
-    } = e;
-
+  const changeDescription = async (description: string) => {
     if (description !== world.description) {
       await updateWorldDescription({
         variables: {
@@ -361,26 +336,6 @@ const World: FC<RouteComponentProps> = props => {
       });
     }
     setDescriptionEditMode(false);
-  };
-
-  const renderDescription = () => {
-    if (descriptionEditMode) {
-      return (
-        <DescriptionTextArea
-          autoFocus
-          onBlur={changeDescription}
-          onFocus={(e: any) => {
-            e.target.value = '';
-            e.target.value = world.description;
-          }}
-        />
-      );
-    }
-    return (
-      <Description onClick={() => setDescriptionEditMode(true)}>
-        {world.description || 'CLICK TO ADD DESCRIPTION'}
-      </Description>
-    );
   };
 
   const renderAction = () => {
@@ -444,7 +399,12 @@ const World: FC<RouteComponentProps> = props => {
             WORLD <span>({world.status.toUpperCase()})</span>
           </Status>
           <EditableInput type="h1" title={world.title} placeholder="CLICK TO ADD TITLE" onChange={changeTitle} />
-          {renderDescription()}
+          <EditableInput
+            type="textarea"
+            title={world.description}
+            placeholder="CLICK TO ADD DESCRIPTION"
+            onChange={changeDescription}
+          />
           <WorldInfo>
             <DivButton onClick={() => setIsViewingCurators(true)}>
               <small>CURATORS</small>

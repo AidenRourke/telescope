@@ -19,7 +19,15 @@ const Text = styled.small`
   border: 2px solid transparent;
 `;
 
-const TitleTextInput = styled.input`
+const Description = styled.p`
+  cursor: pointer;
+  overflow: auto;
+  color: ${colors.green};
+  flex: 1;
+  border: 2px solid transparent;
+`;
+
+const TitleInput = styled.input`
   background: none;
   color: ${colors.green};
   font-family: inherit;
@@ -34,6 +42,16 @@ const TextInput = styled.input`
   font-family: inherit;
   font-size: smaller;
   width: 100%;
+`;
+
+const TextAreaInput = styled.textarea`
+  color: ${colors.green};
+  resize: none;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 1em;
+  flex: 1;
 `;
 
 interface Props {
@@ -53,7 +71,7 @@ const EditableInput: FC<Props> = ({ title, onChange, type, placeholder }) => {
   };
 
   const handler = (e: any) => {
-    if (e.keyCode === 13) {
+    if (editMode && e.keyCode === 13) {
       handleSubmit();
     }
   };
@@ -64,16 +82,41 @@ const EditableInput: FC<Props> = ({ title, onChange, type, placeholder }) => {
     return () => document.removeEventListener('keyup', handler);
   });
 
+  const getInputElement = ({ ...props }) => {
+    switch (type) {
+      case 'h1':
+        return <TitleInput autoFocus {...props} />;
+      case 'textarea':
+        return <TextAreaInput autoFocus {...props} />;
+      default:
+        return <TextInput autoFocus {...props} />;
+    }
+  };
+
+  const getTextElement = ({ ...props }) => {
+    const value = props.value;
+    switch (type) {
+      case 'h1':
+        return <Title {...props}>{value}</Title>;
+      case 'textarea':
+        return <Description {...props}>{value}</Description>;
+      default:
+        return <Text {...props}>{value}</Text>;
+    }
+  };
+
   if (editMode) {
-    const InputComponent = type === 'h1' ? TitleTextInput : TextInput;
-    return (
-      <InputComponent autoFocus onBlur={handleSubmit} value={value} onChange={(e: any) => setValue(e.target.value)} />
-    );
+    return getInputElement({
+      onBlur: handleSubmit,
+      value: value,
+      onChange: (e: any) => setValue(e.target.value),
+    });
   }
 
-  const TextComponent = type === 'h1' ? Title : Text;
-
-  return <TextComponent onClick={() => setEditMode(true)}>{title || placeholder}</TextComponent>;
+  return getTextElement({
+    onClick: () => setEditMode(true),
+    value: title || placeholder,
+  });
 };
 
 export { EditableInput };
