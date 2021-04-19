@@ -72,6 +72,7 @@ const EditableInput: FC<Props> = ({ title, onChange, type, placeholder }) => {
 
   const handler = (e: any) => {
     if (editMode && e.keyCode === 13) {
+      e.stopPropagation();
       handleSubmit();
     }
   };
