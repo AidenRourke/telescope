@@ -2,8 +2,7 @@ import React, { FC, useContext } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
-import { ModalProps, PublisherType, WorldType } from 'Types/types';
-import { Modal } from 'Components';
+import { PublisherType, WorldType } from 'Types/types';
 import { WorldPublisherRow } from './WorldPublisherRow';
 import { UserContext } from 'Contexts/UserContext';
 
@@ -30,11 +29,11 @@ const Table = styled.table`
   }
 `;
 
-interface Props extends ModalProps {
+interface Props {
   world: WorldType;
 }
 
-const WorldPublishersModal: FC<Props> = ({ world, ...rest }) => {
+const WorldPublishersModal: FC<Props> = ({ world }) => {
   const {
     user: { isAdmin },
   } = useContext(UserContext);
@@ -43,7 +42,6 @@ const WorldPublishersModal: FC<Props> = ({ world, ...rest }) => {
 
   const renderPublishers = () => {
     if (!loading) {
-      console.log(data.publishers);
       if (isAdmin) {
         return data.publishers.map((publisher: PublisherType) => (
           <WorldPublisherRow key={publisher.id} publisher={publisher} worldId={world.id} />
@@ -56,17 +54,15 @@ const WorldPublishersModal: FC<Props> = ({ world, ...rest }) => {
   };
 
   return (
-    <Modal title="PUBLISHERS" {...rest}>
-      <Table>
-        <tbody>
-          <tr>
-            <th>PUBLISHER NAME</th>
-            {isAdmin && <th>OPTION</th>}
-          </tr>
-          {renderPublishers()}
-        </tbody>
-      </Table>
-    </Modal>
+    <Table>
+      <tbody>
+        <tr>
+          <th>PUBLISHER NAME</th>
+          {isAdmin && <th>OPTION</th>}
+        </tr>
+        {renderPublishers()}
+      </tbody>
+    </Table>
   );
 };
 

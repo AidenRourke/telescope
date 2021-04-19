@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as colors from 'styles/colors';
 import { faArrowLeft, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropzone, Button, ConfirmationModal, DatePicker, EditableInput } from 'Components';
+import { Dropzone, Button, ConfirmationModal, DatePicker, EditableInput, Modal } from 'Components';
 import { WorldMomentsList } from './WorldMomentsList';
 import { GET_WORLDS } from '../Worlds/Worlds';
 import { WorldPublishersModal } from './WorldPublishersModal';
@@ -503,7 +503,9 @@ const World: FC<RouteComponentProps> = props => {
         closeModal={() => setIsConfirming(false)}
         onConfirm={handleRemoveWorld}
       />
-      <WorldPublishersModal world={world} isOpen={isAddingPublisher} closeModal={() => setIsAddingPublisher(false)} />
+      <Modal title="PUBLISHERS" isOpen={isAddingPublisher} closeModal={() => setIsAddingPublisher(false)}>
+        <WorldPublishersModal world={world} />
+      </Modal>
       <WorldCuratorsModal
         curators={getCurators()}
         isOpen={isViewingCurators}
