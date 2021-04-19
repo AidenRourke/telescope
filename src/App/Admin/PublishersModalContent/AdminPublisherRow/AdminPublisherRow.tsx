@@ -37,13 +37,9 @@ const AdminPublisherRow: FC<Props> = ({ publisher }) => {
       <td>{publisher.name}</td>
       <td>{publisher.organizationFlag?.toString()}</td>
       <td>
-        {loading ? (
-          <Loading>REMOVING</Loading>
-        ) : (
-          <Button color="red" isOutlined={true} size="small" onClick={handleRemovePublisher}>
-            REMOVE
-          </Button>
-        )}
+        <Button isLoading={loading} color="red" isOutlined={true} size="small" onClick={handleRemovePublisher}>
+          REMOVE
+        </Button>
       </td>
     </tr>
   );

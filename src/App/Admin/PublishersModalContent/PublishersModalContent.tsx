@@ -108,13 +108,15 @@ const PublishersModalContent: FC = () => {
               />
             </td>
             <td>
-              {creatingPublisher ? (
-                <Loading>ADDING</Loading>
-              ) : (
-                <Button color="blue" isOutlined={true} size="small" onClick={handleCreatePublisher}>
-                  ADD
-                </Button>
-              )}
+              <Button
+                isLoading={creatingPublisher}
+                color="blue"
+                isOutlined={true}
+                size="small"
+                onClick={handleCreatePublisher}
+              >
+                ADD
+              </Button>
             </td>
           </tr>
         </tbody>

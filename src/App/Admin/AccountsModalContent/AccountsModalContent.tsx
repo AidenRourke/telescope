@@ -111,13 +111,9 @@ const AccountsModalContent: FC = () => {
               />
             </td>
             <td>
-              {loading ? (
-                <Loading>ADDING</Loading>
-              ) : (
-                <Button color="blue" isOutlined={true} size="small" onClick={handleCreateAccount}>
-                  ADD
-                </Button>
-              )}
+              <Button isLoading={loading} color="blue" isOutlined={true} size="small" onClick={handleCreateAccount}>
+                ADD
+              </Button>
             </td>
           </tr>
         </tbody>

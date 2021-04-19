@@ -110,13 +110,9 @@ const UsersModalContent: FC = () => {
               />
             </td>
             <td>
-              {loading ? (
-                <Loading>ADDING</Loading>
-              ) : (
-                <Button color="blue" isOutlined={true} size="small" onClick={handleCreateUser}>
-                  ADD
-                </Button>
-              )}
+              <Button isLoading={loading} color="blue" isOutlined={true} size="small" onClick={handleCreateUser}>
+                ADD
+              </Button>
             </td>
           </tr>
         </tbody>

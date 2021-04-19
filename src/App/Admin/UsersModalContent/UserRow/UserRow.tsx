@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { Button, Loading } from 'Components';
+import { Button } from 'Components';
 import { UserType } from 'Types/types';
 import { useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
@@ -36,9 +36,6 @@ const UserRow: FC<Props> = ({ user }) => {
   };
 
   const renderRemoveOption = () => {
-    if (loading) {
-      return <Loading>REMOVING</Loading>;
-    }
     return (
       <Button
         disabled={user.cognitoId === currentUser.id}
@@ -46,6 +43,7 @@ const UserRow: FC<Props> = ({ user }) => {
         isOutlined={true}
         size="small"
         onClick={handleRemoveUser}
+        isLoading={loading}
       >
         REMOVE
       </Button>

@@ -37,13 +37,9 @@ const AccountRow: FC<Props> = ({ account }) => {
       <td>{account.user?.preferredUsername}</td>
       <td>{account.publisher?.name}</td>
       <td>
-        {loading ? (
-          <Loading>REMOVING</Loading>
-        ) : (
-          <Button color="red" isOutlined={true} size="small" onClick={handleRemoveAccount}>
-            REMOVE
-          </Button>
-        )}
+        <Button isLoading={loading} color="red" isOutlined={true} size="small" onClick={handleRemoveAccount}>
+          REMOVE
+        </Button>
       </td>
     </tr>
   );

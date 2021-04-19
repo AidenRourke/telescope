@@ -94,7 +94,7 @@ const WorldPublisherRow: FC<Props> = ({ publisher, worldId }) => {
               color="red"
               isOutlined={true}
               size="small"
-              isLoading={isRemovingPublisherWorld}
+              isLoading={true}
               onClick={() => removePublisherWorld()}
             >
               REMOVE
