@@ -1,14 +1,14 @@
-import React, {FC, useState} from "react";
-import {MomentType} from "Types/types";
-import {Loading} from "Components/Loading";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMinus} from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
-import * as colors from "styles/colors";
-import {ConfirmationModal} from "Components/ConfirmationModal";
-import {useMutation} from "@apollo/react-hooks";
-import {useHistory, useLocation} from "react-router";
-import {gql} from 'apollo-boost';
+import React, { FC, useState } from 'react';
+import { MomentType } from 'Types/types';
+import { Loading } from 'Components/Loading';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
+import * as colors from 'styles/colors';
+import { ConfirmationModal } from 'Components/ConfirmationModal';
+import { useMutation } from '@apollo/react-hooks';
+import { useHistory, useLocation } from 'react-router';
+import { gql } from 'apollo-boost';
 
 const WorldMomentContainer = styled.div`
   margin-bottom: 0.5rem;
@@ -63,19 +63,18 @@ const REMOVE_MOMENT = gql`
   }
 `;
 
-
 interface Props {
   moment: MomentType;
   worldId: string;
 }
 
-export const WorldMomentListItem: FC<Props> = ({moment, worldId}) => {
+export const WorldMomentListItem: FC<Props> = ({ moment, worldId }) => {
   const [isConfirming, setIsConfirming] = useState<string>();
 
   const history = useHistory();
-  const {search} = useLocation();
+  const { search } = useLocation();
 
-  const [removeWorldMoment, {loading: isRemoving}] = useMutation(REMOVE_MOMENT);
+  const [removeWorldMoment, { loading: isRemoving }] = useMutation(REMOVE_MOMENT);
 
   const handleDelete = () => {
     removeWorldMoment({
@@ -93,27 +92,30 @@ export const WorldMomentListItem: FC<Props> = ({moment, worldId}) => {
   return (
     <>
       <WorldMomentContainer
-      onClick={() => history.push({pathname: `/worlds/${worldId}/moments/${moment.id}`, search})}
-    >
-      <WorldMomentImage src={moment.coverS3}/>
-      {isRemoving ? (
-        <MomentInformation>
-          <Loading>
-            <small>REMOVING</small>
-          </Loading>
-        </MomentInformation>
-      ) : (
-        <MomentInformation>
-          <Title>{moment.title}</Title>
-          {moment.isActive && <Status>ACTIVE</Status>}
-        </MomentInformation>
-      )}
-      <RemoveMomentButton onClick={(e: any) => handleConfirm(e, moment.id)}>
-        <FontAwesomeIcon icon={faMinus} size="lg"/>
-      </RemoveMomentButton>
-    </WorldMomentContainer>
-      <ConfirmationModal isOpen={!!isConfirming} closeModal={() => setIsConfirming(undefined)}
-                         onConfirm={handleDelete}/>
+        onClick={() => history.push({ pathname: `/worlds/${worldId}/moments/${moment.id}`, search })}
+      >
+        <WorldMomentImage src={moment.coverS3} />
+        {isRemoving ? (
+          <MomentInformation>
+            <Loading>
+              <small>REMOVING</small>
+            </Loading>
+          </MomentInformation>
+        ) : (
+          <MomentInformation>
+            <Title>{moment.title}</Title>
+            {moment.isActive && <Status>ACTIVE</Status>}
+          </MomentInformation>
+        )}
+        <RemoveMomentButton onClick={(e: any) => handleConfirm(e, moment.id)}>
+          <FontAwesomeIcon icon={faMinus} size="lg" />
+        </RemoveMomentButton>
+      </WorldMomentContainer>
+      <ConfirmationModal
+        isOpen={!!isConfirming}
+        closeModal={() => setIsConfirming(undefined)}
+        onConfirm={handleDelete}
+      />
     </>
   );
-}
+};

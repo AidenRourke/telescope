@@ -194,11 +194,11 @@ const Post: FC<RouteComponentProps> = props => {
             </TextSection>
             <TextSection>
               <TextHeader>LOCATION:</TextHeader>
-              <p>{renderLocation() || "UNKNOWN"}</p>
+              <p>{renderLocation() || 'UNKNOWN'}</p>
             </TextSection>
             <TextSection>
               <TextHeader>FILTER:</TextHeader>
-              <p>{data.post.filterId || "UNKNOWN"}</p>
+              <p>{data.post.filterId || 'UNKNOWN'}</p>
             </TextSection>
             <TextSection>
               <TextHeader>SUBMISSION DATE:</TextHeader>

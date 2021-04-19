@@ -1,1 +1,1 @@
-export { UsersModalContent } from './UsersModalContent'
+export { UsersModalContent } from './UsersModalContent';

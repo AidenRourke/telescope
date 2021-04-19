@@ -1,1 +1,1 @@
-export { SelectMoment } from "./SelectMoment"
+export { SelectMoment } from './SelectMoment';

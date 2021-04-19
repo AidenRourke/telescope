@@ -32,7 +32,6 @@ const AccountRow: FC<Props> = ({ account }) => {
     });
   };
 
-
   return (
     <tr>
       <td>{account.user?.preferredUsername}</td>

@@ -15,7 +15,7 @@ interface Props extends ModalProps {
   onConfirm: () => void;
 }
 
-const ConfirmationModal: FC<Props> = ({ title = "ARE YOU SURE?", closeModal, isOpen, onConfirm }) => {
+const ConfirmationModal: FC<Props> = ({ title = 'ARE YOU SURE?', closeModal, isOpen, onConfirm }) => {
   const handleConfirm = () => {
     onConfirm();
     closeModal();

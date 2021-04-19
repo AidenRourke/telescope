@@ -18,13 +18,17 @@ const GraphiqlModalContent: FC = () => {
   const launchGraphiql = async () => {
     const token = (await Auth.currentSession()).getAccessToken().getJwtToken();
 
-    window.open(`http://localhost:3001/graphiql?token=${token}`)
+    window.open(`http://localhost:3001/graphiql?token=${token}`);
   };
 
-  return <Container>
-    <Warning>MAKE SURE SERVER IS RUNNING LOCALLY ON PORT 3001</Warning>
-    <Button onClick={launchGraphiql} color="white">LAUNCH GRAPHIQL</Button>
-  </Container>
+  return (
+    <Container>
+      <Warning>MAKE SURE SERVER IS RUNNING LOCALLY ON PORT 3001</Warning>
+      <Button onClick={launchGraphiql} color="white">
+        LAUNCH GRAPHIQL
+      </Button>
+    </Container>
+  );
 };
 
-export {GraphiqlModalContent}
+export { GraphiqlModalContent };

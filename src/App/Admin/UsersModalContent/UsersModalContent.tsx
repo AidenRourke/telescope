@@ -69,13 +69,11 @@ const UsersModalContent: FC = () => {
     setIsAdmin(false);
     setUsername('');
     if (result.data.createUser.errors) {
-      setError(result.data.createUser.errors[0])
-    } else
-      setError('')
+      setError(result.data.createUser.errors[0]);
+    } else setError('');
     if (result.data.createUser.errors) {
-      setError(result.data.createUser.errors[0])
-    } else
-      setError('')
+      setError(result.data.createUser.errors[0]);
+    } else setError('');
   };
 
   const renderUsers = () => {

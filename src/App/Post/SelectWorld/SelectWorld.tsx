@@ -4,7 +4,7 @@ import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { WorldType } from 'Types/types';
 import * as colors from 'styles/colors';
-import {Card} from "../Card";
+import { Card } from '../Card';
 
 const WorldsContainer = styled.div`
   margin: 2rem 0;
@@ -33,13 +33,7 @@ const SelectWorld: FC<Props> = ({ setSelected }) => {
   const renderWorlds = () => {
     if (loading) return null;
     return data.worlds.map((world: WorldType) => (
-      <Card
-        key={world.id}
-        onClick={setSelected}
-        title={world.title}
-        imageSrc={world.coverS3}
-        id={world.id}
-      />
+      <Card key={world.id} onClick={setSelected} title={world.title} imageSrc={world.coverS3} id={world.id} />
     ));
   };
 

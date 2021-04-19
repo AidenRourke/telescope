@@ -1,1 +1,1 @@
-export { UserRow } from "./UserRow"
+export { UserRow } from './UserRow';

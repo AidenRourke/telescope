@@ -16,11 +16,14 @@ const Tags = styled.div`
 const CREATE_POST_TAG = gql`
   mutation CreatePostTag($postId: ID!, $tagName: String!) {
     createPostTag(postId: $postId, tagName: $tagName) {
-      post {
+      postTag {
         id
-        tags {
+        post {
           id
-          name
+          tags {
+            id
+            name
+          }
         }
       }
     }
@@ -30,11 +33,14 @@ const CREATE_POST_TAG = gql`
 const REMOVE_POST_TAG = gql`
   mutation RemovePostTag($postId: ID!, $tagId: ID!) {
     removePostTag(postId: $postId, tagId: $tagId) {
-      post {
+      postTag {
         id
-        tags {
+        post {
           id
-          name
+          tags {
+            id
+            name
+          }
         }
       }
     }
@@ -114,7 +120,9 @@ const PostTags: FC<Props> = ({ tags, handleAddFilter, postId }) => {
       const {
         data: {
           removePostTag: {
-            post: { tags },
+            postTag: {
+              post: { tags },
+            },
           },
         },
       } = ret;

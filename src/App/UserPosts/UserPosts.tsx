@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -22,14 +22,10 @@ const UserPosts: FC<RouteComponentProps> = props => {
 
   return (
     <>
-      <Navbar {...props}/>
+      <Navbar {...props} />
       <UserPostsContainer>
-        <FilterSearch
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          options={['USER', 'LOCATION', 'TAG']}
-        />
-        <Filters/>
+        <FilterSearch isOpen={isOpen} setIsOpen={setIsOpen} options={['USER', 'LOCATION', 'TAG']} />
+        <Filters />
         <ListView label="LIST VIEW" />
       </UserPostsContainer>
     </>

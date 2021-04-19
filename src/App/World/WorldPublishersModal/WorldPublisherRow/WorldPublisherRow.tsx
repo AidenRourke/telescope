@@ -13,25 +13,28 @@ interface Props {
 const CREATE_PUBLISHER_WORLD = gql`
   mutation CreatePublisherWorld($publisherId: ID!, $worldId: ID!) {
     createPublisherWorld(publisherId: $publisherId, worldId: $worldId) {
-      world {
+      publisherWorld {
         id
-        publishers {
+        world {
           id
-          name
-          accounts {
+          publishers {
             id
-            user {
+            name
+            accounts {
               id
-              preferredUsername
+              user {
+                id
+                preferredUsername
+              }
             }
           }
         }
-      }
-      publisher {
-        id
-        name
-        worlds {
+        publisher {
           id
+          name
+          worlds {
+            id
+          }
         }
       }
     }
@@ -41,24 +44,28 @@ const CREATE_PUBLISHER_WORLD = gql`
 const REMOVE_PUBLISHER_WORLD = gql`
   mutation RemovePublisherWorld($publisherId: ID!, $worldId: ID!) {
     removePublisherWorld(publisherId: $publisherId, worldId: $worldId) {
-      world {
+      publisherWorld {
         id
-        publishers {
+        world {
           id
-          accounts {
+          publishers {
             id
-            user {
+            name
+            accounts {
               id
-              preferredUsername
+              user {
+                id
+                preferredUsername
+              }
             }
           }
         }
-      }
-      publisher {
-        id
-        name
-        worlds {
+        publisher {
           id
+          name
+          worlds {
+            id
+          }
         }
       }
     }

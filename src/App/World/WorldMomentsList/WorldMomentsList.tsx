@@ -1,15 +1,15 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import {gql} from 'apollo-boost';
-import {MomentType} from 'Types/types';
+import { gql } from 'apollo-boost';
+import { MomentType } from 'Types/types';
 import * as colors from 'styles/colors';
-import {useHistory, useLocation} from 'react-router';
-import {useMutation} from '@apollo/react-hooks';
-import {GET_WORLD} from '../World';
-import {WorldMomentListItem} from './WorldMomentListItem';
+import { useHistory, useLocation } from 'react-router';
+import { useMutation } from '@apollo/react-hooks';
+import { GET_WORLD } from '../World';
+import { WorldMomentListItem } from './WorldMomentListItem';
 
 const WorldMomentsListContainer = styled.div`
-  margin: 2rem ;
+  margin: 2rem;
   min-width: 12rem;
   overflow: auto;
 `;
@@ -59,31 +59,33 @@ interface Props {
   worldId: string;
 }
 
-const WorldMomentsList: FC<Props> = ({moments, worldId}) => {
+const WorldMomentsList: FC<Props> = ({ moments, worldId }) => {
   const history = useHistory();
-  const {search} = useLocation();
+  const { search } = useLocation();
 
   const [createMoment] = useMutation(CREATE_MOMENT, {
-    refetchQueries: [{query: GET_WORLD, variables: {id: worldId}}],
+    refetchQueries: [{ query: GET_WORLD, variables: { id: worldId } }],
   });
 
   const handleCreateMoment = async () => {
-    const res = await createMoment({variables: {worldId}});
+    const res = await createMoment({ variables: { worldId } });
     const {
       data: {
-        createMoment: {moment},
+        createMoment: { moment },
       },
     } = res;
-    history.push({pathname: `/worlds/${worldId}/moments/${moment.id}`, search});
+    history.push({ pathname: `/worlds/${worldId}/moments/${moment.id}`, search });
   };
 
   return (
     <WorldMomentsListContainer>
-      {moments.map(moment => <WorldMomentListItem key={moment.id} worldId={worldId} moment={moment}/>)}
+      {moments.map(moment => (
+        <WorldMomentListItem key={moment.id} worldId={worldId} moment={moment} />
+      ))}
       <WorldMomentContainer onClick={() => handleCreateMoment()}>
         <AddMomentImage>
           <svg xmlns="http://www.w3.org/2000/svg" height="30%" viewBox="0 0 24 24">
-            <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/>
+            <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
           </svg>
         </AddMomentImage>
         <MomentInformation>
@@ -94,4 +96,4 @@ const WorldMomentsList: FC<Props> = ({moments, worldId}) => {
   );
 };
 
-export {WorldMomentsList};
+export { WorldMomentsList };

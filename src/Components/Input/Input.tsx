@@ -4,7 +4,7 @@ import * as colors from 'styles/colors';
 import { colorTypes } from 'styles/colorTypes';
 import { Sizes } from 'Types/types';
 
-interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   color?: colorTypes;
   inputSize?: Sizes;
 }

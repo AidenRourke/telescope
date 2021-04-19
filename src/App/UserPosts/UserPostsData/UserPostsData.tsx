@@ -16,9 +16,9 @@ const DataContainer = styled.div`
 const UserPostsData: FC = () => {
   // There will probably be an api request based on the url params to fill this up
   const mockData = [
-    { name: 'POSTS', value: "6.1M" },
-    { name: 'COUNTRIES', value: "134" },
-    { name: 'USERS', value: "2M" },
+    { name: 'POSTS', value: '6.1M' },
+    { name: 'COUNTRIES', value: '134' },
+    { name: 'USERS', value: '2M' },
   ];
   return (
     <div>

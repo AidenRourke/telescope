@@ -130,7 +130,13 @@ const FilterSearch: FC<Props> = ({ setIsOpen, isOpen, options }) => {
         )}
       </Dropdown>
       <FilterForm onSubmit={submitForm}>
-        <Input inputSize="small" color="blue" value={tagInputValue} onChange={(e: any) => setTagInputValue(e.target.value)} type="text" />
+        <Input
+          inputSize="small"
+          color="blue"
+          value={tagInputValue}
+          onChange={(e: any) => setTagInputValue(e.target.value)}
+          type="text"
+        />
         <SearchButton color="blue" size="small">
           <FontAwesomeIcon icon={faSearch} size="lg" type="submit" />
         </SearchButton>
