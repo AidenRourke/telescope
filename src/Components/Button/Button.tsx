@@ -64,7 +64,7 @@ const TextButton = styled(StyledButton)<ButtonProps>`
   color: ${({ color }) => colors[color]};
 `;
 
-const Button: FC<ButtonProps> = ({ isLoading, isOutlined, isText, children, ...rest }) => {
+const Button: FC<ButtonProps> = ({ isLoading, isOutlined, isText, disabled, children, ...rest }) => {
   const RenderButton = (props: any) => {
     if (isOutlined) {
       return <OutlinedButton {...props} />;
@@ -82,7 +82,7 @@ const Button: FC<ButtonProps> = ({ isLoading, isOutlined, isText, children, ...r
     return children;
   };
 
-  return <RenderButton {...rest}>{renderContent()}</RenderButton>;
+  return <RenderButton {...rest} disabled={isLoading || disabled}>{renderContent()}</RenderButton>;
 };
 
 export { Button };
