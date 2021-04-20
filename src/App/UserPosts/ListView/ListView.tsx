@@ -136,7 +136,7 @@ const ListView: FC<Props> = () => {
       {data.posts.nodes.length > 0 && <Gallery photos={getPhotos()} direction="column" renderImage={imageRenderer} />}
       {pageInfo.hasNextPage && (
         <LoadMoreButton>
-          <Button onClick={handleFetchMore} size="small" color="green" isLoading={loading}>
+          <Button isLoading={loading} onClick={handleFetchMore} size="small" color="green" isLoading={loading}>
             LOAD MORE
           </Button>
         </LoadMoreButton>
