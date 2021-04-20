@@ -25,8 +25,8 @@ Amplify.configure({
 // Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const httpLink = createHttpLink({
-  // uri: 'https://world.moduresearch.com/graphql',
-  uri: 'http://localhost:3001/graphql',
+  uri: 'https://world.moduresearch.com/graphql',
+  // uri: 'http://localhost:3001/graphql',
 });
 
 const authLink = setContext(async (_, something) => {
