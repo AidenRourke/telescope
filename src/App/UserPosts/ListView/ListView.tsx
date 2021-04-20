@@ -61,7 +61,7 @@ export const GET_POSTS = gql`
   }
 `;
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 6;
 
 const ListView: FC<Props> = () => {
   const history = useHistory();
@@ -76,6 +76,7 @@ const ListView: FC<Props> = () => {
 
   const { loading, data, fetchMore } = useQuery(GET_POSTS, {
     variables: {
+      first: PAGE_SIZE,
       filter,
     },
     fetchPolicy: 'network-only',
