@@ -37,8 +37,8 @@ export const addToQuery = ({ name, type }: FilterType, query: string) => {
       newFilters = [newFilter];
     }
     queryObject[type] = newFilters;
-    return filtersToQueries(queryObject);
   }
+  return filtersToQueries(queryObject);
 };
 
 export const removeFromQuery = ({ type, name }: FilterType, query: string) => {

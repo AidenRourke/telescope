@@ -32,10 +32,10 @@ const Filters: FC = () => {
         if (filtersOfType) {
           if (Array.isArray(filtersOfType)) {
             filtersOfType.map((name: string) => {
-              tags.push(<FilterTag filter={{ type: key, name }} onClick={removeFilter} />);
+              tags.push(<FilterTag key={`${key}-${name}`} filter={{ type: key, name }} onClick={removeFilter} />);
             });
           } else {
-            tags.push(<FilterTag filter={{ type: key, name: filtersOfType }} onClick={removeFilter} />);
+            tags.push(<FilterTag key={`${key}-${filtersOfType}`} filter={{ type: key, name: filtersOfType }} onClick={removeFilter} />);
           }
         }
       });

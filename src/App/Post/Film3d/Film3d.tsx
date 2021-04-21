@@ -35,6 +35,7 @@ const Film3d: FC<Props> = ({ images }) => {
       }, 142.5);
       setIntervalObject(interval);
     });
+    return () => clearInterval(intervalObject)
   }, []);
 
   useEffect(() => {
